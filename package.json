@@ -1,0 +1,38 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "run-s test:*",
+    "test:edge-gateway": "yarn --cwd packages/edge-gateway test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "clean": "rm -rf node_modules yarn.lock packages/*/{yarn.lock,package-lock.json,.next,out,coverage,.nyc_output,worker,dist,node_modules}"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.*": "prettier --ignore-unknown --write"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  },
+  "devDependencies": {
+    "lint-staged": "^12.3.7",
+    "npm-run-all": "^4.1.5",
+    "prettier": "2.5.1",
+    "rimraf": "^3.0.2",
+    "simple-git-hooks": "^2.7.0"
+  },
+  "resolutions": {
+    "prettier": "2.5.1"
+  },
+  "engines": {
+    "node": "16.x"
+  }
+}
