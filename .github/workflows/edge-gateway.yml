@@ -16,12 +16,13 @@ jobs:
     name: Test
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v2.0.1
         with:
-          node-version: '16'
-      - uses: bahmutov/npm-install@v1
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+      - run: pnpm install
       - run: npx playwright install-deps
-      - run: yarn test:edge-gateway
+      - run: pnpm test:edge-gateway
   deploy-staging:
     name: Deploy Staging
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -29,10 +30,13 @@ jobs:
     needs: test
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         with:
-          node-version: '16'
-      - uses: bahmutov/npm-install@v1
+          cache: 'pnpm'
+      - run: pnpm install
       - name: Publish app
         # FIXME: uses Node.js 16 not 12 (upcoming release).
         # FIXME: update to tag > 1.3.0 when released.
@@ -61,13 +65,17 @@ jobs:
           package-name: edge-gateway
       - uses: actions/checkout@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
+      - uses: pnpm/action-setup@v2.0.1
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
         with:
-          node-version: '16'
-          registry-url: https://registry.npmjs.org/
-      - uses: bahmutov/npm-install@v1
-        if: ${{ steps.tag-release.outputs.releases_created }}
+          cache: 'pnpm'
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install
       - name: Deploy
         if: ${{ steps.tag-release.outputs.releases_created }}
         # FIXME: uses Node.js 16 not 12 (upcoming release).

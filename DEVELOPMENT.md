@@ -7,23 +7,23 @@ This doc should contain everything you need to know to get a working development
 You'll need at least the following:
 
 - Node.js v16+
-- [yarn](https://yarnpkg.com/)
+- [pnpm](https://pnpm.io/)
 - Docker
 
 ## Getting Started
 
-We use `yarn` in this project and commit the `yarn.lock` file.
+We use `pnpm` in this project and commit the `pnpm-lock.yaml` file.
 
 1. Install dependencies.
    ```bash
    # install all dependencies in the mono-repo
-   yarn
+   pnpm install
    # setup git hooks
    npx simple-git-hooks
    ```
 2. Run locally by starting the following processes.
-   1. API server (`yarn dev` in `/packages/edge-gateway`).
-   2. Web server (`yarn dev` in `/packages/website`).
+   1. API server (`pnpm dev` in `/packages/edge-gateway`).
+   2. Web server (`pnpm dev` in `/packages/website`).
 
 ## Release
 

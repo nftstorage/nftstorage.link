@@ -8,7 +8,7 @@
     "dev": "rm -rf .next && next dev -p 4000",
     "build": "next build",
     "start": "next start",
-    "test": "yarn lint",
+    "test": "pnpm lint",
     "test:e2e": "npx playwright test",
     "lint": "eslint './**/*.js'",
     "lint:fix": "eslint './**/*.js' --fix-dry-run"

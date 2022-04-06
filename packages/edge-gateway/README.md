@@ -6,12 +6,12 @@
 
 One time set up of your cloudflare worker subdomain for dev:
 
-- `npm install` - Install the project dependencies
+- `pnpm install` - Install the project dependencies
 - Sign up to Cloudflare and log in with your default browser.
 - `npm i @cloudflare/wrangler -g` - Install the Cloudflare wrangler CLI
 - `wrangler login` - Authenticate your wrangler cli; it'll open your browser.
 - Copy your cloudflare account id from `wrangler whoami`
-- Update `wrangler.toml` with a new `env`. Set your env name to be the value of `whoami` on your system you can use `npm start` to run the worker in dev mode for you.
+- Update `wrangler.toml` with a new `env`. Set your env name to be the value of `whoami` on your system you can use `pnpm start` to run the worker in dev mode for you.
 
   [**wrangler.toml**](./wrangler.toml)
 
@@ -37,10 +37,10 @@ One time set up of your cloudflare worker subdomain for dev:
   # for production: wrangler kv:namespace create DENYLIST --env production
   ```
 
-- `npm run publish` - Publish the worker under your env. An alias for `wrangler publish --env $(whoami)`
-- `npm start` - Run the worker in dev mode. An alias for `wrangler dev --env $(whoami)`
+- `pnpm run publish` - Publish the worker under your env. An alias for `wrangler publish --env $(whoami)`
+- `pnpm start` - Run the worker in dev mode. An alias for `wrangler dev --env $(whoami)`
 
-You only need to `npm start` for subsequent runs. PR your env config to the `wrangler.toml` to celebrate 🎉
+You only need to `pnpm start` for subsequent runs. PR your env config to the `wrangler.toml` to celebrate 🎉
 
 ## High level architecture
 

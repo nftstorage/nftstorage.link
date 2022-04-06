@@ -15,17 +15,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         with:
-          node-version: 16
-      - uses: bahmutov/npm-install@v1
+          cache: 'pnpm'
+      - run: pnpm install
       - name: Run build
         env:
           # Fake environment vars required for build
           NEXT_PUBLIC_ENV: dev
-        run: yarn build:website
+        run: pnpm build:website
       - name: Run test
-        run: yarn test:website
+        run: pnpm test:website
   test-e2e:
     name: ${{ matrix.os }} (${{ matrix.browser }})
     strategy:
@@ -44,16 +47,20 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node-version }}
-      - uses: bahmutov/npm-install@v1
+          cache: 'pnpm'
+          node-version: ${{ matrix.node }}
+      - run: pnpm install
         env:
           DEBUG: pw:install
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       - run: npx playwright install --with-deps ${{ matrix.browser }} chromium
         working-directory: packages/website
-      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- yarn workspace website run test:e2e -- --project=${{ matrix.browser }}
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm --filter website run test:e2e -- --project=${{ matrix.browser }}
       - name: Check for website test results
         id: check_website_test_results
         uses: andstor/file-existence-action@v1
