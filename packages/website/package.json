@@ -1,0 +1,70 @@
+{
+  "name": "website",
+  "version": "0.0.0",
+  "description": "nftstorage.link website",
+  "private": true,
+  "license": "(Apache-2.0 OR MIT)",
+  "scripts": {
+    "dev": "rm -rf .next && next dev -p 4000",
+    "build": "next build",
+    "start": "next start",
+    "test": "yarn lint",
+    "test:e2e": "npx playwright test",
+    "lint": "eslint './**/*.js'",
+    "lint:fix": "eslint './**/*.js' --fix-dry-run"
+  },
+  "dependencies": {
+    "next": "12.1.4",
+    "react": "18.0.0",
+    "react-dom": "18.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.20.1",
+    "eslint": "^8.4.1",
+    "eslint-config-next": "12.0.10",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard",
+      "next",
+      "prettier"
+    ],
+    "env": {
+      "jest": true,
+      "es2020": true,
+      "browser": true,
+      "node": true
+    },
+    "rules": {
+      "no-unused-vars": [
+        "error",
+        {
+          "args": "all",
+          "argsIgnorePattern": "_",
+          "varsIgnorePattern": "_"
+        }
+      ],
+      "react/jsx-filename-extension": [
+        "warn",
+        {
+          "extensions": [
+            ".js",
+            ".jsx"
+          ]
+        }
+      ],
+      "react/display-name": "warn",
+      "@next/next/no-img-element": "off"
+    }
+  },
+  "eslintIgnore": [
+    "node_modules",
+    ".next",
+    "out"
+  ]
+}
