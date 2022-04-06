@@ -1,0 +1,45 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+node_modules
+
+# testing
+coverage
+.nyc_output
+
+# next.js
+.next
+out
+
+# production
+build
+
+# misc
+.DS_Store
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.production.env
+.env
+
+dist
+node_modules
+worker
+package-lock.json
+site/public
+.cluster
+*.http
+.local
+.supabase
+
+packages/website/public/robots.txt
+packages/website/public/sitemap.xml
+packages/api/docker/compose
