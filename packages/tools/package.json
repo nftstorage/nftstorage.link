@@ -1,0 +1,38 @@
+{
+  "name": "tools",
+  "version": "1.0.0",
+  "description": "nftstorage.link Tools",
+  "private": true,
+  "main": "cli.js",
+  "type": "module",
+  "scripts": {
+    "test": "tsc"
+  },
+  "author": "Vasco Santos <santos.vasco@gmail.com>",
+  "license": "(Apache-2.0 OR MIT)",
+  "dependencies": {
+    "got": "^11.8.2",
+    "sade": "^1.7.4"
+  },
+  "devDependencies": {
+    "@types/sade": "^1.7.2",
+    "eslint": "^8.4.1",
+    "eslint-config-prettier": "^8.2.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard",
+      "prettier"
+    ],
+    "env": {
+      "es2020": true,
+      "browser": true,
+      "node": true
+    },
+    "ignorePatterns": "**/*.ts"
+  }
+}
