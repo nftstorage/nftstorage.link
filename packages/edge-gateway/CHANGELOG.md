@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0 (2022-04-06)
+
+
+### Features
+
+* monorepo with gateway ([#4](https://github.com/nftstorage/nftstorage.link/issues/4)) ([3b8bd4f](https://github.com/nftstorage/nftstorage.link/commit/3b8bd4f7d474e23695ca7710a3b9ca65aa9f848f))
+
 ## [1.4.0](https://github.com/nftstorage/nft.storage/compare/gateway-v1.3.1...gateway-v1.4.0) (2022-04-01)
 
 
