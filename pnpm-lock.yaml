@@ -31,6 +31,7 @@ importers:
       ipfs-utils: ^9.0.4
       itty-router: ^2.4.5
       miniflare: ^2.2.0
+      multicodec: ^3.2.1
       multiformats: ^9.6.4
       nanoid: ^3.1.30
       npm-run-all: ^4.1.5
@@ -47,6 +48,7 @@ importers:
       uint8arrays: ^3.0.0
     dependencies:
       itty-router: 2.6.1
+      multicodec: 3.2.1
       multiformats: 9.6.4
       nanoid: 3.3.2
       p-any: 4.0.0
@@ -8229,6 +8231,17 @@ packages:
       - supports-color
     dev: true
 
+  /multicodec/3.2.1:
+    resolution:
+      {
+        integrity: sha512-+expTPftro8VAW8kfvcuNNNBgb9gPeNYV9dn+z1kJRWF2vih+/S79f2RVeIwmrJBUJ6NT9IUPWnZDQvegEh5pw==,
+      }
+    deprecated: This module has been superseded by the multiformats module
+    dependencies:
+      uint8arrays: 3.0.0
+      varint: 6.0.0
+    dev: false
+
   /multiformats/9.6.4:
     resolution:
       {
@@ -11008,7 +11021,6 @@ packages:
       {
         integrity: sha512-cXEIW6cfr15lFv563k4GuVuW/fiwjknytD37jIOLSdSWuOI6WnO/oKwmP2FQTU2l01LP8/M5TSAJpzUaGe3uWg==,
       }
-    dev: true
 
   /vary/1.1.2:
     resolution: { integrity: sha1-IpnwLG3tMNSllhsLn3RSShj2NPw= }
