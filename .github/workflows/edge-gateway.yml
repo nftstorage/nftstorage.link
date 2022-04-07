@@ -76,6 +76,7 @@ jobs:
           node-version: 16
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
+        if: ${{ steps.tag-release.outputs.releases_created }}
       - name: Deploy
         if: ${{ steps.tag-release.outputs.releases_created }}
         # FIXME: uses Node.js 16 not 12 (upcoming release).
