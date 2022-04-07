@@ -5,12 +5,12 @@
   ],
   "scripts": {
     "test": "run-s test:*",
-    "test:website": "yarn --cwd packages/website test",
-    "test:edge-gateway": "yarn --cwd packages/edge-gateway test",
-    "build:website": "yarn --cwd packages/website build",
+    "test:website": "pnpm --filter website test",
+    "test:edge-gateway": "pnpm --filter edge-gateway test",
+    "build:website": "pnpm --filter website build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean": "rm -rf node_modules yarn.lock packages/*/{yarn.lock,package-lock.json,.next,out,coverage,.nyc_output,worker,dist,node_modules}"
+    "clean": "rm -rf node_modules pnpm-lock.yml packages/*/{pnpm-lock.ymlyarn.lock,package-lock.json,.next,out,coverage,.nyc_output,worker,dist,node_modules}"
   },
   "simple-git-hooks": {
     "pre-commit": "npx lint-staged"
