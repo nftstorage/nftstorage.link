@@ -1,5 +1,6 @@
 /* global BRANCH, VERSION, COMMITHASH, SENTRY_RELEASE */
 import Toucan from 'toucan-js'
+import { Magic } from '@magic-sdk/admin'
 import pkg from '../package.json'
 import { Logging } from './logs.js'
 
@@ -13,6 +14,7 @@ import { Logging } from './logs.js'
  * @property {string} BRANCH
  * @property {string} DEBUG
  * @property {string} ENV
+ * @property {string} MAGIC_SECRET_KEY
  * @property {string} [SENTRY_DSN]
  * @property {string} [LOGTAIL_TOKEN]
  * @property {number} [REQUEST_TIMEOUT]
@@ -31,6 +33,7 @@ import { Logging } from './logs.js'
  * @property {DurableObjectNamespace} cidsTrackerDurable
  * @property {DurableObjectNamespace} gatewayRedirectCounter
  * @property {number} REQUEST_TIMEOUT
+ * @property {Magic} magic
  * @property {Toucan} [sentry]
  * @property {Logging} [log]
  *

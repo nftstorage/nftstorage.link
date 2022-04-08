@@ -9,3 +9,7 @@ export const HTTP_STATUS_RATE_LIMITED = 429
 export const HTTP_STATUS_SUCCESS = 200
 export const REQUEST_PREVENTED_RATE_LIMIT_CODE = 'RATE_LIMIT'
 export const TIMEOUT_CODE = 'TIMEOUT'
+export const USER_TAGS = {
+  ACCOUNT_RESTRICTION: 'HasAccountRestriction',
+  SUPER_HOT_ACCESS: 'HasSuperHotAccess',
+}

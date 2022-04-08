@@ -2,10 +2,16 @@
 
 import { Router } from 'itty-router'
 
+import {
+  withAccountNotRestricted,
+  withApiOrMagicToken,
+  withSuperHotAuthorized,
+} from './auth.js'
 import { ipfsGet } from './ipfs.js'
 import { ipnsGet } from './ipns.js'
 import { gatewayGet } from './gateway.js'
 import { metricsGet } from './metrics.js'
+import { permaCachePut } from './perma-cache.js'
 
 // Export Durable Object namespace from the root module.
 export { GatewayMetrics0 } from './durable-objects/gateway-metrics.js'
@@ -19,17 +25,26 @@ import { envAll } from './env.js'
 
 const router = Router()
 
+const auth = {
+  '🤲': (handler) => withCorsHeaders(handler),
+  '🔒': (handler) => withCorsHeaders(withApiOrMagicToken(handler)),
+  '🔥': (handler) => withSuperHotAuthorized(handler),
+  '🚫': (handler) => withAccountNotRestricted(handler),
+}
+
 router
   .all('*', envAll)
-  .get('/metrics', withCorsHeaders(metricsGet))
-  .get('/ipfs/:cid', withCorsHeaders(ipfsGet))
-  .get('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
-  .head('/ipfs/:cid', withCorsHeaders(ipfsGet))
-  .head('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
-  .get('/ipns/:name', withCorsHeaders(ipnsGet))
-  .get('/ipns/:name/*', withCorsHeaders(ipnsGet))
-  .get('*', withCorsHeaders(gatewayGet))
-  .head('*', withCorsHeaders(gatewayGet))
+  .get('/metrics', auth['🤲'](metricsGet))
+  .get('/ipfs/:cid', auth['🤲'](ipfsGet))
+  .get('/ipfs/:cid/*', auth['🤲'](ipfsGet))
+  .head('/ipfs/:cid', auth['🤲'](ipfsGet))
+  .head('/ipfs/:cid/*', auth['🤲'](ipfsGet))
+  .get('/ipns/:name', auth['🤲'](ipnsGet))
+  .get('/ipns/:name/*', auth['🤲'](ipnsGet))
+  // .put('/perma-cache/:url', (auth['🔒'](auth['🚫'](auth['🔥'](permaCachePut)))))
+  .put('/perma-cache/:url', auth['🤲'](permaCachePut))
+  .get('*', auth['🤲'](gatewayGet))
+  .head('*', auth['🤲'](gatewayGet))
 
 /**
  * @param {Error} error
