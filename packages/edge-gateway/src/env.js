@@ -22,6 +22,8 @@ import { Logging } from './logs.js'
  * @property {KVNamespace} DENYLIST
  *
  * @typedef {Object} EnvTransformed
+ * @property {string} IPFS_GATEWAY_HOSTNAME
+ * @property {string} IPNS_GATEWAY_HOSTNAME
  * @property {Array<string>} ipfsGateways
  * @property {DurableObjectNamespace} gatewayMetricsDurable
  * @property {DurableObjectNamespace} summaryMetricsDurable
@@ -49,6 +51,8 @@ export function envAll(request, env, ctx) {
   env.gatewayRateLimitsDurable = env.GATEWAYRATELIMITS
   env.gatewayRedirectCounter = env.GATEWAYREDIRECTCOUNTER
   env.REQUEST_TIMEOUT = env.REQUEST_TIMEOUT || 20000
+  env.IPFS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME
+  env.IPNS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME.replace('ipfs', 'ipns')
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')

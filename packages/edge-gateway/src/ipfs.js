@@ -24,7 +24,7 @@ export async function ipfsGet(request, env) {
     throw new InvalidUrlError(`invalid CID: ${cid}: ${err.message}`)
   }
   const url = new URL(
-    `https://${nCid}.${env.GATEWAY_HOSTNAME}${redirectPath}${redirectQueryString}`
+    `https://${nCid}.${env.IPFS_GATEWAY_HOSTNAME}${redirectPath}${redirectQueryString}`
   )
 
   return Response.redirect(url, 302)

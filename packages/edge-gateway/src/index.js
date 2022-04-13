@@ -3,6 +3,7 @@
 import { Router } from 'itty-router'
 
 import { ipfsGet } from './ipfs.js'
+import { ipnsGet } from './ipns.js'
 import { gatewayGet } from './gateway.js'
 import { metricsGet } from './metrics.js'
 
@@ -26,6 +27,8 @@ router
   .get('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
   .head('/ipfs/:cid', withCorsHeaders(ipfsGet))
   .head('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
+  .get('/ipns/:name', withCorsHeaders(ipnsGet))
+  .get('/ipns/:name/*', withCorsHeaders(ipnsGet))
   .get('*', withCorsHeaders(gatewayGet))
   .head('*', withCorsHeaders(gatewayGet))
 
