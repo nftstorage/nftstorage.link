@@ -38,6 +38,14 @@ import {
  * @param {import('./index').Ctx} ctx
  */
 export async function gatewayGet(request, env, ctx) {
+  // Redirect if ipns
+  if (request.url.includes(env.IPNS_GATEWAY_HOSTNAME)) {
+    return Response.redirect(
+      request.url.replace(env.IPNS_GATEWAY_HOSTNAME, 'ipns.dweb.link'),
+      302
+    )
+  }
+
   const startTs = Date.now()
   const reqUrl = new URL(request.url)
   const cid = getCidFromSubdomainUrl(reqUrl)
