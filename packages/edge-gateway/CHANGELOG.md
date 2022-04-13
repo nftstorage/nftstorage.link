@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.4.0...edge-gateway-v1.5.0) (2022-04-13)
+
+
+### Features
+
+* redirect to dweb link when ipns ([#25](https://github.com/nftstorage/nftstorage.link/issues/25)) ([da81710](https://github.com/nftstorage/nftstorage.link/commit/da817101bfb84ee3edda9871f39d36ff13dfa5f9))
+
 ## [1.4.0](https://github.com/nftstorage/nft.storage/compare/gateway-v1.3.1...gateway-v1.4.0) (2022-04-01)
 
 
