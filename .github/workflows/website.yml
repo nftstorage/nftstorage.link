@@ -71,6 +71,48 @@ jobs:
         with:
           name: ${{ matrix.browser }}-${{ matrix.os }}-test-results
           path: ${{ matrix.test_results_path }}
+  build:
+    name: Build & Add to IPFS
+    runs-on: ubuntu-latest
+    outputs:
+      cid: ${{ steps.ipfs.outputs.cid }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+      - run: pnpm install
+      - name: Run build
+        env:
+          # Fake environment vars required for build
+          NEXT_PUBLIC_ENV: dev
+        run: pnpm build:website
+      # Add the site to web3.storage, output the cid as `steps.ipfs.outputs.cid`
+      - name: Add to web3.storage
+        uses: web3-storage/add-to-web3@v2
+        id: ipfs
+        with:
+          path_to_add: packages/website/out
+          web3_token: ${{ secrets.WEB3_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - run: echo ${{ steps.ipfs.outputs.url }}
+
+  # Publish to the staging domain if it's a change on main 🚀
+  deploy:
+    name: Deploy https://staging.nftstorage.link
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: npx dnslink-cloudflare --record staging --domain nftstorage.link --link /ipfs/${{ needs.build.outputs.cid }}
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
+
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Release
