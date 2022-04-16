@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.1...edge-gateway-v1.5.2) (2022-04-16)
+
+
+### Bug Fixes
+
+* gateway get rate limit state function env ([#34](https://github.com/nftstorage/nftstorage.link/issues/34)) ([3fae246](https://github.com/nftstorage/nftstorage.link/commit/3fae246bdea0ec433dbcf1edc6de88dd83a8924f))
+
 ### [1.5.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.0...edge-gateway-v1.5.1) (2022-04-15)
 
 
