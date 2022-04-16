@@ -314,7 +314,7 @@ async function getGatewayRateLimitState(request, env) {
     env.log.log(err, 'error')
     // Just force no prevention of rate limit
     const shouldPreventRateLimit = {}
-    this.ipfsGateways.forEach((gwUrl) => {
+    env.ipfsGateways.forEach((gwUrl) => {
       shouldPreventRateLimit[gwUrl] = false
     })
     return shouldPreventRateLimit
