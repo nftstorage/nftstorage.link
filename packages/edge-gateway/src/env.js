@@ -17,7 +17,6 @@ import { Logging } from './logs.js'
  * @property {Object} GATEWAYMETRICS
  * @property {Object} SUMMARYMETRICS
  * @property {Object} CIDSTRACKER
- * @property {Object} GATEWAYRATELIMITS
  * @property {Object} GATEWAYREDIRECTCOUNTER
  * @property {KVNamespace} DENYLIST
  *
@@ -28,7 +27,6 @@ import { Logging } from './logs.js'
  * @property {DurableObjectNamespace} gatewayMetricsDurable
  * @property {DurableObjectNamespace} summaryMetricsDurable
  * @property {DurableObjectNamespace} cidsTrackerDurable
- * @property {DurableObjectNamespace} gatewayRateLimitsDurable
  * @property {DurableObjectNamespace} gatewayRedirectCounter
  * @property {number} REQUEST_TIMEOUT
  * @property {Toucan} [sentry]
@@ -48,7 +46,6 @@ export function envAll(request, env, ctx) {
   env.gatewayMetricsDurable = env.GATEWAYMETRICS
   env.summaryMetricsDurable = env.SUMMARYMETRICS
   env.cidsTrackerDurable = env.CIDSTRACKER
-  env.gatewayRateLimitsDurable = env.GATEWAYRATELIMITS
   env.gatewayRedirectCounter = env.GATEWAYREDIRECTCOUNTER
   env.REQUEST_TIMEOUT = env.REQUEST_TIMEOUT || 20000
   env.IPFS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME
