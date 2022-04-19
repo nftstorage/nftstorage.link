@@ -5,6 +5,7 @@
   ],
   "scripts": {
     "test": "run-s test:*",
+    "test:api": "pnpm --filter api test",
     "test:website": "pnpm --filter website test",
     "test:edge-gateway": "pnpm --filter edge-gateway test",
     "build:website": "pnpm --filter website build",

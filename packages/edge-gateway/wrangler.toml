@@ -1,4 +1,4 @@
-# gateway.nft.storage wrangler config.
+# nftstorage.link wrangler config.
 name = "gateway-nft-storage"
 
 # `javascript` means our we'll send pre-built javascript code. 

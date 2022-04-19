@@ -1,0 +1,66 @@
+# nftstorage.link api wrangler config.
+name = "nftstorage-link-api"
+
+# `javascript` means our we'll send pre-built javascript code. 
+#  ...as opposed to `webpack` where wrangler builds our code for us.
+type = "javascript"
+
+account_id = ""
+watch_dir = "src"
+compatibility_date = "2021-12-03"
+
+[build]
+command = "npm run build"
+[build.upload]
+format = "modules"
+dir = "dist"
+main = "worker.mjs"
+
+# PROD!
+[env.production]
+# name = "nftstorage-link-api-production"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
+route = "api.nftstorage.link/*"
+kv_namespaces = [{ binding = "PERMACACHE", id = "73fa71d7cadc4671b91a236cee82d502", preview_id = "73fa71d7cadc4671b91a236cee82d502" }]
+
+[env.production.vars]
+DATABASE_URL = "https://nft-storage-pgrest-prod.herokuapp.com"
+DEBUG = "false"
+ENV = "production"
+GATEWAY_DOMAIN = "nftstorage.link"
+
+# Staging!
+[env.staging]
+# name = "nftstorage-link-api-staging"
+account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
+route = "api-staging.nftstorage.link/*"
+kv_namespaces = [{ binding = "PERMACACHE", id = "de8e81e8107d4b2497dfa9e288f5dc8c", preview_id = "de8e81e8107d4b2497dfa9e288f5dc8c" }]
+
+[env.staging.vars]
+DATABASE_URL = "https://nft-storage-pgrest-staging.herokuapp.com"
+DEBUG = "true"
+ENV = "staging"
+GATEWAY_DOMAIN = "nftstorage.link"
+
+# Test!
+[env.test]
+workers_dev = true
+kv_namespaces = [{ binding = "PERMACACHE" }]
+
+[env.test.vars]
+DEBUG = "true"
+ENV = "test"
+GATEWAY_DOMAIN = "localhost:8787"
+
+# Dev!
+[env.vsantos]
+workers_dev = true
+account_id = "7ec0b7cf2ec201b2580374e53ba5f37b"
+kv_namespaces = [{ binding = "PERMACACHE", id = "63929be6928343d0b915e98d6882ccba", preview_id = "63929be6928343d0b915e98d6882ccba" }]
+
+[env.vsantos.vars]
+DEBUG = "true"
+ENV = "test"
+GATEWAY_DOMAIN = "nftstorage.link"

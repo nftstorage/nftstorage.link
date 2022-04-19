@@ -2,16 +2,12 @@
 
 import { Router } from 'itty-router'
 
-import { ipfsGet } from './ipfs.js'
-import { ipnsGet } from './ipns.js'
-import { gatewayGet } from './gateway.js'
-import { metricsGet } from './metrics.js'
-
-// Export Durable Object namespace from the root module.
-export { GatewayMetrics0 } from './durable-objects/gateway-metrics.js'
-export { SummaryMetrics0 } from './durable-objects/summary-metrics.js'
-export { CidsTracker0 } from './durable-objects/cids.js'
-export { GatewayRedirectCounter0 } from './durable-objects/gateway-redirect-counter.js'
+import {
+  withAccountNotRestricted,
+  withApiToken,
+  withSuperHotAuthorized,
+} from './auth.js'
+import { permaCachePut } from './perma-cache/index.js'
 
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
@@ -19,17 +15,16 @@ import { envAll } from './env.js'
 
 const router = Router()
 
+const auth = {
+  '🤲': (handler) => withCorsHeaders(handler),
+  '🔒': (handler) => withCorsHeaders(withApiToken(handler)),
+  '🔥': (handler) => withSuperHotAuthorized(handler),
+  '🚫': (handler) => withAccountNotRestricted(handler),
+}
+
 router
   .all('*', envAll)
-  .get('/metrics', withCorsHeaders(metricsGet))
-  .get('/ipfs/:cid', withCorsHeaders(ipfsGet))
-  .get('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
-  .head('/ipfs/:cid', withCorsHeaders(ipfsGet))
-  .head('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
-  .get('/ipns/:name', withCorsHeaders(ipnsGet))
-  .get('/ipns/:name/*', withCorsHeaders(ipnsGet))
-  .get('*', withCorsHeaders(gatewayGet))
-  .head('*', withCorsHeaders(gatewayGet))
+  .put('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePut))))
 
 /**
  * @param {Error} error

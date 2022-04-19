@@ -1,53 +1,20 @@
-#!/usr/bin/env node
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import sade from 'sade'
 import { build } from 'esbuild'
 import git from 'git-rev-sync'
 import Sentry from '@sentry/cli'
 
-import { ipfsCmd } from './ipfs.js'
-import { denylistSyncCmd, denylistAddCmd } from './denylist.js'
-import { heartbeatCmd } from './heartbeat.js'
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
 const pkg = JSON.parse(
   fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')
 )
 
-const prog = sade('gateway')
-
-prog
-  .command('build')
-  .describe('Build the worker.')
-  .option('--env', 'Environment', process.env.ENV)
-  .action(buildCmd)
-  .command('ipfs')
-  .describe('Run ipfs node')
-  .option('--start', 'Start docker container', false)
-  .option('--stop', 'Stop and clean all dockers artifacts', false)
-  .action(ipfsCmd)
-  .command('heartbeat', 'Ping opsgenie heartbeat')
-  .option('--token', 'Opsgenie Token')
-  .option('--name', 'Heartbeat Name')
-  .action(heartbeatCmd)
-  .command('denylist sync')
-  .describe('Sync the gateway deny list with various sources.')
-  .option('--env', 'Wrangler environment to use.', 'dev')
-  .action(denylistSyncCmd)
-  .command('denylist add <cid>')
-  .describe(
-    'Add a CID (or CID + path) to the local deny list. Note: we currently DO NOT support denying by CID + path in the API.'
-  )
-  .option('--status', 'HTTP status to send in response.')
-  .option('--reason', 'Reason for deny. Note: may be communicated in response')
-  .action(denylistAddCmd)
-
-async function buildCmd(opts) {
-  const sentryRelease = `nft-gateway@${pkg.version}-${opts.env}+${git.short(
-    __dirname
-  )}`
+export async function buildCmd(opts) {
+  const sentryRelease = `nftstorage.link-api@${pkg.version}-${
+    opts.env
+  }+${git.short(__dirname)}`
   console.log(`Building ${sentryRelease}`)
 
   await build({
@@ -72,7 +39,7 @@ async function buildCmd(opts) {
     const cli = new Sentry(undefined, {
       authToken: process.env.SENTRY_TOKEN,
       org: 'protocol-labs-it',
-      project: 'nft-gateway',
+      project: 'nftstorage.link-api',
       dist: git.short(__dirname),
     })
 
@@ -83,7 +50,7 @@ async function buildCmd(opts) {
       ignoreMissing: true,
     })
     await cli.releases.uploadSourceMaps(sentryRelease, {
-      include: [path.join(__dirname, '..', 'dist')],
+      include: ['./dist'],
       ext: ['map', 'mjs'],
     })
     await cli.releases.finalize(sentryRelease)
@@ -92,5 +59,3 @@ async function buildCmd(opts) {
     })
   }
 }
-
-prog.parse(process.argv)

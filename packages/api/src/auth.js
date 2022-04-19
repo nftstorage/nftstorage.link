@@ -5,18 +5,17 @@ import {
   SuperHotUnauthorizedError,
   TokenNotFoundError,
   UnrecognisedTokenError,
-  UserNotFoundError,
 } from './errors.js'
 import { USER_TAGS } from './constants.js'
 
 /**
- * Middleware: verify the request is authenticated with a valid an api token *or* a magic link token.
+ * Middleware: verify the request is authenticated with a valid api token.
  * On successful login, adds `auth.user`, `auth.authToken`, and `auth.userTags` to the Request
  *
  * @param {import('itty-router').RouteHandler} handler
  * @returns {import('itty-router').RouteHandler}
  */
-export function withApiOrMagicToken(handler) {
+export function withApiToken(handler) {
   /**
    * @param {Request} request
    * @param {import('./env').Env} env
@@ -24,23 +23,11 @@ export function withApiOrMagicToken(handler) {
    */
   return async (request, env, ctx) => {
     const token = getTokenFromRequest(request, env)
-
-    const magicUser = await tryMagicToken(token, env)
-    if (magicUser) {
-      const userTags = await getUserTags(magicUser._id, env)
-      request.auth = {
-        user: magicUser,
-        userTags,
-      }
-      env.sentry && env.sentry.setUser(magicUser)
-      return handler(request, env, ctx)
-    }
-
-    const apiToken = await tryWeb3ApiToken(token, env)
+    const apiToken = await tryApiToken(token, env)
     if (apiToken) {
-      const userTags = await getUserTags(apiToken.user._id, env)
+      const userTags = await env.db.getUserTags(apiToken.user.id)
       request.auth = {
-        authToken: apiToken,
+        authToken: apiToken.key,
         user: apiToken.user,
         userTags,
       }
@@ -92,73 +79,56 @@ export function withSuperHotAuthorized(handler) {
 
 /**
  * @param {string} token
- * @param {import('./env').Env} env
- * @throws UserNotFoundError
- */
-async function tryMagicToken(token, env) {
-  let issuer = null
-  try {
-    env.magic.token.validate(token)
-    const [, claim] = env.magic.token.decode(token)
-    issuer = claim.iss
-  } catch (_) {
-    // not a magic token, give up.
-    return null
-  }
-  // token is a magic.link token! let's go!
-  const user = await findUserByIssuer(issuer, env)
-  if (!user) {
-    // we have a magic token, but no user for them!
-    throw new UserNotFoundError()
-  }
-  return user
-}
-
-/**
- * @param {string} token
  * @param {import('./env').Env}
  * @throws TokenNotFoundError
- * @returns {import(./user).AuthToken | null }
  */
-async function tryWeb3ApiToken(token, env) {
+async function tryApiToken(token, env) {
   let decoded = null
   try {
     await JWT.verify(token, env.SALT)
     decoded = JWT.parse(token)
   } catch (_) {
-    // not a web3 api token, give up
+    // not a api token
     return null
   }
-  // it's a web3 api token! let's go!
-  const apiToken = await verifyAuthToken(token, decoded, env)
-  if (!apiToken) {
-    // we have a web3 api token, but it's no longer valid
+  const user = await env.db.getUser(decoded.sub)
+  if (!user) {
+    // we have a api token, but it's no longer valid
     throw new TokenNotFoundError()
   }
-  return apiToken
+
+  return {
+    user: user,
+    key: user.keys.find((k) => k?.secret === token),
+  }
 }
 
-function findUserByIssuer(issuer, env) {
-  return env.db.getUser(issuer)
-}
-
-function getUserTags(userId, env) {
-  return env.db.getUserTags(userId)
-}
-
-function verifyAuthToken(token, decoded, env) {
-  return env.db.getKey(decoded.sub, token)
-}
-
-function getTokenFromRequest(request, { magic }) {
+/**
+ * @param {Request} request
+ * @throws NoTokenError
+ */
+function getTokenFromRequest(request) {
   const authHeader = request.headers.get('Authorization') || ''
   if (!authHeader) {
     throw new NoTokenError()
   }
-  // NOTE: This is not magic specific, we're just reusing the header parsing logic.
-  const token = magic.utils.parseAuthorizationHeader(authHeader)
+
+  const token = parseAuthorizationHeader(authHeader)
   if (!token) {
     throw new NoTokenError()
   }
   return token
+}
+
+/**
+ * Parse a raw DID Token from the given Authorization header.
+ * @param {string} header
+ */
+function parseAuthorizationHeader(header) {
+  if (!header.toLowerCase().startsWith('bearer ')) {
+    throw new UnrecognisedTokenError(
+      'Expected argument to be a string in the `Bearer {token}` format.'
+    )
+  }
+  return header.substring(7)
 }

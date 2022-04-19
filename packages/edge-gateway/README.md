@@ -6,7 +6,7 @@
 
 One time set up of your cloudflare worker subdomain for dev:
 
-- `pnpm install` - Install the project dependencies
+- `pnpm install` - Install the project dependencies from the monorepo root directory.
 - Sign up to Cloudflare and log in with your default browser.
 - `npm i @cloudflare/wrangler -g` - Install the Cloudflare wrangler CLI
 - `wrangler login` - Authenticate your wrangler cli; it'll open your browser.
@@ -24,10 +24,8 @@ One time set up of your cloudflare worker subdomain for dev:
 - Add secrets
 
   ```sh
-    wrangler secret put MAGIC_SECRET_KEY --env $(whoami) # Get from magic.link account
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
     wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
-    wrangler secret put DATABASE_TOKEN --env $(whoami) # Get from database account
   ```
 
 - Add KV namespaces
@@ -52,7 +50,7 @@ Thanks to IPFS immutable nature, a CDN cache is an excellent fit for content ret
 
 In the event of content not being already cached, a race with multiple IPFS gateways is performed. As soon as one gateway successfully responds, its response is forwarded to the user and added to Cloudflare Cache.
 
-![High level Architecture](./gateway.nft.storage.jpg)
+![High level Architecture](./nftstorage.link-edge-gateway.jpg)
 
 Notes:
 

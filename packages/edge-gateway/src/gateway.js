@@ -8,7 +8,6 @@ import pRetry from 'p-retry'
 
 import { TimeoutError } from './errors.js'
 import { getCidFromSubdomainUrl } from './utils/cid.js'
-import { getIpfsGatewayHeaders } from './utils/headers.js'
 import { toDenyListAnchor } from './utils/deny-list.js'
 import {
   CIDS_TRACKER_ID,
@@ -216,7 +215,7 @@ async function gatewayFetch(
   try {
     response = await fetch(`${ipfsUrl.toString()}/${cid}${pathname}`, {
       signal: controller.signal,
-      headers: getIpfsGatewayHeaders(request),
+      headers: getHeaders(request),
     })
   } catch (error) {
     if (controller.signal.aborted) {
@@ -238,6 +237,21 @@ async function gatewayFetch(
     responseTime: Date.now() - startTs,
   }
   return gwResponse
+}
+
+/**
+ * @param {Request} request
+ */
+function getHeaders(request) {
+  const existingProxies = request.headers.get('X-Forwarded-For')
+    ? `, ${request.headers.get('X-Forwarded-For')}`
+    : ''
+  return {
+    'X-Forwarded-For': `${request.headers.get(
+      'cf-connecting-ip'
+    )}${existingProxies}`,
+    'X-Forwarded-Host': request.headers.get('host'),
+  }
 }
 
 /**
