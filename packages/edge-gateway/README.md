@@ -1,6 +1,6 @@
 # IPFS edge gateway
 
-> The IPFS edge gateway for nft.storage is not "another gateway", but a caching layer for NFT’s that sits on top of existing IPFS public gateways.
+> The IPFS edge gateway for nft.storage is not "another gateway", but a caching layer for NFTs that sits on top of existing IPFS public gateways.
 
 ## Getting started
 
