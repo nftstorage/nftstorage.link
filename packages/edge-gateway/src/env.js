@@ -1,3 +1,4 @@
+/* global BRANCH, VERSION, COMMITHASH, SENTRY_RELEASE */
 import Toucan from 'toucan-js'
 import pkg from '../package.json'
 import { Logging } from './logs.js'
@@ -54,6 +55,12 @@ export function envAll(request, env, ctx) {
   env.REQUEST_TIMEOUT = env.REQUEST_TIMEOUT || 20000
   env.IPFS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME
   env.IPNS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME.replace('ipfs', 'ipns')
+
+  // These values are replaced at build time by esbuild `define`
+  env.BRANCH = BRANCH
+  env.VERSION = VERSION
+  env.COMMITHASH = COMMITHASH
+  env.SENTRY_RELEASE = SENTRY_RELEASE
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')
