@@ -13,6 +13,21 @@ export class InvalidUrlError extends Error {
 }
 InvalidUrlError.CODE = 'ERROR_INVALID_URL'
 
+export class ForbiddenContentError extends Error {
+  /**
+   * @param {string} message
+   */
+  constructor(message = 'Forbidden content') {
+    const status = 403
+    super(createErrorHtmlContent(status, message))
+    this.name = 'ForbiddenContentError'
+    this.status = status
+    this.code = ForbiddenContentError.CODE
+    this.contentType = 'text/html'
+  }
+}
+ForbiddenContentError.CODE = 'ERROR_INVALID_URL'
+
 export class TimeoutError extends Error {
   /**
    * @param {string} message

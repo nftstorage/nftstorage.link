@@ -5,7 +5,7 @@ import pAny, { AggregateError } from 'p-any'
 import { FilterError } from 'p-some'
 import pSettle from 'p-settle'
 
-import { TimeoutError } from './errors.js'
+import { TimeoutError, ForbiddenContentError } from './errors.js'
 import { getCidFromSubdomainUrl } from './utils/cid.js'
 import { toDenyListAnchor } from './utils/deny-list.js'
 import {
@@ -17,6 +17,7 @@ import {
   HTTP_STATUS_RATE_LIMITED,
   REQUEST_PREVENTED_RATE_LIMIT_CODE,
   TIMEOUT_CODE,
+  FORBIDDEN_CONTENT_TYPES,
 } from './constants.js'
 
 /**
@@ -109,7 +110,6 @@ export async function gatewayGet(request, env, ctx) {
         const contentLengthMb = Number(
           winnerGwResponse.response.headers.get('content-length')
         )
-
         await Promise.all([
           storeWinnerGwResponse(request, env, winnerGwResponse),
           settleGatewayRequests(),
@@ -119,6 +119,19 @@ export async function gatewayGet(request, env, ctx) {
         ])
       })()
     )
+
+    // Block content types
+    if (
+      FORBIDDEN_CONTENT_TYPES.includes(
+        winnerGwResponse.response.headers.get('content-type')
+      )
+    ) {
+      throw new ForbiddenContentError(
+        `Forbidden content type: ${winnerGwResponse.response.headers.get(
+          'content-type'
+        )}`
+      )
+    }
 
     // forward winner gateway response
     return winnerGwResponse.response
@@ -166,7 +179,6 @@ export async function gatewayGet(request, env, ctx) {
         throw new TimeoutError()
       }
     }
-
     throw err
   }
 }
