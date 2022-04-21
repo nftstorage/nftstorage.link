@@ -56,6 +56,7 @@ async function buildCmd(opts) {
     outfile: path.join(__dirname, '..', 'dist', 'worker.mjs'),
     legalComments: 'external',
     define: {
+      SENTRY_RELEASE: JSON.stringify(sentryRelease),
       VERSION: JSON.stringify(pkg.version),
       COMMITHASH: JSON.stringify(git.long(__dirname)),
       BRANCH: JSON.stringify(git.branch(__dirname)),
@@ -81,7 +82,7 @@ async function buildCmd(opts) {
       ignoreMissing: true,
     })
     await cli.releases.uploadSourceMaps(sentryRelease, {
-      include: ['./dist'],
+      include: [path.join(__dirname, '..', 'dist')],
       ext: ['map', 'mjs'],
     })
     await cli.releases.finalize(sentryRelease)
