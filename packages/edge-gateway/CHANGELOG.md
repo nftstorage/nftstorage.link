@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.5](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.4...edge-gateway-v1.5.5) (2022-04-21)
+
+
+### Bug Fixes
+
+* missing built time env vars ([#43](https://github.com/nftstorage/nftstorage.link/issues/43)) ([149aa05](https://github.com/nftstorage/nftstorage.link/commit/149aa05529a692bda623273f2c42089bbecaf3ad))
+
 ### [1.5.4](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.3...edge-gateway-v1.5.4) (2022-04-21)
 
 
