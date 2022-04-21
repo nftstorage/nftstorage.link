@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.2...edge-gateway-v1.5.3) (2022-04-21)
+
+
+### Bug Fixes
+
+* sentry source maps for worker.mjs ([#38](https://github.com/nftstorage/nftstorage.link/issues/38)) ([8100aa3](https://github.com/nftstorage/nftstorage.link/commit/8100aa3cbbd9ed4241247e6774c5ab55548be761))
+
 ### [1.5.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.1...edge-gateway-v1.5.2) (2022-04-16)
 
 
