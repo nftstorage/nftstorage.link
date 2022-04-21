@@ -24,7 +24,7 @@ const prog = sade('gateway')
 prog
   .command('build')
   .describe('Build the worker.')
-  .option('--env', 'Environment', 'dev')
+  .option('--env', 'Environment', process.env.ENV)
   .action(buildCmd)
   .command('ipfs')
   .describe('Run ipfs node')
