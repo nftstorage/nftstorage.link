@@ -6,7 +6,8 @@ import { Logging } from './logs.js'
  * @typedef {Object} EnvInput
  * @property {string} IPFS_GATEWAYS
  * @property {string} GATEWAY_HOSTNAME
- * @property {string} VERSION
+ * @property {string} SENTRY_RELEASE
+ * @property {string} VERSION SENTRY_RELEASE
  * @property {string} COMMITHASH
  * @property {string} BRANCH
  * @property {string} DEBUG
@@ -43,7 +44,7 @@ import { Logging } from './logs.js'
  * @param {import('.').Ctx} ctx
  */
 export function envAll(request, env, ctx) {
-  env.sentry = getSentry(request, env)
+  env.sentry = getSentry(request, env, ctx)
   env.ipfsGateways = JSON.parse(env.IPFS_GATEWAYS)
   env.gatewayMetricsDurable = env.GATEWAYMETRICS
   env.summaryMetricsDurable = env.SUMMARYMETRICS
@@ -63,8 +64,9 @@ export function envAll(request, env, ctx) {
  *
  * @param {Request} request
  * @param {Env} env
+ * @param {import('.').Ctx} ctx
  */
-function getSentry(request, env) {
+function getSentry(request, env, ctx) {
   if (!env.SENTRY_DSN) {
     return
   }
@@ -72,6 +74,7 @@ function getSentry(request, env) {
   return new Toucan({
     request,
     dsn: env.SENTRY_DSN,
+    context: ctx,
     allowedHeaders: ['user-agent'],
     allowedSearchParams: /(.*)/,
     debug: false,
@@ -83,7 +86,7 @@ function getSentry(request, env) {
         filename: frame.filename.substring(1),
       }),
     },
-    release: env.VERSION,
+    release: env.SENTRY_RELEASE,
     pkg,
   })
 }
