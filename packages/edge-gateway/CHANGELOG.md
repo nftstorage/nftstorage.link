@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.6](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.5...edge-gateway-v1.5.6) (2022-04-22)
+
+
+### Bug Fixes
+
+* retry gateway denly list kv get ([#50](https://github.com/nftstorage/nftstorage.link/issues/50)) ([3ed087e](https://github.com/nftstorage/nftstorage.link/commit/3ed087e8a1e07fcc9087348bc80b4ca444c42dc2))
+
 ### [1.5.5](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.4...edge-gateway-v1.5.5) (2022-04-21)
 
 
