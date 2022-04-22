@@ -51,6 +51,7 @@ importers:
       nanoid: 3.3.2
       p-any: 4.0.0
       p-map: 5.3.0
+      p-retry: 5.1.0
       p-settle: 5.0.0
       p-some: 5.0.0
       toucan-js: 2.5.0
@@ -67,7 +68,6 @@ importers:
       ipfs-utils: 9.0.5
       miniflare: 2.4.0
       npm-run-all: 4.1.5
-      p-retry: 5.1.0
       p-wait-for: 4.1.0
       sade: 1.8.1
       smoke: 3.1.1
@@ -3174,7 +3174,7 @@ packages:
       {
         integrity: sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==,
       }
-    dev: true
+    dev: false
 
   /@types/sade/1.7.4:
     resolution:
@@ -8818,7 +8818,7 @@ packages:
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
-    dev: true
+    dev: false
 
   /p-settle/5.0.0:
     resolution:
@@ -9761,7 +9761,7 @@ packages:
         integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==,
       }
     engines: { node: '>= 4' }
-    dev: true
+    dev: false
 
   /reusify/1.0.4:
     resolution:

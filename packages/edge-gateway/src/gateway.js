@@ -4,6 +4,7 @@
 import pAny, { AggregateError } from 'p-any'
 import { FilterError } from 'p-some'
 import pSettle from 'p-settle'
+import pRetry from 'p-retry'
 
 import { TimeoutError } from './errors.js'
 import { getCidFromSubdomainUrl } from './utils/cid.js'
@@ -53,9 +54,15 @@ export async function gatewayGet(request, env, ctx) {
 
   if (env.DENYLIST) {
     const anchor = await toDenyListAnchor(cid)
-    // TODO: in theory we should check each subcomponent of the pathname also.
-    // https://github.com/nftstorage/nft.storage/issues/1737
-    const value = await env.DENYLIST.get(anchor)
+    // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
+    const value = await pRetry(
+      // TODO: in theory we should check each subcomponent of the pathname also.
+      // https://github.com/nftstorage/nft.storage/issues/1737
+      () => env.DENYLIST.get(anchor),
+      { retries: 5 }
+    )
+
+    // const value = await env.DENYLIST.get(anchor)
     if (value) {
       const { status, reason } = JSON.parse(value)
       return new Response(reason || '', { status: status || 410 })
