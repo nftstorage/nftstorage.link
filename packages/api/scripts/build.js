@@ -13,7 +13,7 @@ const pkg = JSON.parse(
 
 export async function buildCmd(opts) {
   const sentryRelease = `nftstorage.link-api@${pkg.version}-${
-    opts.env
+    opts.env || 'dev'
   }+${git.short(__dirname)}`
   console.log(`Building ${sentryRelease}`)
 

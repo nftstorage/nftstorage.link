@@ -3,6 +3,7 @@ import path from 'path'
 import { Miniflare } from 'miniflare'
 
 import { globals } from './worker-globals.js'
+import { createR2Bucket } from './mocks/r2.js'
 
 export function getMiniflare() {
   let envPath = path.join(process.cwd(), '../../.env')
@@ -22,6 +23,9 @@ export function getMiniflare() {
     buildCommand: undefined,
     wranglerConfigEnv: 'test',
     modules: true,
-    bindings: globals,
+    bindings: {
+      ...globals,
+      SUPERHOT: createR2Bucket(),
+    },
   })
 }

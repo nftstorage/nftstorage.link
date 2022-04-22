@@ -33,10 +33,18 @@ One time set up of your cloudflare worker subdomain for dev:
 - Add KV namespaces
 
   ```sh
-  wrangler kv:namespace create PERMACACHE --preview --env USER
+  wrangler kv:namespace create PERMACACHE --preview --env $(whoami)
   # Outputs something like: `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4" }`
   # but you need to put `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4", id = "7e441603d1bc4d5a87f6cecb959018e4" }` inside the `kv_namespaces`.
   # for production: wrangler kv:namespace create PERMACACHE --env production
+  ```
+
+- Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
+
+  ```sh
+  wrangler r2 bucket create super-hot --env $(whoami)
+  # 🌀  Creating bucket "super-hot"
+  # ✨  Success!
   ```
 
 - `pnpm run publish` - Publish the worker under your env. An alias for `wrangler publish --env $(whoami)`

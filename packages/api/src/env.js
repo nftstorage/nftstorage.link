@@ -16,6 +16,7 @@ import { DBClient } from './utils/db-client.js'
  * @property {string} [LOGTAIL_TOKEN]
  * @property {number} [REQUEST_TIMEOUT]
  * @property {KVNamespace} PERMACACHE
+ * @property {R2Bucket} SUPERHOT
  *
  * @typedef {Object} EnvTransformed
  * @property {string} VERSION
@@ -92,4 +93,8 @@ function getSentry(request, env, ctx) {
  * From: https://github.com/cloudflare/workers-types
  *
  * @typedef {{ get: (key: string) => Promise<string | null>, put: (key: string, value: string) => Promise<string | null>}} KVNamespace
+ * @typedef {Object} R2Bucket
+ * @property {(key: string, options?: R2GetOptions) => Promise<R2Object | null>} get
+ * @property {(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null, options?: R2PutOptions) => Promise<R2Object>} put
+ * @property {(key: string) => Promise<void>} delete
  */

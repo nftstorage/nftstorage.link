@@ -29,16 +29,14 @@ export async function permaCachePut(request, env, ctx) {
 
   // Fetch Response from provided URL
   const response = await getResponse(request, env, normalizedUrl)
-
-  const text = await response.text()
   if (!response.ok) {
-    throw new Error('response not ok')
+    // TODO: Formatted error
+    throw new Error(`response not ok: ${response.status}`)
   }
 
-  // TODO: Store in Parallel to R2 and add to Database if not existent
-  // Rollback if R2 fails
+  // TODO: Validate headers
 
-  // TODO: handle concurrency and keeping track of all
+  // Store key with user namespace to handle concurrency and keeping track of all
   const kvKey = `${request.auth.user.id}/${normalizedUrl.toString()}`
   const kvValue = {
     sourceUrl: sourceUrl.toString(),
@@ -47,7 +45,14 @@ export async function permaCachePut(request, env, ctx) {
     insertedAt: new Date().toISOString(),
     deletedAt: undefined,
   }
-  await env.PERMACACHE.put(String(kvKey), JSON.stringify(kvValue))
+
+  // Store in R2 and add to Database if not existent
+  await env.SUPERHOT.put(normalizedUrl.toString(), response.body, {
+    httpMetadata: response.headers,
+  })
+
+  // Store in KV
+  await env.PERMACACHE.put(kvKey, JSON.stringify(kvValue))
 
   return new JSONResponse(kvValue)
 }
@@ -63,9 +68,7 @@ async function getResponse(request, env, url) {
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
   try {
-    // TODO: use url once Miniflare supports it.
-    // Currently if gets converted from subdomain format to just the hostname underneath
-    response = await fetch(transformUrlToIpfsPath(url, env), {
+    response = await fetch(url.toString(), {
       signal: controller.signal,
       headers: getHeaders(request),
     })
@@ -141,22 +144,6 @@ function getNormalizedUrl(candidateUrl, env) {
 }
 
 /**
- * Transform a subdomain IPFS url to a IPFS path url.
- * TODO Temporary fix for https://github.com/cloudflare/miniflare/issues/182
- * @param {URL} url
- * @param {Env} env
- */
-function transformUrlToIpfsPath(url, env) {
-  // TODO: Short circuit if not test/dev
-  const subdomainParts = url.hostname.split('.ipfs.')
-  const cid = getCid(subdomainParts[0])
-  const path = url.pathname
-  // TODO: handle query params
-
-  return `${url.protocol}//${env.GATEWAY_DOMAIN}/ipfs/${cid}${path}`
-}
-
-/**
  * @param {string} candidateCid
  */
 function getCid(candidateCid) {
@@ -178,6 +165,5 @@ function getHeaders(request) {
     'X-Forwarded-For': `${request.headers.get(
       'cf-connecting-ip'
     )}${existingProxies}`,
-    'X-Forwarded-Host': request.headers.get('host'),
   }
 }

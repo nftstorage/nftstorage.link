@@ -8,6 +8,7 @@ type = "javascript"
 account_id = ""
 watch_dir = "src"
 compatibility_date = "2021-12-03"
+compatibility_flags = ["r2_public_beta_bindings"]
 
 [build]
 command = "npm run build"
@@ -30,6 +31,10 @@ DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
 
+#[env.production.r2_buckets]
+#binding = "SUPERHOT"
+#bucket_name = "super-hot"
+
 # Staging!
 [env.staging]
 # name = "nftstorage-link-api-staging"
@@ -43,6 +48,10 @@ DATABASE_URL = "https://nft-storage-pgrest-staging.herokuapp.com"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
+
+[[env.staging.r2_buckets]]
+bucket_name = "super-hot"
+binding = "SUPERHOT"
 
 # Test!
 [env.test]

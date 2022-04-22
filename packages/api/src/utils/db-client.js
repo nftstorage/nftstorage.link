@@ -31,7 +31,7 @@ export class DBClient {
         tags:user_tag_user_id_fkey(user_id,id,tag,value)
         `
       )
-      .or(`github_id.eq.${id},did.eq.${id}`)
+      .or(`magic_link_id.eq.${id},github_id.eq.${id},did.eq.${id}`)
       // @ts-ignore
       .filter('keys.deleted_at', 'is', null)
       // @ts-ignore

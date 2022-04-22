@@ -24,6 +24,10 @@ const auth = {
 
 router
   .all('*', envAll)
+  .get('/test', async (request, env, ctx) => {
+    const r = await env.SUPERHOT.get('0.csv')
+    return new Response(r.body)
+  })
   .put('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePut))))
 
 /**
@@ -40,7 +44,6 @@ function serverError(error, request, env) {
 
 export default {
   async fetch(request, env, ctx) {
-    console.log('fetch', request.url)
     try {
       const res = await router.handle(request, env, ctx)
       env.log.timeEnd('request')

@@ -29,7 +29,9 @@
   },
   "devDependencies": {
     "@sentry/cli": "^1.71.0",
+    "@web-std/fetch": "^4.1.0",
     "ava": "^3.15.0",
+    "browser-env": "^3.3.0",
     "dotenv": "^16.0.0",
     "edge-gateway": "^1.5.5",
     "esbuild": "^0.14.2",
@@ -39,7 +41,8 @@
     "nft.storage-api": "https://gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326",
     "npm-run-all": "^4.1.5",
     "pg": "^8.7.3",
-    "sade": "^1.7.4"
+    "sade": "^1.7.4",
+    "uint8arrays": "^3.0.0"
   },
   "author": "Vasco Santos <santos.vasco10@gmail.com>",
   "license": "Apache-2.0 OR MIT"
