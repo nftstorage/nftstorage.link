@@ -54,7 +54,7 @@ export async function gatewayGet(request, env, ctx) {
 
   if (env.DENYLIST) {
     const anchor = await toDenyListAnchor(cid)
-    // TODO: Remove once CF team as a solution for "Network connection lost" Errors
+    // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
     const value = await pRetry(
       // TODO: in theory we should check each subcomponent of the pathname also.
       // https://github.com/nftstorage/nft.storage/issues/1737
