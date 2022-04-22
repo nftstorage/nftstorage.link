@@ -53,7 +53,7 @@ test('Fails when non nftstorage.link url is provided', async (t) => {
 test('Puts to perma cache IPFS path valid url without directory path', async (t) => {
   const { mf, user } = t.context
   const url =
-    'https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
     method: 'PUT',
     headers: { Authorization: `Bearer ${user.token}` },
@@ -68,7 +68,7 @@ test('Puts to perma cache IPFS path valid url with directory path', async (t) =>
   const { mf, user } = t.context
 
   const url =
-    'https://localhost:8787/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path/file.txt'
+    'http://localhost:9081/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
     method: 'PUT',
     headers: { Authorization: `Bearer ${user.token}` },
@@ -82,7 +82,7 @@ test('Puts to perma cache IPFS path valid url with directory path', async (t) =>
 test('Puts to perma cache IPFS subdomain valid url without directory path', async (t) => {
   const { mf, user } = t.context
   const url =
-    'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:8787'
+    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
     method: 'PUT',
     headers: { Authorization: `Bearer ${user.token}` },
@@ -96,7 +96,7 @@ test('Puts to perma cache IPFS subdomain valid url without directory path', asyn
 test('Puts to perma cache IPFS subdomain valid url with directory path', async (t) => {
   const { mf, user } = t.context
   const url =
-    'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:8787/path/file.txt'
+    'http://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:9081/path'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
     method: 'PUT',
     headers: { Authorization: `Bearer ${user.token}` },
@@ -111,7 +111,7 @@ test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
   const { mf, user } = t.context
 
   const response = await mf.dispatchFetch(
-    getPermaCachePutUrl('https://localhost:8787/ipfs/invalidcid'),
+    getPermaCachePutUrl('http://localhost:9081/ipfs/invalidcid'),
     {
       method: 'PUT',
       headers: { Authorization: `Bearer ${user.token}` },
@@ -128,15 +128,13 @@ test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
 const validateSuccessfulPut = async (t, url, body) => {
   const { mf, user } = t.context
 
-  console.log('b', body)
-
   // Validate expected body
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
   t.is(body.normalizedUrl, normalizedUrl)
   t.is(body.sourceUrl, sourceUrl)
   t.truthy(body.insertedAt)
   t.falsy(body.deletedAt)
-  // t.truthy(body.contentLength) // TODO: still 0
+  t.truthy(body.contentLength)
 
   // Validate KV
   const ns = await mf.getKVNamespace('PERMACACHE')
@@ -149,7 +147,7 @@ const validateSuccessfulPut = async (t, url, body) => {
 }
 
 const getPermaCachePutUrl = (url) =>
-  `https://localhost:8787/perma-cache/${encodeURIComponent(url)}`
+  `https://localhost:8788/perma-cache/${encodeURIComponent(url)}`
 
 const getParsedUrl = (url) => {
   let normalizedUrl = new URL(url)
@@ -160,7 +158,9 @@ const getParsedUrl = (url) => {
     const cid = normalizeCid(pathParts[0])
     const path = pathParts[1] ? `/${pathParts[1]}` : ''
     // TODO: handle query params
-    normalizedUrl = new URL(`https://${cid}.${globals.GATEWAY_DOMAIN}${path}`)
+    normalizedUrl = new URL(
+      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAIN}${path}`
+    )
   }
 
   return {

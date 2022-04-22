@@ -13,6 +13,7 @@ export function getMiniflare() {
 
   return new Miniflare({
     envPath,
+    port: 8788,
     packagePath: true,
     wranglerConfigPath: true,
     // We don't want to rebuild our worker for each test, we're already doing

@@ -40,6 +40,7 @@ function serverError(error, request, env) {
 
 export default {
   async fetch(request, env, ctx) {
+    console.log('fetch', request.url)
     try {
       const res = await router.handle(request, env, ctx)
       env.log.timeEnd('request')

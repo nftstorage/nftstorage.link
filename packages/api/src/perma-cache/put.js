@@ -30,6 +30,11 @@ export async function permaCachePut(request, env, ctx) {
   // Fetch Response from provided URL
   const response = await getResponse(request, env, normalizedUrl)
 
+  const text = await response.text()
+  if (!response.ok) {
+    throw new Error('response not ok')
+  }
+
   // TODO: Store in Parallel to R2 and add to Database if not existent
   // Rollback if R2 fails
 
@@ -54,14 +59,13 @@ export async function permaCachePut(request, env, ctx) {
  * @param {URL} url
  */
 async function getResponse(request, env, url) {
-  console.log('url', url.toString())
-  return new Response(new Blob(['ola']))
-
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
   try {
-    response = await fetch(url.toString(), {
+    // TODO: use url once Miniflare supports it.
+    // Currently if gets converted from subdomain format to just the hostname underneath
+    response = await fetch(transformUrlToIpfsPath(url, env), {
       signal: controller.signal,
       headers: getHeaders(request),
     })
@@ -119,7 +123,9 @@ function getNormalizedUrl(candidateUrl, env) {
     const cid = getCid(pathParts[0])
     const path = pathParts[1] ? `/${pathParts[1]}` : ''
     // TODO: handle query params
-    return new URL(`https://${cid}.${env.GATEWAY_DOMAIN}${path}`)
+    return new URL(
+      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAIN}${path}`
+    )
   }
 
   // Verify if subdomain resolution URL
@@ -132,6 +138,22 @@ function getNormalizedUrl(candidateUrl, env) {
 
   // TODO: handle query params
   return candidateUrl
+}
+
+/**
+ * Transform a subdomain IPFS url to a IPFS path url.
+ * TODO Temporary fix for https://github.com/cloudflare/miniflare/issues/182
+ * @param {URL} url
+ * @param {Env} env
+ */
+function transformUrlToIpfsPath(url, env) {
+  // TODO: Short circuit if not test/dev
+  const subdomainParts = url.hostname.split('.ipfs.')
+  const cid = getCid(subdomainParts[0])
+  const path = url.pathname
+  // TODO: handle query params
+
+  return `${url.protocol}//${env.GATEWAY_DOMAIN}/ipfs/${cid}${path}`
 }
 
 /**

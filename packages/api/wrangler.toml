@@ -52,7 +52,7 @@ kv_namespaces = [{ binding = "PERMACACHE" }]
 [env.test.vars]
 DEBUG = "true"
 ENV = "test"
-GATEWAY_DOMAIN = "localhost:8787"
+GATEWAY_DOMAIN = "localhost:9081"
 
 # Dev!
 [env.vsantos]
