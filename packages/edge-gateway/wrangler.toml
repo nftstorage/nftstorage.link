@@ -145,5 +145,5 @@ new_classes = ["GatewayRateLimits4"]
 deleted_classes = ["GatewayRateLimits3"]
 
 [[migrations]]
-tag = "v5" # Should be unique for each entry
+tag = "v6" # Should be unique for each entry
 deleted_classes = ["GatewayRateLimits4"]
