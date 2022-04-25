@@ -10,7 +10,7 @@ const withStatus = (fn, getStatus) => {
   const fetch = () => ({ json: getStatus })
   // @ts-ignore fetch is a mock in tests
   const statusChecker = new StatusChecker({ fetch })
-  return (/** @type {string} */ cid, options = {}) =>
+  return (/** @type {string|URL} */ cid, options = {}) =>
     fn(cid, { ...options, statusChecker })
 }
 
@@ -27,7 +27,7 @@ describe('getGatewayURL', () => {
       'bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
   })
@@ -38,7 +38,7 @@ describe('getGatewayURL', () => {
       'bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
   })
@@ -49,7 +49,7 @@ describe('getGatewayURL', () => {
       'ipfs://bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
   })
@@ -60,7 +60,7 @@ describe('getGatewayURL', () => {
       'ipfs://bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
   })
@@ -71,7 +71,7 @@ describe('getGatewayURL', () => {
       'https://ipfs.io/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
   })
@@ -82,7 +82,20 @@ describe('getGatewayURL', () => {
       'https://bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye.ipfs.dweb.link'
     )
     assert.equal(
-      url,
+      url.toString(),
+      'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
+    )
+  })
+
+  it('should get gateway URL for gateway URL', async () => {
+    const getURL = withStatusValue(getGatewayURL, 'ok')
+    const url = await getURL(
+      new URL(
+        'https://ipfs.io/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
+      )
+    )
+    assert.equal(
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
   })
@@ -93,7 +106,7 @@ describe('getGatewayURL', () => {
       'https://ipfs.io/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
   })
@@ -104,7 +117,7 @@ describe('getGatewayURL', () => {
       'https://bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye.ipfs.dweb.link/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
   })
@@ -115,7 +128,7 @@ describe('getGatewayURL', () => {
       '/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye'
     )
   })
@@ -126,7 +139,7 @@ describe('getGatewayURL', () => {
       '/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipfs/bafyreihwsoxxcxfsisghlc22xzc6datssd7n52wonpdgrhu3lwyqqagzye/metadata.json'
     )
   })
@@ -137,7 +150,7 @@ describe('getGatewayURL', () => {
       '/ipns/k51qzi5uqu5dlcuzv5xhg1zqn48gobcvn2mx13uoig7zfj8rz6zvqdxsugka9z'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipns/k51qzi5uqu5dlcuzv5xhg1zqn48gobcvn2mx13uoig7zfj8rz6zvqdxsugka9z'
     )
   })
@@ -148,7 +161,7 @@ describe('getGatewayURL', () => {
       '/ipns/k51qzi5uqu5dlcuzv5xhg1zqn48gobcvn2mx13uoig7zfj8rz6zvqdxsugka9z/metadata.json'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://nftstorage.link/ipns/k51qzi5uqu5dlcuzv5xhg1zqn48gobcvn2mx13uoig7zfj8rz6zvqdxsugka9z/metadata.json'
     )
   })
@@ -159,7 +172,7 @@ describe('getGatewayURL', () => {
       'bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://dweb.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
   })
@@ -172,7 +185,7 @@ describe('getGatewayURL', () => {
       'bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://dweb.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
     )
   })
@@ -185,7 +198,7 @@ describe('getGatewayURL', () => {
       'https://ipfs.io/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui?query#hash'
     )
     assert.equal(
-      url,
+      url.toString(),
       'https://dweb.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui?query#hash'
     )
   })

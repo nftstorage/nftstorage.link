@@ -83,5 +83,5 @@ export async function getGatewayURL(cidPath, options) {
         : `/ipfs${pathname}`
   }
   const base = isOk ? GATEWAY_URL : fallbackGatewayURL
-  return new URL(`${pathname}${search}${hash}`, base).toString()
+  return new URL(`${pathname}${search}${hash}`, base)
 }
