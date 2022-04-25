@@ -24,7 +24,15 @@ export async function permaCachePut(request, env) {
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
 
   // Validate if we already have it in R2
-  let r2Object = await env.SUPERHOT.head(normalizedUrl.toString())
+  let r2Object
+  try {
+    r2Object = await env.SUPERHOT.head(normalizedUrl.toString())
+  } catch (err) {
+    // TODO: R2 currently throws error here and does not follow types to return undefined.
+    // They say it will change soon to return undefined...
+    console.log(err)
+  }
+
   if (!r2Object) {
     // Fetch Response from provided URL
     const response = await getResponse(request, env, normalizedUrl)
@@ -36,16 +44,22 @@ export async function permaCachePut(request, env) {
     // Store in R2 and add to Database if not existent
     r2Object = await env.SUPERHOT.put(normalizedUrl.toString(), response.body, {
       httpMetadata: response.headers,
+      customMetadata: {
+        'content-length': response.headers.get('content-length'),
+      },
     })
   }
 
   // Store key with user namespace to handle concurrency and keeping track of all
-  const kvKey = `${request.auth.user.id}/${normalizedUrl.toString()}`
+  const insertedAt = new Date().toISOString()
+  const kvKey = `${
+    request.auth.user.id
+  }/${normalizedUrl.toString()}/${insertedAt}`
   const kvValue = {
     sourceUrl: sourceUrl.toString(),
     normalizedUrl: normalizedUrl.toString(),
-    contentLength: r2Object.httpMetadata.get('content-length'),
-    insertedAt: new Date().toISOString(),
+    contentLength: r2Object.customMetadata['content-length'],
+    insertedAt,
     deletedAt: undefined,
   }
 
