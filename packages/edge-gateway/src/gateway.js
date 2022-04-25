@@ -81,12 +81,10 @@ export async function gatewayGet(request, env, ctx) {
   }
 
   // Prepare IPFS gateway requests
-  const shouldPreventRateLimit = await getGatewayRateLimitState(request, env)
   const gatewayReqs = env.ipfsGateways.map((gwUrl) =>
     gatewayFetch(gwUrl, cid, request, {
       pathname,
       timeout: env.REQUEST_TIMEOUT,
-      shouldPreventRateLimit: shouldPreventRateLimit[gwUrl],
     })
   )
   try {
@@ -201,24 +199,13 @@ async function storeWinnerGwResponse(request, env, winnerGwResponse) {
  * @param {Object} [options]
  * @param {string} [options.pathname]
  * @param {number} [options.timeout]
- * @param {boolean} [options.shouldPreventRateLimit]
  */
 async function gatewayFetch(
   gwUrl,
   cid,
   request,
-  { pathname = '', timeout = 60000, shouldPreventRateLimit = false } = {}
+  { pathname = '', timeout = 60000 } = {}
 ) {
-  // Block before hitting rate limit if needed
-  if (shouldPreventRateLimit) {
-    /** @type {GatewayResponse} */
-    return {
-      url: gwUrl,
-      aborted: true,
-      reason: REQUEST_PREVENTED_RATE_LIMIT_CODE,
-    }
-  }
-
   const ipfsUrl = new URL('ipfs', gwUrl)
   const controller = new AbortController()
   const startTs = Date.now()
@@ -298,34 +285,6 @@ async function updateGatewayRedirectCounter(request, env) {
   const stub = env.gatewayRedirectCounter.get(id)
 
   await stub.fetch(getDurableRequestUrl(request, 'update'))
-}
-
-/**
- * @param {Request} request
- * @param {import('./env').Env} env
- */
-async function getGatewayRateLimitState(request, env) {
-  // Get durable object for gateway rate limits
-  const id = env.gatewayRateLimitsDurable.idFromName(GATEWAY_RATE_LIMIT_ID)
-  const stub = env.gatewayRateLimitsDurable.get(id)
-
-  try {
-    const stubResponse = await stub.fetch(
-      getDurableRequestUrl(request, 'request')
-    )
-
-    /** @type {import('./durable-objects/gateway-rate-limits').RateLimitResponse} */
-    const rateLimitResponse = await stubResponse.json()
-    return rateLimitResponse
-  } catch (err) {
-    env.log.log(err, 'error')
-    // Just force no prevention of rate limit
-    const shouldPreventRateLimit = {}
-    env.ipfsGateways.forEach((gwUrl) => {
-      shouldPreventRateLimit[gwUrl] = false
-    })
-    return shouldPreventRateLimit
-  }
 }
 
 /**
