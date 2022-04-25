@@ -1,7 +1,7 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
-import { InvalidUrlError, TimeoutError } from '../errors.js'
+import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
 
@@ -18,38 +18,36 @@ import { normalizeCid } from '../utils/cid.js'
  *
  * @param {Request} request
  * @param {Env} env
- * @param {import('..').Ctx} ctx
  */
-export async function permaCachePut(request, env, ctx) {
+export async function permaCachePut(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
 
-  // TODO: Validate if user has enough space?
-  // TODO: validate if we already have it in R2
+  // Validate if we already have it in R2
+  let r2Object = await env.SUPERHOT.head(normalizedUrl.toString())
+  if (!r2Object) {
+    // Fetch Response from provided URL
+    const response = await getResponse(request, env, normalizedUrl)
+    if (!response.ok) {
+      throw new HTTPError(await response.text(), 400)
+    }
 
-  // Fetch Response from provided URL
-  const response = await getResponse(request, env, normalizedUrl)
-  if (!response.ok) {
-    // TODO: Formatted error
-    throw new Error(`response not ok: ${response.status}`)
+    // TODO: Validate headers per https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+    // Store in R2 and add to Database if not existent
+    r2Object = await env.SUPERHOT.put(normalizedUrl.toString(), response.body, {
+      httpMetadata: response.headers,
+    })
   }
-
-  // TODO: Validate headers
 
   // Store key with user namespace to handle concurrency and keeping track of all
   const kvKey = `${request.auth.user.id}/${normalizedUrl.toString()}`
   const kvValue = {
     sourceUrl: sourceUrl.toString(),
     normalizedUrl: normalizedUrl.toString(),
-    contentLength: response.headers.get('content-length'),
+    contentLength: r2Object.httpMetadata.get('content-length'),
     insertedAt: new Date().toISOString(),
     deletedAt: undefined,
   }
-
-  // Store in R2 and add to Database if not existent
-  await env.SUPERHOT.put(normalizedUrl.toString(), response.body, {
-    httpMetadata: response.headers,
-  })
 
   // Store in KV
   await env.PERMACACHE.put(kvKey, JSON.stringify(kvValue))
@@ -117,17 +115,21 @@ function getSourceUrl(request, env) {
  * @param {Env} env
  */
 function getNormalizedUrl(candidateUrl, env) {
-  const urlString = candidateUrl.toString()
-
   // Verify if IPFS path resolution URL
-  const ipfsPathParts = urlString.split('/ipfs/')
+  const ipfsPathParts = candidateUrl.pathname.split('/ipfs/')
   if (ipfsPathParts.length > 1) {
     const pathParts = ipfsPathParts[1].split(/\/(.*)/s)
     const cid = getCid(pathParts[0])
+
+    // Parse path + query params
     const path = pathParts[1] ? `/${pathParts[1]}` : ''
-    // TODO: handle query params
+    const queryParamsCandidate = candidateUrl.searchParams.toString()
+    const queryParams = queryParamsCandidate.length
+      ? `?${queryParamsCandidate}`
+      : ''
+
     return new URL(
-      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAIN}${path}`
+      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAIN}${path}${queryParams}`
     )
   }
 
@@ -139,7 +141,6 @@ function getNormalizedUrl(candidateUrl, env) {
     )
   }
 
-  // TODO: handle query params
   return candidateUrl
 }
 

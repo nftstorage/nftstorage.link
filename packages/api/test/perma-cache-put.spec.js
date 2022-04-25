@@ -111,6 +111,21 @@ test('Puts to perma cache IPFS subdomain valid url with directory path', async (
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
+test('Puts to perma cache IPFS subdomain valid url with query parameters', async (t) => {
+  const { mf, user } = t.context
+  const url =
+    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true'
+  const gatewayTxtResponse = 'Hello nft.storage! 😎'
+  const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'PUT',
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  t.is(response.status, 200)
+
+  const body = await response.json()
+  await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
+})
+
 test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
   const { mf, user } = t.context
 
@@ -160,14 +175,17 @@ const getPermaCachePutUrl = (url) =>
 const getParsedUrl = (url) => {
   let normalizedUrl = new URL(url)
   // Verify if IPFS path resolution URL
-  const ipfsPathParts = url.split('/ipfs/')
+  const ipfsPathParts = normalizedUrl.pathname.split('/ipfs/')
   if (ipfsPathParts.length > 1) {
-    const pathParts = ipfsPathParts[1].split(/\/(.*)/s)
+    const pathParts = ipfsPathParts[1].split(/[\/\?](.*)/s)
     const cid = normalizeCid(pathParts[0])
+    // Parse path + query params
     const path = pathParts[1] ? `/${pathParts[1]}` : ''
-    // TODO: handle query params
+    const queryParamsString = normalizedUrl.searchParams.toString()
+    const queryParams = queryParamsString.length ? `?${queryParamsString}` : ''
+
     normalizedUrl = new URL(
-      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAIN}${path}`
+      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAIN}${path}${queryParams}`
     )
   }
 

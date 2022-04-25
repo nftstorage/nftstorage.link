@@ -1,10 +1,10 @@
 import { concat } from 'uint8arrays/concat'
 
 export function createR2Bucket() {
-  const datastore = new Map()
+  const bucket = new Map()
 
   return {
-    put: async (key, value, putOpts) => {
+    put: async (key, value, putOpts = {}) => {
       let data = new Uint8Array([])
       const reader = value.getReader()
       try {
@@ -20,14 +20,41 @@ export function createR2Bucket() {
       }
 
       // TODO: Store metadata
-      datastore.set(key, data)
+      bucket.set(key, {
+        body: data,
+        httpMetadata: putOpts.httpMetadata || {},
+        customMetadata: putOpts.customMetadata || {},
+      })
 
-      return Promise.resolve()
+      return Promise.resolve({
+        httpMetadata: putOpts.httpMetadata,
+      })
     },
-    get: async (key, options) => {
-      const value = datastore.get(key)
+    get: async (key) => {
+      const value = bucket.get(key)
+      if (!value) {
+        return undefined
+      }
 
-      return Promise.resolve(new Response(value, { status: 200 }))
+      const response = new Response(value.body, { status: 200 })
+
+      return Promise.resolve(
+        Object.assign(response, {
+          httpMetadata: value.httpMetadata,
+          customMetadata: value.customMetadata,
+        })
+      )
+    },
+    head: async (key) => {
+      const value = bucket.get(key)
+      if (!value) {
+        return undefined
+      }
+
+      return Promise.resolve({
+        httpMetadata: value.httpMetadata,
+        customMetadata: value.customMetadata,
+      })
     },
   }
 }

@@ -93,8 +93,29 @@ function getSentry(request, env, ctx) {
  * From: https://github.com/cloudflare/workers-types
  *
  * @typedef {{ get: (key: string) => Promise<string | null>, put: (key: string, value: string) => Promise<string | null>}} KVNamespace
+ *
+ * @typedef {Object} R2PutOptions
+ * @property {Headers} [httpMetadata]
+ * @property {Record<string, string>} [customMetadata]
+ *
+ * @typedef {Object} R2Object
+ * @property {Date} uploaded
+ * @property {Headers} [httpMetadata]
+ * @property {Record<string, string>} [customMetadata]
+ *
+ * @typedef {Object} R2ObjectBody
+ * @property {ReadableStream} body
+ * @property {() => Promise<ArrayBuffer>} arrayBuffer
+ * @property {() => Promise<string>} text
+ * @property {() => Promise<JSON>} json
+ * @property {() => Promise<Blob>} blob
+ * @property {Date} uploaded
+ * @property {Headers} [httpMetadata]
+ * @property {Record<string, string>} [customMetadata]
+ *
  * @typedef {Object} R2Bucket
- * @property {(key: string, options?: R2GetOptions) => Promise<R2Object | null>} get
+ * @property {(key: string) => Promise<R2Object | null>} head
+ * @property {(key: string) => Promise<R2ObjectBody | null>} get
  * @property {(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null, options?: R2PutOptions) => Promise<R2Object>} put
  * @property {(key: string) => Promise<void>} delete
  */
