@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.5.7](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.6...edge-gateway-v1.5.7) (2022-04-25)
+
+
+### Bug Fixes
+
+* gateway use cf dns to prevent rate limit instead of durable object ([#36](https://github.com/nftstorage/nftstorage.link/issues/36)) ([f192d70](https://github.com/nftstorage/nftstorage.link/commit/f192d7052e71c6b631b2d86d9a58907e3671186d))
+
 ### [1.5.6](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.5...edge-gateway-v1.5.6) (2022-04-22)
 
 
