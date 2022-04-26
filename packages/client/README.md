@@ -61,11 +61,23 @@ console.log(url)
 // https://dweb.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui
 ```
 
-Also works with any IPFS gateway URL:
+Also works with _any_ IPFS gateway URL:
 
 ```js
 const url = await getGatewayURL(
   'https://ipfs.io/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
+)
+console.log(url)
+// https://nftstorage.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui
+// or
+// https://dweb.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui
+```
+
+...including _subdomain_ gateway URL:
+
+```js
+const url = await getGatewayURL(
+  'https://bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui.ipfs.dweb.link'
 )
 console.log(url)
 // https://nftstorage.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui
@@ -115,19 +127,18 @@ This library uses the `fetch` API. In Node.js there are two options to enable us
 Assign to global:
 
 ```js
-// npm install @web-std/fetch
-import fetch from '@web-std/fetch'
+import fetch from '@web-std/fetch' // npm install @web-std/fetch
 globalThis.fetch = fetch
 // use getGatewayURL etc. as usual
 ```
 
-Pass to `StatusChecker`:
+Pass to `GatewayStatusChecker`:
 
 ```js
-import { getGatewayURL, StatusChecker } from 'nftstorage.link'
-import fetch from '@web-std/fetch'
+import { getGatewayURL, GatewayStatusChecker } from 'nftstorage.link'
+import fetch from '@web-std/fetch' // npm install @web-std/fetch
 
-const statusChecker = new StatusChecker({ fetch })
+const statusChecker = new GatewayStatusChecker({ fetch })
 const url = await getGatewayURL(
   'bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui',
   { statusChecker }

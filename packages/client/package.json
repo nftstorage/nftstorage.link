@@ -8,13 +8,24 @@
   "main": "./dist/src/lib.cjs",
   "files": [
     "src",
-    "dist/src"
+    "dist/src",
+    "dist/bundle*"
   ],
   "exports": {
     ".": {
       "browser": "./src/lib.js",
       "require": "./dist/src/lib.cjs",
       "node": "./src/lib.js"
+    },
+    "./src/gateway.js": {
+      "browser": "./src/gateway.js",
+      "require": "./dist/src/gateway.cjs",
+      "node": "./src/gateway.js"
+    },
+    "./dist/bundle.esm.min.js": {
+      "browser": "./dist/bundle.esm.min.js",
+      "require": "./dist/bundle.esm.min.js",
+      "node": "./dist/bundle.esm.min.js"
     }
   },
   "scripts": {

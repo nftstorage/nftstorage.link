@@ -1,6 +1,6 @@
 /** eslint-env mocha */
 import assert from 'assert'
-import { getGatewayURL, StatusChecker } from '../src/lib.js'
+import { getGatewayURL, GatewayStatusChecker } from '../src/lib.js'
 
 /**
  * @param {getGatewayURL} fn
@@ -9,7 +9,7 @@ import { getGatewayURL, StatusChecker } from '../src/lib.js'
 const withStatus = (fn, getStatus) => {
   const fetch = () => ({ json: getStatus })
   // @ts-ignore fetch is a mock in tests
-  const statusChecker = new StatusChecker({ fetch })
+  const statusChecker = new GatewayStatusChecker({ fetch })
   return (/** @type {string|URL} */ cid, options = {}) =>
     fn(cid, { ...options, statusChecker })
 }
@@ -215,7 +215,7 @@ describe('StatusChecker', () => {
     const sleep = (/** @type {number} */ ms) =>
       new Promise((resolve) => setTimeout(resolve, ms))
     // @ts-ignore fetch is a mock in tests
-    const statusChecker = new StatusChecker({ fetch, maxAge })
+    const statusChecker = new GatewayStatusChecker({ fetch, maxAge })
     await statusChecker.ok()
     assert.equal(callCount, 1)
     await sleep(maxAge / 2)
