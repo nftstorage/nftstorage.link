@@ -31,3 +31,7 @@ jobs:
         env:
           CF_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
         run: node packages/edge-gateway/scripts/cli.js denylist sync --env ${{ matrix.env }}
+
+      - name: Heartbeat
+        if: ${{ success() }}
+        run: node packages/edge-gateway/scripts/cli.js heartbeat --token ${{ secrets.OPSGENIE_KEY }} --name cron-nftstoragelink-denylist
