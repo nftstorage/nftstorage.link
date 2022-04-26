@@ -92,7 +92,14 @@ function getSentry(request, env, ctx) {
 /**
  * From: https://github.com/cloudflare/workers-types
  *
- * @typedef {{ get: (key: string) => Promise<string | null>, put: (key: string, value: string) => Promise<string | null>}} KVNamespace
+ * @typedef {Object} KVNamespacePutOptions
+ * @property {any} [metadata]
+ * @property {number} [expiration]
+ * @property {number} [expirationTtl]
+ *
+ * @typedef {Object} KVNamespace
+ * @property {(key: string) => Promise<string | null>} get
+ * @property {(key: string, value: string, options?: KVNamespacePutOptions) => Promise<string | null>} put
  *
  * @typedef {Object} R2PutOptions
  * @property {Headers} [httpMetadata]

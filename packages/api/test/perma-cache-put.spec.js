@@ -157,11 +157,12 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
 
   // Validate KV
   const ns = await mf.getKVNamespace('PERMACACHE')
-  const value = await ns.get(
+  const { value, metadata } = await ns.getWithMetadata(
     `${user.userId}/${normalizedUrl}/${body.insertedAt}`
   )
   t.truthy(value)
-  t.deepEqual(body, JSON.parse(value))
+  t.truthy(metadata)
+  t.deepEqual(body, metadata)
 
   // Validate R2
   const bindings = await mf.getBindings()

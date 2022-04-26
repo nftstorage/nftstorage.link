@@ -22,6 +22,7 @@ import { normalizeCid } from '../utils/cid.js'
 export async function permaCachePut(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
+  const r2Key = normalizedUrl.toString()
 
   // Validate if we already have it in R2
   let r2Object
@@ -42,31 +43,26 @@ export async function permaCachePut(request, env) {
 
     // TODO: Validate headers per https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
     // Store in R2 and add to Database if not existent
-    r2Object = await env.SUPERHOT.put(normalizedUrl.toString(), response.body, {
+    r2Object = await env.SUPERHOT.put(r2Key, response.body, {
       httpMetadata: response.headers,
-      customMetadata: {
-        'content-length': response.headers.get('content-length'),
-      },
     })
   }
 
   // Store key with user namespace to handle concurrency and keeping track of all
   const insertedAt = new Date().toISOString()
-  const kvKey = `${
-    request.auth.user.id
-  }/${normalizedUrl.toString()}/${insertedAt}`
-  const kvValue = {
+  const kvKey = `${request.auth.user.id}/${r2Key}/${insertedAt}`
+  const metadata = {
     sourceUrl: sourceUrl.toString(),
-    normalizedUrl: normalizedUrl.toString(),
-    contentLength: r2Object.customMetadata['content-length'],
+    normalizedUrl: r2Key,
+    contentLength: r2Object.size,
     insertedAt,
     deletedAt: undefined,
   }
 
   // Store in KV
-  await env.PERMACACHE.put(kvKey, JSON.stringify(kvValue))
+  await env.PERMACACHE.put(kvKey, r2Key, { metadata })
 
-  return new JSONResponse(kvValue)
+  return new JSONResponse(metadata)
 }
 
 /**

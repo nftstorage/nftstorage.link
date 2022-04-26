@@ -29,6 +29,7 @@ export function createR2Bucket() {
       return Promise.resolve({
         httpMetadata: putOpts.httpMetadata,
         customMetadata: putOpts.customMetadata,
+        size: data.length,
       })
     },
     get: async (key) => {
@@ -43,6 +44,7 @@ export function createR2Bucket() {
         Object.assign(response, {
           httpMetadata: value.httpMetadata || {},
           customMetadata: value.customMetadata || {},
+          size: value.body.length,
         })
       )
     },
@@ -55,6 +57,7 @@ export function createR2Bucket() {
       return Promise.resolve({
         httpMetadata: value.httpMetadata || {},
         customMetadata: value.customMetadata || {},
+        size: value.body.length,
       })
     },
   }
