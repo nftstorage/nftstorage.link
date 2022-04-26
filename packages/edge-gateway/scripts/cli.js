@@ -12,6 +12,7 @@ import pWaitFor from 'p-wait-for'
 import { create } from 'ipfs-http-client'
 import globSource from 'ipfs-utils/src/files/glob-source.js'
 import { denylistSyncCmd, denylistAddCmd } from './denylist.js'
+import { heartbeatCmd } from './heartbeat.js'
 
 const IPFS_API_URL = 'http://127.0.0.1:9089'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -31,6 +32,10 @@ prog
   .option('--start', 'Start docker container', false)
   .option('--stop', 'Stop and clean all dockers artifacts', false)
   .action(ipfsCmd)
+  .command('heartbeat', 'Ping opsgenie heartbeat')
+  .option('--token', 'Opsgenie Token')
+  .option('--name', 'Heartbeat Name')
+  .action(heartbeatCmd)
   .command('denylist sync')
   .describe('Sync the gateway deny list with various sources.')
   .option('--env', 'Wrangler environment to use.', 'dev')
