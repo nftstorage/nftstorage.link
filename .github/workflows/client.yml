@@ -21,6 +21,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         with:
           node-version: 16
@@ -36,6 +39,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         with:
           node-version: 16
@@ -67,6 +73,10 @@ jobs:
           package-name: nftstorage.link
       - uses: actions/checkout@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
+      - uses: pnpm/action-setup@v2.0.1
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
         with:
