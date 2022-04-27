@@ -30,7 +30,7 @@ export class GatewayStatusChecker {
     /** @private */
     this._maxAge = config.maxAge || MAX_AGE
     /** @private */
-    this._fetch = config.fetch || globalThis.fetch
+    this._fetch = config.fetch || globalThis.fetch.bind(globalThis)
     /** @private */
     this._lastCheck = 0
     /**
