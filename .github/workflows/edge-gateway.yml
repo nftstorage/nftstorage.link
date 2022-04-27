@@ -6,10 +6,12 @@ on:
     paths:
       - 'packages/edge-gateway/**'
       - '.github/workflows/edge-gateway.yml'
+      - 'pnpm-lock.yaml'
   pull_request:
     paths:
       - 'packages/edge-gateway/**'
       - '.github/workflows/edge-gateway.yml'
+      - 'pnpm-lock.yaml'
 jobs:
   test:
     runs-on: ubuntu-latest
