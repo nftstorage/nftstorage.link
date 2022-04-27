@@ -26,7 +26,7 @@ export class ForbiddenContentError extends Error {
     this.contentType = 'text/html'
   }
 }
-ForbiddenContentError.CODE = 'ERROR_INVALID_URL'
+ForbiddenContentError.CODE = 'ERROR_FORBIDDEN_CONTENT'
 
 export class TimeoutError extends Error {
   /**

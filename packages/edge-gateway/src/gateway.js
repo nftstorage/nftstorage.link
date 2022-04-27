@@ -105,6 +105,15 @@ export async function gatewayGet(request, env, ctx) {
       ])
     }
 
+    const winnerContentType =
+      winnerGwResponse.response.headers.get('content-type')
+    // Block content types
+    if (FORBIDDEN_CONTENT_TYPES.includes(winnerContentType)) {
+      throw new ForbiddenContentError(
+        `Forbidden content type: ${winnerContentType}`
+      )
+    }
+
     ctx.waitUntil(
       (async () => {
         const contentLengthMb = Number(
@@ -119,19 +128,6 @@ export async function gatewayGet(request, env, ctx) {
         ])
       })()
     )
-
-    // Block content types
-    if (
-      FORBIDDEN_CONTENT_TYPES.includes(
-        winnerGwResponse.response.headers.get('content-type')
-      )
-    ) {
-      throw new ForbiddenContentError(
-        `Forbidden content type: ${winnerGwResponse.response.headers.get(
-          'content-type'
-        )}`
-      )
-    }
 
     // forward winner gateway response
     return winnerGwResponse.response
