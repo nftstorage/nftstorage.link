@@ -1,0 +1,78 @@
+{
+  "name": "nftstorage.link",
+  "version": "0.0.0",
+  "description": "Utilities for working with the NFT.Storage IPFS Edge Gateway",
+  "type": "module",
+  "types": "./dist/src/lib.d.ts",
+  "module": "./src/lib.js",
+  "main": "./dist/src/lib.cjs",
+  "files": [
+    "src",
+    "dist/src",
+    "dist/bundle*"
+  ],
+  "exports": {
+    ".": {
+      "browser": "./src/lib.js",
+      "require": "./dist/src/lib.cjs",
+      "node": "./src/lib.js"
+    },
+    "./src/gateway.js": {
+      "browser": "./src/gateway.js",
+      "require": "./dist/src/gateway.cjs",
+      "node": "./src/gateway.js"
+    },
+    "./dist/bundle.esm.min.js": {
+      "browser": "./dist/bundle.esm.min.js",
+      "require": "./dist/bundle.esm.min.js",
+      "node": "./dist/bundle.esm.min.js"
+    }
+  },
+  "scripts": {
+    "test": "run-s test:*",
+    "test:web": "playwright-test test/*.spec.js --cov && nyc report",
+    "test:es": "hundreds mocha test/*.spec.js --exit",
+    "test:cjs": "npm run build:cjs && mocha dist/**/*.spec.cjs --exit",
+    "build": "run-s build:*",
+    "build:ts": "tsc --build",
+    "build:cjs": "rollup --config rollup.config.js",
+    "build:esm": "rollup --config rollup.esm.config.js",
+    "coverage": "nyc report --reporter=text-lcov > coverage.lcov && npx codecov"
+  },
+  "keywords": [
+    "ipfs",
+    "gateway",
+    "edge",
+    "cache",
+    "cdn",
+    "nft",
+    "nftstorage",
+    "nft.storage"
+  ],
+  "author": "Alan Shaw",
+  "license": "Apache-2.0 OR MIT",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^21.1.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.0",
+    "@types/mocha": "^9.0.0",
+    "assert": "^2.0.0",
+    "c8": "^7.11.2",
+    "hundreds": "^0.0.9",
+    "mocha": "^9.1.0",
+    "npm-run-all": "^4.1.5",
+    "nyc": "15.1.0",
+    "playwright-test": "^7.2.1",
+    "rollup": "^2.70.2",
+    "rollup-plugin-multi-input": "^1.3.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "typescript": "^4.6.3"
+  },
+  "homepage": "https://github.com/nftstorage/nftstorage.link/tree/main/packages/client",
+  "bugs": "https://github.com/nftstorage/nftstorage.link/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nftstorage/nftstorage.link.git",
+    "directory": "packages/client"
+  }
+}
