@@ -18,7 +18,9 @@ import { getGatewayURL } from 'nftstorage.link'
 
 ### `getGatewayURL`
 
-Get a gateway URL, given a CID, CID+path, IPFS path or an IPFS gateway URL. If the status of the nftstorage.link gateway is known to be good (according to the status checker) then return a URL that uses nftstorage.link, otherwise return an URL that uses dweb.link (or the optional passed fallback gateway URL). Status result is cached for **60 seconds** by default.
+Get a gateway URL, given a CID, CID+path, IPFS path or an IPFS gateway URL. If the status of the `nftstorage.link` gateway is known to be good (according to the status checker) then return a URL that uses `nftstorage.link`, otherwise return an URL that uses `dweb.link` (or the optional passed fallback gateway URL). Status result is cached for **60 seconds** by default.
+
+Note: the fallback gateway is not guaranteed to be operational and this library makes no attempt to verify this.
 
 ```ts
 getGatewayURL (cid: string|URL): Promise<string>
