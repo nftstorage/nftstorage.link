@@ -22,7 +22,7 @@ test('Fails when invalid url is provided', async (t) => {
   const { mf, user } = t.context
 
   const response = await mf.dispatchFetch(getPermaCachePutUrl('test.png'), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   const body = await response.json()
@@ -37,7 +37,7 @@ test('Fails when non nftstorage.link url is provided', async (t) => {
   const response = await mf.dispatchFetch(
     getPermaCachePutUrl('https://example.com/test.png'),
     {
-      method: 'PUT',
+      method: 'POST',
       headers: { Authorization: `Bearer ${user.token}` },
     }
   )
@@ -56,7 +56,7 @@ test('Puts to perma cache IPFS path valid url without directory path', async (t)
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
   const gatewayTxtResponse = 'Hello nft.storage! 😎'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(response.status, 200)
@@ -72,7 +72,7 @@ test('Puts to perma cache IPFS path valid url with directory path', async (t) =>
     'http://localhost:9081/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path'
   const gatewayTxtResponse = 'Hello gateway.nft.storage resource!'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(response.status, 200)
@@ -87,7 +87,7 @@ test('Puts to perma cache IPFS subdomain valid url without directory path', asyn
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
   const gatewayTxtResponse = 'Hello nft.storage! 😎'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(response.status, 200)
@@ -102,7 +102,7 @@ test('Puts to perma cache IPFS subdomain valid url with directory path', async (
     'http://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:9081/path'
   const gatewayTxtResponse = 'Hello gateway.nft.storage resource!'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(response.status, 200)
@@ -117,7 +117,7 @@ test('Puts to perma cache IPFS subdomain valid url with query parameters', async
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true'
   const gatewayTxtResponse = 'Hello nft.storage! 😎'
   const response = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-    method: 'PUT',
+    method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(response.status, 200)
@@ -132,7 +132,7 @@ test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
   const response = await mf.dispatchFetch(
     getPermaCachePutUrl('http://localhost:9081/ipfs/invalidcid'),
     {
-      method: 'PUT',
+      method: 'POST',
       headers: { Authorization: `Bearer ${user.token}` },
     }
   )

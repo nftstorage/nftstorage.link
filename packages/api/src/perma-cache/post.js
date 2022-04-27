@@ -14,12 +14,12 @@ import { normalizeCid } from '../utils/cid.js'
  */
 
 /**
- * Handle perma-cache put request
+ * Handle perma-cache post request
  *
  * @param {Request} request
  * @param {Env} env
  */
-export async function permaCachePut(request, env) {
+export async function permaCachePost(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()

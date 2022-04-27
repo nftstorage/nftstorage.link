@@ -1,1 +1,1 @@
-export { permaCachePut } from './put.js'
+export { permaCachePost } from './post.js'
