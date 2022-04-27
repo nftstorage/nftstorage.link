@@ -29,11 +29,12 @@ export class GatewayStatusChecker {
     this._gatewayURL = new URL(config.gatewayURL || GATEWAY_URL)
     /** @private */
     this._maxAge = config.maxAge || MAX_AGE
-    /* c8 ignore next 2 */
     /** @private */
-    this._fetch =
-      config.fetch ||
-      (globalThis.fetch ? globalThis.fetch.bind(globalThis) : null)
+    this._fetch = config.fetch
+    /* c8 ignore next 3 */
+    if (!this._fetch && globalThis.fetch) {
+      this._fetch = globalThis.fetch.bind(globalThis)
+    }
     /** @private */
     this._lastCheck = 0
     /**
@@ -57,6 +58,7 @@ export class GatewayStatusChecker {
         this._lastCheck = now
         try {
           const fetch = this._fetch
+          /* c8 ignore next 1 */
           if (!fetch) throw new Error('missing fetch implementation')
           const res = await fetch(this._apiURL.toString())
           const data = await res.json()
