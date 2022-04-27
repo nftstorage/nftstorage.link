@@ -111,16 +111,22 @@ import { getGatewayURL } from 'nftstorage.link'
 
 function GatewayLink({ cid, title }) {
   const [url, setUrl] = useState('')
-  useEffect(async () => setUrl(await getGatewayURL(cid)), [cid])
+  useEffect(() => {
+    getGatewayURL(cid).then(setUrl)
+  }, [cid])
   return url ? <a href={url}>{title}</a> : null
 }
 
 function GatewayImage({ cid, alt }) {
   const [url, setUrl] = useState('')
-  useEffect(async () => setUrl(await getGatewayURL(cid)), [cid])
+  useEffect(() => {
+    getGatewayURL(cid).then(setUrl)
+  }, [cid])
   return url ? <img src={url} alt={alt} /> : null
 }
 ```
+
+See the full example here: https://github.com/nftstorage/react-nftstorage.link-fallback-example
 
 ##### Node.js usage
 
