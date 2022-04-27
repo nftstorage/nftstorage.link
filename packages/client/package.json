@@ -1,6 +1,6 @@
 {
   "name": "nftstorage.link",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Utilities for working with the NFT.Storage IPFS Edge Gateway",
   "type": "module",
   "types": "./dist/src/lib.d.ts",
