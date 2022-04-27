@@ -74,8 +74,5 @@
     "type": "git",
     "url": "https://github.com/nftstorage/nftstorage.link.git",
     "directory": "packages/client"
-  },
-  "engines": {
-    "node": ">=10.0.0"
   }
 }
