@@ -1,12 +1,15 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
+import { FAR_FUTURE, PAD_LEN, MAX_ALLOWED_URL_LENGTH } from '../constants.js'
 import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
 
 /**
  * @typedef {import('../env').Env} Env
+ * @typedef {{ userId: string, r2Key: string, date: string }} Key
+ *
  * @typedef {Object} IpfsUrlParts
  * @property {string} cid
  * @property {string} url
@@ -23,6 +26,15 @@ export async function permaCachePost(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
+
+  // Validate if URL is not already perma cached by user
+  const kvPrefix = `${request.auth.user.id}:${r2Key}`
+  const { keys } = await env.PERMACACHE.list({
+    prefix: kvPrefix,
+  })
+  if (keys.length > 0) {
+    throw new HTTPError('The provided url was already perma cached', 400)
+  }
 
   // Validate if we already have it in R2
   let r2Object
@@ -48,21 +60,37 @@ export async function permaCachePost(request, env) {
     })
   }
 
-  // Store key with user namespace to handle concurrency and keeping track of all
-  const insertedAt = new Date().toISOString()
-  const kvKey = `${request.auth.user.id}/${r2Key}/${insertedAt}`
-  const metadata = {
+  const date = new Date().toISOString()
+  const kvKey = encodeKey({
+    userId: request.auth.user.id,
+    r2Key,
+    date,
+  })
+
+  // Store in KV
+  await Promise.all([
+    await env.PERMACACHE.put(kvKey, r2Key, {
+      metadata: {
+        sourceUrl: sourceUrl.toString(),
+        contentLength: r2Object.size,
+        date,
+      },
+    }),
+    await env.PERMACACHE_HISTORY.put(kvKey, r2Key, {
+      metadata: {
+        contentLength: r2Object.size,
+        date,
+        operation: 'put',
+      },
+    }),
+  ])
+
+  return new JSONResponse({
     sourceUrl: sourceUrl.toString(),
     normalizedUrl: r2Key,
     contentLength: r2Object.size,
-    insertedAt,
-    deletedAt: undefined,
-  }
-
-  // Store in KV
-  await env.PERMACACHE.put(kvKey, r2Key, { metadata })
-
-  return new JSONResponse(metadata)
+    date,
+  })
 }
 
 /**
@@ -109,6 +137,11 @@ function getSourceUrl(request, env) {
   }
 
   const urlString = candidateUrl.toString()
+  if (urlString.length > MAX_ALLOWED_URL_LENGTH) {
+    throw new InvalidUrlError(
+      `invalid URL provided: ${request.params.url}: maximum allowed length or URL is ${MAX_ALLOWED_URL_LENGTH}`
+    )
+  }
   if (!urlString.includes(env.GATEWAY_DOMAIN)) {
     throw new InvalidUrlError(
       `invalid URL provided: ${urlString}: not nftstorage.link URL`
@@ -177,4 +210,29 @@ function getHeaders(request) {
       'cf-connecting-ip'
     )}${existingProxies}`,
   }
+}
+
+/**
+ * Encode key with user namespace to handle concurrency and keeping track of all
+ * @param {Key} key
+ */
+export function encodeKey({ userId, r2Key, date }) {
+  const createdTime = new Date(date).getTime()
+  const ts = (FAR_FUTURE - createdTime).toString().padStart(PAD_LEN, '0')
+
+  return `${userId}:${r2Key}:${ts}`
+}
+
+/**
+ * @param {string} key
+ * @returns {Key}
+ */
+export function decodeKey(key) {
+  const parts = key.split(':')
+  const r2Key = parts.pop()
+  const ts = parts.pop()
+  if (!r2Key || !ts) throw new Error('Invalid key')
+  const date = new Date(FAR_FUTURE - parseInt(ts)).toISOString()
+
+  return { date, r2Key, userId: parts.join(':') }
 }

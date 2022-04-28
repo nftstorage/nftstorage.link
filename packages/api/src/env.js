@@ -16,6 +16,7 @@ import { DBClient } from './utils/db-client.js'
  * @property {string} [LOGTAIL_TOKEN]
  * @property {number} [REQUEST_TIMEOUT]
  * @property {KVNamespace} PERMACACHE
+ * @property {KVNamespace} PERMACACHE_HISTORY
  * @property {R2Bucket} SUPERHOT
  *
  * @typedef {Object} EnvTransformed
@@ -97,9 +98,25 @@ function getSentry(request, env, ctx) {
  * @property {number} [expiration]
  * @property {number} [expirationTtl]
  *
+ * @typedef {Object} KVNamespaceListOptions
+ * @property {number} [limit]
+ * @property {string} [prefix]
+ * @property {string} [cursor]
+ *
+ * @typedef {Object} KVNamespaceListKey
+ * @property {string} name
+ * @property {number} [expiration]
+ * @property {any} [metadata]
+ *
+ * @typedef {Object} KVNamespaceListResult
+ * @property {KVNamespaceListKey[]} [keys]
+ * @property {boolean} [list_complete]
+ * @property {string} [cursor]
+ *
  * @typedef {Object} KVNamespace
  * @property {(key: string) => Promise<string | null>} get
  * @property {(key: string, value: string, options?: KVNamespacePutOptions) => Promise<string | null>} put
+ * @property {(options: KVNamespaceListOptions) => Promise<KVNamespaceListResult>} list
  *
  * @typedef {Object} R2PutOptions
  * @property {Headers} [httpMetadata]
@@ -107,6 +124,7 @@ function getSentry(request, env, ctx) {
  *
  * @typedef {Object} R2Object
  * @property {Date} uploaded
+ * @property {number} size
  * @property {Headers} [httpMetadata]
  * @property {Record<string, string>} [customMetadata]
  *

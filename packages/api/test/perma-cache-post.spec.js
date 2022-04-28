@@ -1,5 +1,6 @@
 import test from 'ava'
 
+import { encodeKey } from '../src/perma-cache/post.js'
 import { normalizeCid } from '../src/utils/cid.js'
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
@@ -144,6 +145,26 @@ test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
   )
 })
 
+test('Fails when it was already perma cached', async (t) => {
+  const { mf, user } = t.context
+  const url =
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+
+  const response1 = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  t.is(response1.status, 200)
+
+  const response2 = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  t.is(response2.status, 400)
+  const body = await response2.json()
+  t.is(body, 'The provided url was already perma cached')
+})
+
 const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   const { mf, user } = t.context
 
@@ -151,18 +172,31 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
   t.is(body.normalizedUrl, normalizedUrl)
   t.is(body.sourceUrl, sourceUrl)
-  t.truthy(body.insertedAt)
+  t.truthy(body.date)
   t.falsy(body.deletedAt)
   t.truthy(body.contentLength)
 
   // Validate KV
+  const kvKey = encodeKey({
+    userId: user.userId,
+    r2Key: normalizedUrl,
+    date: body.date,
+  })
+  console.log('kvKey', kvKey)
   const ns = await mf.getKVNamespace('PERMACACHE')
-  const { value, metadata } = await ns.getWithMetadata(
-    `${user.userId}/${normalizedUrl}/${body.insertedAt}`
-  )
+  const { value, metadata } = await ns.getWithMetadata(kvKey)
   t.truthy(value)
   t.truthy(metadata)
-  t.deepEqual(body, metadata)
+  t.is(body.sourceUrl, metadata.sourceUrl)
+  t.is(body.contentLength, metadata.contentLength)
+  t.is(body.date, metadata.date)
+
+  const nsHistory = await mf.getKVNamespace('PERMACACHE_HISTORY')
+  const { value: valueHistory, metadata: metadataHistory } =
+    await nsHistory.getWithMetadata(kvKey)
+  t.truthy(valueHistory)
+  t.truthy(metadataHistory)
+  t.is(metadataHistory.operation, 'put')
 
   // Validate R2
   const bindings = await mf.getBindings()

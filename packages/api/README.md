@@ -37,6 +37,10 @@ One time set up of your cloudflare worker subdomain for dev:
   # Outputs something like: `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4" }`
   # but you need to put `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4", id = "7e441603d1bc4d5a87f6cecb959018e4" }` inside the `kv_namespaces`.
   # for production: wrangler kv:namespace create PERMACACHE --env production
+  wrangler kv:namespace create PERMACACHE_HISTORY --preview --env $(whoami)
+  # Outputs something like: `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930" }`
+  # but you need to put `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930", id = "bac8069051ee4796a305b4d3f366b930" }` inside the `kv_namespaces`.
+  # for production: wrangler kv:namespace create PERMACACHE_HISTORY --env production
   ```
 
 - Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
