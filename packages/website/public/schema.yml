@@ -1,0 +1,339 @@
+openapi: 3.0.0
+info:
+  title: nftstorage.link API
+  version: '1.0'
+
+servers:
+  - url: https://api.nftstorage.link
+  - url: http://127.0.0.1:8787
+
+tags:
+  - name: nftstorage.link
+paths:
+  /perma-cache/{url}:
+    post:
+      tags:
+        - nftstorage.link
+      summary: Put a given URL response in nftstorage.link perma-cache.
+      description: |
+        Store the response of the nftstorage.link IPFS gateway in a edge perma-cache
+        to accelerate future request to the gateway.
+
+        ### Rate limits
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+      operationId: permaCachePost
+      parameters:
+        - name: url
+          in: path
+          description: nftstorage.link IPFS gateway URL properly encoded
+          required: true
+          schema:
+            $ref: '#/components/schemas/URL'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PermaCachePostResponse'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '409':
+          $ref: '#/components/responses/conflict'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+    delete:
+      tags:
+        - nftstorage.link
+      summary: Delete a given URL response from nftstorage.link perma-cache.
+      description: |
+        Delete a given URL response from nftstorage.link perma cache if single reference to it.
+
+        Mark perma cache entry for user as deleted.
+
+        ### Rate limits
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+      operationId: permaCacheDelete
+      parameters:
+        - name: url
+          in: path
+          description: nftstorage.link IPFS gateway URL properly encoded
+          required: true
+          schema:
+            $ref: '#/components/schemas/URL'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PermaCacheDeleteResponse'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+  /perma-cache:
+    get:
+      tags:
+        - nftstorage.link
+      summary: Get all URLs perma cached in nftstorage.link by the user.
+      description: |
+        Get all URLs previously perma-cached by the user.
+
+        ### Rate limits
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+      operationId: permaCacheGet
+      parameters:
+        - $ref: '#/components/parameters/size'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/order'
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/PermaCacheGetResponse'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+  /perma-cache/status:
+    get:
+      tags:
+        - nftstorage.link
+      operationId: permaCacheStatusGet
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/StatusResponse'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/forbidden'
+        '500':
+          $ref: '#/components/responses/internalServerError'
+components:
+  schemas:
+    PermaCacheEntry:
+      type: object
+      properties:
+        url:
+          type: string
+          example: https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/
+          description: 'URL as provided for perma cache.'
+        size:
+          type: number
+          example: 600
+        inserted_at:
+          $ref: '#/components/schemas/Date'
+    PermaCacheStatus:
+      type: object
+      properties:
+        usedStorage:
+          type: number
+    Date:
+      type: string
+      format: date-time
+      example: '2021-03-12T17:03:07.787Z'
+      description: 'This is a timestamp in [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format: YYYY-MM-DDTHH:MM:SSZ.'
+    URL:
+      type: string
+      example: https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F
+      description: 'nftstorage.link IPFS gateway URL properly encoded.'
+    PermaCachePostResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: true
+        value:
+          $ref: '#/components/schemas/PermaCacheEntry'
+    PermaCacheGetResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: true
+        value:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermaCacheEntry'
+    PermaCacheDeleteResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: true
+        value:
+          type: boolean
+          default: true
+    StatusResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: true
+        value:
+          $ref: '#/components/schemas/PermaCacheStatus'
+    ErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+    UnauthorizedErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+              default: HTTP Error
+            message:
+              type: string
+              default: Unauthorized
+    ForbiddenErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+              default: HTTP Error
+            message:
+              type: string
+              enum: [Token is not valid, Session expired]
+    ConflictErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          default: false
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      description: |
+        The nftstorage.link API uses *Bearer Tokens* to authenticate requests. You can view and manage your tokens in the [NFT Storage Dashboard](https://nft.storage).   
+        Your tokens carry many privileges, so be sure to keep them secure! Do not share your *secret tokens* in publicly accessible areas such as GitHub, client-side code, and so forth.   
+        **Bearer authentication** (also called token authentication) is an HTTP authentication scheme that involves security tokens called bearer tokens. The name “Bearer authentication” can be understood as “give access to the bearer of this token.” The bearer token is a cryptic string, usually generated by the server in response to a login request. The client must send this token in the Authorization header when making requests to protected resources:
+        ```js
+        Authorization: Bearer <token>
+        ```
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    unauthorized:
+      description: Unauthorized
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/UnauthorizedErrorResponse'
+    forbidden:
+      description: Forbidden
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ForbiddenErrorResponse'
+    notFound:
+      description: Not Found
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    conflict:
+      description: Not Found
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ConflictErrorResponse'
+    internalServerError:
+      description: Internal Server Error
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    badRequest:
+      description: Bad Request
+      content:
+        'application/json':
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    page:
+      description: Page of the list to return
+      name: page
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+      example: 2
+    size:
+      description: Max records to return
+      name: size
+      in: query
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 1000
+        default: 10
+    sort:
+      description: Sorting property
+      name: sort
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: ['date', 'size']
+      example: 'date'
+    order:
+      description: Sorting order
+      name: order
+      in: query
+      required: false
+      schema:
+        type: string
+        enum: ['asc', 'desc']
+      example: 'asc'
