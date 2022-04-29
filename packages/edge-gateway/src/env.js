@@ -7,8 +7,8 @@ import { Logging } from './logs.js'
  * @typedef {Object} EnvInput
  * @property {string} IPFS_GATEWAYS
  * @property {string} GATEWAY_HOSTNAME
+ * @property {string} VERSION
  * @property {string} SENTRY_RELEASE
- * @property {string} VERSION SENTRY_RELEASE
  * @property {string} COMMITHASH
  * @property {string} BRANCH
  * @property {string} DEBUG

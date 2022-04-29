@@ -1,0 +1,98 @@
+name: api
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/api/**'
+      - '.github/workflows/api.yml'
+  pull_request:
+    paths:
+      - 'packages/api/**'
+      - '.github/workflows/api.yml'
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+      - run: pnpm install
+      - run: npx playwright install-deps
+      - run: pnpm test:api
+        env:
+          DATABASE_URL: http://localhost:3000
+          DATABASE_TOKEN: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlhdCI6MTYwMzk2ODgzNCwiZXhwIjoyNTUwNjUzNjM0LCJyb2xlIjoic2VydmljZV9yb2xlIn0.necIJaiP7X2T2QjGeV-FhpkizcNTX8HjDDBAxpgQTEI
+          DATABASE_CONNECTION: postgresql://postgres:postgres@localhost:5432/postgres
+  deploy-staging:
+    name: Deploy Staging
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+      - run: pnpm install
+      - name: Publish app
+        # FIXME: uses Node.js 16 not 12 (upcoming release).
+        # FIXME: update to tag > 1.3.0 when released.
+        uses: cloudflare/wrangler-action@6f62debcf8abf8e33e41343df9d7ab49612c324d
+        env:
+          ENV: 'staging' # inform the build process what the env is
+          SENTRY_TOKEN: ${{secrets.SENTRY_TOKEN}}
+          SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
+        with:
+          apiToken: ${{secrets.CF_GATEWAY_TOKEN }}
+          workingDirectory: 'packages/api'
+          environment: 'staging'
+  release:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Release
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@v3
+        id: tag-release
+        with:
+          path: packages/api
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          monorepo-tags: true
+          package-name: api
+      - uses: actions/checkout@v2
+        if: ${{ steps.tag-release.outputs.releases_created }}
+      - uses: pnpm/action-setup@v2.0.1
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        with:
+          cache: 'pnpm'
+          node-version: 16
+          registry-url: 'https://registry.npmjs.org'
+      - run: pnpm install
+        if: ${{ steps.tag-release.outputs.releases_created }}
+      - name: Deploy
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        # FIXME: uses Node.js 16 not 12 (upcoming release).
+        # FIXME: update to tag > 1.3.0 when released.
+        uses: cloudflare/wrangler-action@6f62debcf8abf8e33e41343df9d7ab49612c324d
+        env:
+          ENV: 'production' # inform the build process what the env is
+          SENTRY_TOKEN: ${{ secrets.SENTRY_TOKEN }}
+          SENTRY_UPLOAD: ${{ secrets.SENTRY_UPLOAD }}
+        with:
+          apiToken: ${{ secrets.CF_GATEWAY_TOKEN }}
+          workingDirectory: 'packages/api'
+          environment: 'production'

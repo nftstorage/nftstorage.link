@@ -1,8 +1,8 @@
 version: '3.6'
 
 services:
-  ipfs0:
-    container_name: ipfs0
+  ipfs1:
+    container_name: ipfs1
     image: ipfs/go-ipfs:v0.12.0
     ports:
       - '9089:5001' # ipfs api - expose if needed/wanted
