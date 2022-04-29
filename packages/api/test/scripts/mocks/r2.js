@@ -60,5 +60,9 @@ export function createR2Bucket() {
         size: value.body.length,
       })
     },
+    delete: async (key) => {
+      bucket.delete(key)
+      return Promise.resolve()
+    },
   }
 }

@@ -129,7 +129,7 @@ async function getResponse(request, env, url) {
  * @param {Request} request
  * @param {Env} env
  */
-function getSourceUrl(request, env) {
+export function getSourceUrl(request, env) {
   let candidateUrl
   try {
     candidateUrl = new URL(decodeURIComponent(request.params.url))
@@ -160,7 +160,7 @@ function getSourceUrl(request, env) {
  * @param {URL} candidateUrl
  * @param {Env} env
  */
-function getNormalizedUrl(candidateUrl, env) {
+export function getNormalizedUrl(candidateUrl, env) {
   // Verify if IPFS path resolution URL
   const ipfsPathParts = candidateUrl.pathname.split('/ipfs/')
   if (ipfsPathParts.length > 1) {

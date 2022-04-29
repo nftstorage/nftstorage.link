@@ -115,6 +115,7 @@ function getSentry(request, env, ctx) {
  *
  * @typedef {Object} KVNamespace
  * @property {(key: string) => Promise<string | null>} get
+ * @property {(key: string) => Promise<void>} delete
  * @property {(key: string, value: string, options?: KVNamespacePutOptions) => Promise<string | null>} put
  * @property {(options: KVNamespaceListOptions) => Promise<KVNamespaceListResult>} list
  *
