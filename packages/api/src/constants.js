@@ -8,3 +8,12 @@ export const USER_TAGS = {
 export const MAX_ALLOWED_URL_LENGTH = 460
 
 export const HTTP_STATUS_CONFLICT = 409
+
+export const INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES = [
+  'no-cache',
+  'no-store',
+  'private',
+  'must-revalidate',
+  'stale-while-revalidate',
+  'proxy-revalidate',
+]

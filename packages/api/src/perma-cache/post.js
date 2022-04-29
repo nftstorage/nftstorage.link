@@ -1,8 +1,16 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
-import { MAX_ALLOWED_URL_LENGTH } from '../constants.js'
-import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
+import {
+  MAX_ALLOWED_URL_LENGTH,
+  INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES,
+} from '../constants.js'
+import {
+  InvalidUrlError,
+  TimeoutError,
+  HTTPError,
+  ExpectationFailedError,
+} from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
 
@@ -58,7 +66,8 @@ export async function permaCachePost(request, env, ctx) {
       )
     }
 
-    // TODO: Validate headers per https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+    validateCacheControlHeader(response.headers.get('Cache-Control') || '')
+
     // Store in R2 and add to Database if not existent
     r2Object = await env.SUPERHOT.put(r2Key, response.body, {
       httpMetadata: response.headers,
@@ -192,6 +201,21 @@ function getCid(candidateCid) {
   } catch (err) {
     throw new InvalidUrlError(`invalid CID: ${candidateCid}: ${err.message}`)
   }
+}
+
+/**
+ * Validates cache control header to verify if we should perma cache the response.
+ * Based on https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+ * @param {string} cacheControl
+ */
+function validateCacheControlHeader(cacheControl) {
+  INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES.forEach((directive) => {
+    if (cacheControl.includes(directive)) {
+      throw new ExpectationFailedError(
+        'Expectation failed with cache control header content'
+      )
+    }
+  })
 }
 
 /**

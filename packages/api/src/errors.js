@@ -15,6 +15,21 @@ export class InvalidUrlError extends Error {
 }
 InvalidUrlError.CODE = 'ERROR_INVALID_URL'
 
+export class ExpectationFailedError extends Error {
+  /**
+   * @param {string} message
+   */
+  constructor(message = 'Expectation failed') {
+    const status = 417
+    super(message)
+    this.name = 'ExpectationFailedError'
+    this.status = status
+    this.code = ExpectationFailedError.CODE
+    this.contentType = 'text/html'
+  }
+}
+ExpectationFailedError.CODE = 'ERROR_EXPECTATION_FAILED'
+
 export class TimeoutError extends Error {
   /**
    * @param {string} message

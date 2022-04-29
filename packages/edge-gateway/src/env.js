@@ -21,6 +21,7 @@ import { Logging } from './logs.js'
  * @property {Object} CIDSTRACKER
  * @property {Object} GATEWAYREDIRECTCOUNTER
  * @property {KVNamespace} DENYLIST
+ * @property {R2Bucket} SUPERHOT
  *
  * @typedef {Object} EnvTransformed
  * @property {string} IPFS_GATEWAY_HOSTNAME
@@ -118,4 +119,19 @@ function getSentry(request, env, ctx) {
  * }} DurableObjectStub
  *
  * @typedef {{ get: (key: string) => Promise<string | null> }} KVNamespace
+ *
+ * @typedef {Object} R2PutOptions
+ * @property {Headers} [httpMetadata]
+ * @property {Record<string, string>} [customMetadata]
+ *
+ * @typedef {Object} R2Object
+ * @property {Date} uploaded
+ * @property {Headers} [httpMetadata]
+ * @property {Record<string, string>} [customMetadata]
+ *
+ * @typedef {Object} R2Bucket
+ * @property {(key: string) => Promise<R2Object | null>} head
+ * @property {(key: string) => Promise<Response & R2Object | null>} get
+ * @property {(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null, options?: R2PutOptions) => Promise<R2Object>} put
+ * @property {(key: string) => Promise<void>} delete
  */
