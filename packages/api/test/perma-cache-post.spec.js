@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { encodeKey } from '../src/perma-cache/post.js'
+import { encodeKey } from '../src/perma-cache/utils.js'
 import { normalizeCid } from '../src/utils/cid.js'
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
@@ -162,7 +162,7 @@ test('Fails when it was already perma cached', async (t) => {
   })
   t.is(response2.status, 400)
   const body = await response2.json()
-  t.is(body, 'The provided url was already perma cached')
+  t.is(body, 'The provided URL was already perma cached')
 })
 
 const validateSuccessfulPut = async (t, url, body, responseTxt) => {

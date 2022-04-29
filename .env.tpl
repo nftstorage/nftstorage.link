@@ -2,7 +2,7 @@
 DEBUG=true
 
 # API Secrets
-# the salt is literally secret, not a random string, just 'secret'
+# the salt is literally the word 'secret', not a random string
 SALT=secret
 
 LOGTAIL_TOKEN=secret

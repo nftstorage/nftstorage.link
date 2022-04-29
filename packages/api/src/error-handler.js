@@ -9,7 +9,7 @@ export function errorHandler(err, env) {
 
   const status = err.status || 500
 
-  if (env.sentry && status >= 500) {
+  if (env.sentry && status >= 500 && err.name !== 'HTTPError') {
     env.log.error(err)
   }
 
