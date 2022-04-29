@@ -1,4 +1,3 @@
-import * as JWT from './utils/jwt.js'
 import {
   AccountRestrictedError,
   NoTokenError,
@@ -10,96 +9,85 @@ import { USER_TAGS } from './constants.js'
 
 /**
  * Middleware: verify the request is authenticated with a valid api token.
- * On successful login, adds `auth.user`, `auth.authToken`, and `auth.userTags` to the Request
+ * On successful login, adds `auth.user` to the Request and validates
+ * user does not have account restricted and has feature access.
  *
  * @param {import('itty-router').RouteHandler} handler
  * @returns {import('itty-router').RouteHandler}
  */
-export function withApiToken(handler) {
+export function withAuth(handler) {
   /**
    * @param {Request} request
    * @param {import('./env').Env} env
    * @returns {Promise<Response>}
    */
   return async (request, env, ctx) => {
-    const token = getTokenFromRequest(request, env)
-    const apiToken = await tryApiToken(token, env)
-    if (apiToken) {
-      const userTags = await env.db.getUserTags(apiToken.user.id)
-      request.auth = {
-        authToken: apiToken.key,
-        user: apiToken.user,
-        userTags,
-      }
-      env.sentry && env.sentry.setUser(apiToken.user)
-      return handler(request, env, ctx)
+    const token = getTokenFromRequest(request)
+    const user = await login(token, env)
+    const userTags = await getUserTags(token, env)
+
+    request.auth = {
+      user: user,
     }
 
-    throw new UnrecognisedTokenError()
-  }
-}
+    env.sentry && env.sentry.setUser(user)
 
-/**
- * Middleware: verify that the authenticated request is for a user whose
- * account is not restricted.
- *
- * @param {import('itty-router').RouteHandler} handler
- * @returns {import('itty-router').RouteHandler}
- */
-export function withAccountNotRestricted(handler) {
-  return async (request, env, ctx) => {
-    const isAccountRestricted = request.auth.userTags.find(
-      (v) => v.tag === USER_TAGS.ACCOUNT_RESTRICTION && v.value === 'true'
-    )
-    if (!isAccountRestricted) {
-      return handler(request, env, ctx)
+    // Verify user tags
+    if (userTags[USER_TAGS.ACCOUNT_RESTRICTION] === true) {
+      throw new AccountRestrictedError()
     }
-    throw new AccountRestrictedError()
-  }
-}
+    if (
+      !userTags[USER_TAGS.SUPER_HOT_ACCESS] ||
+      userTags[USER_TAGS.SUPER_HOT_ACCESS] === false
+    ) {
+      throw new SuperHotUnauthorizedError()
+    }
 
-/**
- * Middleware: verify that the authenticated request is for a user who is
- * authorized to use super hot.
- *
- * @param {import('itty-router').RouteHandler} handler
- * @returns {import('itty-router').RouteHandler}
- */
-export function withSuperHotAuthorized(handler) {
-  return async (request, env, ctx) => {
-    const authorized = request.auth.userTags.find(
-      (v) => v.tag === USER_TAGS.SUPER_HOT_ACCESS && v.value === 'true'
-    )
-    if (authorized) {
-      return handler(request, env, ctx)
-    }
-    throw new SuperHotUnauthorizedError()
+    return handler(request, env, ctx)
   }
 }
 
 /**
  * @param {string} token
- * @param {import('./env').Env}
+ * @param {import('./env').Env} env
  * @throws TokenNotFoundError
  */
-async function tryApiToken(token, env) {
-  let decoded = null
-  try {
-    await JWT.verify(token, env.SALT)
-    decoded = JWT.parse(token)
-  } catch (_) {
-    // not a api token
-    return null
-  }
-  const user = await env.db.getUser(decoded.sub)
-  if (!user) {
-    // we have a api token, but it's no longer valid
+async function login(token, env) {
+  const res = await fetch(`${env.API}/login`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    },
+  })
+
+  const body = await res.json()
+
+  if (body.ok) {
+    return body.value.user
+  } else {
     throw new TokenNotFoundError()
   }
+}
 
-  return {
-    user: user,
-    key: user.keys.find((k) => k?.secret === token),
+/**
+ * @param {string} token
+ * @param {import('./env').Env} env
+ */
+async function getUserTags(token, env) {
+  const res = await fetch(`${env.API}/user/tags`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: 'Bearer ' + token,
+    },
+  })
+
+  const body = await res.json()
+  if (body.ok) {
+    return body.value
+  } else {
+    throw new UnrecognisedTokenError()
   }
 }
 

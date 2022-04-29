@@ -1,6 +1,10 @@
 import test from 'ava'
 import { getMiniflare } from './scripts/utils.js'
-import { createTestUser, grantUserTag } from './scripts/helpers.js'
+import {
+  createTestUser,
+  USER_WITHOUT_SUPER_HOT_ACCESS,
+  USER_WITH_ACCOUNT_RESTRICTED,
+} from './scripts/helpers.js'
 
 test.beforeEach(async (t) => {
   // Create a new Miniflare environment for each test
@@ -42,23 +46,20 @@ test('Fails with 401 authentication when user unexistent token provided', async 
 
 test('Fails with 403 Forbidden when user has account restricted', async (t) => {
   const { mf } = t.context
-  const user = await createTestUser()
-  await grantUserTag(user.userId, 'HasAccountRestriction', true)
 
   const response = await mf.dispatchFetch(getPermaCachePutUrl('test.png'), {
     method: 'POST',
-    headers: { Authorization: `Bearer ${user.token}` },
+    headers: { Authorization: `Bearer ${USER_WITH_ACCOUNT_RESTRICTED.token}` },
   })
   t.is(response.status, 403)
 })
 
 test('Fails with 403 Forbidden when user does not have super hot access', async (t) => {
   const { mf } = t.context
-  const user = await createTestUser()
 
   const response = await mf.dispatchFetch(getPermaCachePutUrl('test.png'), {
     method: 'POST',
-    headers: { Authorization: `Bearer ${user.token}` },
+    headers: { Authorization: `Bearer ${USER_WITHOUT_SUPER_HOT_ACCESS.token}` },
   })
   t.is(response.status, 403)
 })

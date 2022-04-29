@@ -6,10 +6,8 @@ import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
 import { globals } from './scripts/worker-globals.js'
 
-test.before(async (t) => {
-  const user = await createTestUser({
-    grantRequiredTags: true,
-  })
+test.beforeEach(async (t) => {
+  const user = await createTestUser()
 
   // Create a new Miniflare environment for each test
   t.context = {
@@ -178,11 +176,10 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
 
   // Validate KV
   const kvKey = encodeKey({
-    userId: user.userId,
+    userId: user.id,
     r2Key: normalizedUrl,
     date: body.date,
   })
-  console.log('kvKey', kvKey)
   const ns = await mf.getKVNamespace('PERMACACHE')
   const { value, metadata } = await ns.getWithMetadata(kvKey)
   t.truthy(value)

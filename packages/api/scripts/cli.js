@@ -5,8 +5,6 @@ import { fileURLToPath } from 'url'
 import sade from 'sade'
 
 import { buildCmd } from './build.js'
-import { dbCmd } from '../node_modules/nft.storage-api/scripts/cmds/db.js'
-import { dbSqlCmd } from '../node_modules/nft.storage-api/scripts/cmds/db-sql.js'
 import { ipfsCmd } from '../node_modules/edge-gateway/scripts/ipfs.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -32,19 +30,5 @@ prog
       containerName: 'ipfs1',
     })
   )
-  .command('db')
-  .describe('Run docker compose to setup pg and pgrest')
-  .option('--init', 'Init docker container', false)
-  .option('--start', 'Start docker container', false)
-  .option('--stop', 'Stop docker container', false)
-  .option('--project', 'Project name', 'nftstorage.link-api')
-  .option('--clean', 'Clean all dockers artifacts', false)
-  .action(dbCmd)
-  .command('db-sql')
-  .describe('Database scripts')
-  .option('--reset', 'Reset db before running SQL.', false)
-  .option('--cargo', 'Import cargo data.', false)
-  .option('--testing', 'Tweak schema for testing.', false)
-  .action(dbSqlCmd)
 
 prog.parse(process.argv)

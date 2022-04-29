@@ -2,11 +2,7 @@
 
 import { Router } from 'itty-router'
 
-import {
-  withAccountNotRestricted,
-  withApiToken,
-  withSuperHotAuthorized,
-} from './auth.js'
+import { withAuth } from './auth.js'
 import { permaCachePost } from './perma-cache/index.js'
 
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
@@ -17,9 +13,7 @@ const router = Router()
 
 const auth = {
   '🤲': (handler) => withCorsHeaders(handler),
-  '🔒': (handler) => withCorsHeaders(withApiToken(handler)),
-  '🔥': (handler) => withSuperHotAuthorized(handler),
-  '🚫': (handler) => withAccountNotRestricted(handler),
+  '🔒': (handler) => withCorsHeaders(withAuth(handler)),
 }
 
 router
@@ -28,7 +22,7 @@ router
     const r = await env.SUPERHOT.get('0.csv')
     return new Response(r.body)
   })
-  .post('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePost))))
+  .post('/perma-cache/:url', auth['🔒'](permaCachePost))
 
 /**
  * @param {Error} error

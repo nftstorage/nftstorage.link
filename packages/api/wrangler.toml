@@ -29,14 +29,14 @@ kv_namespaces = [
 ]
 
 [env.production.vars]
-DATABASE_URL = "https://nft-storage-pgrest-prod.herokuapp.com"
+API = "https://api.nft.storage"
 DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
 
-#[env.production.r2_buckets]
-#binding = "SUPERHOT"
-#bucket_name = "super-hot"
+[[env.production.r2_buckets]]
+binding = "SUPERHOT"
+bucket_name = "super-hot"
 
 # Staging!
 [env.staging]
@@ -50,13 +50,13 @@ kv_namespaces = [
 ]
 
 [env.staging.vars]
-DATABASE_URL = "https://nft-storage-pgrest-staging.herokuapp.com"
+API = "https://api-staging.nft.storage"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
 
 [[env.staging.r2_buckets]]
-bucket_name = "super-hot"
+bucket_name = "super-hot-staging"
 binding = "SUPERHOT"
 
 # Test!
