@@ -29,7 +29,7 @@ export async function permaCachePost(request, env) {
   const r2Key = normalizedUrl.toString()
 
   // Validate if URL is not already perma cached by user
-  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}`
+  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}:`
   const { keys } = await env.PERMACACHE.list({
     prefix: kvPrefix,
   })

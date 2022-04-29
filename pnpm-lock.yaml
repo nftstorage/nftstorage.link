@@ -36,6 +36,7 @@ importers:
       nanoid: ^3.1.30
       nft.storage-api: https://gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326
       npm-run-all: ^4.1.5
+      p-map: ^5.3.0
       pg: ^8.7.3
       sade: ^1.7.4
       toucan-js: ^2.5.0
@@ -59,6 +60,7 @@ importers:
       miniflare: 2.4.0
       nft.storage-api: '@gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326'
       npm-run-all: 4.1.5
+      p-map: 5.3.0
       pg: 8.7.3
       sade: 1.8.1
       uint8arrays: 3.0.0
@@ -4995,7 +4997,6 @@ packages:
     dependencies:
       clean-stack: 4.1.0
       indent-string: 5.0.0
-    dev: false
 
   /ajv-keywords/3.5.2_ajv@6.12.6:
     resolution:
@@ -6023,7 +6024,6 @@ packages:
     engines: { node: '>=12' }
     dependencies:
       escape-string-regexp: 5.0.0
-    dev: false
 
   /clean-yaml-object/0.1.0:
     resolution: { integrity: sha1-Y/sRDcLOGoTcIfbZM0h20BCui2g= }
@@ -7808,7 +7808,6 @@ packages:
         integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==,
       }
     engines: { node: '>=12' }
-    dev: false
 
   /escodegen/1.14.3:
     resolution:
@@ -9319,7 +9318,6 @@ packages:
         integrity: sha512-m6FAo/spmsW2Ab2fU35JTYwtOKa2yAwXSwgjSv1TJzh4Mh7mC3lzAOVLBprb72XsTrgkEIsl7YrFNAiDiRhIGg==,
       }
     engines: { node: '>=12' }
-    dev: false
 
   /inflight/1.0.6:
     resolution: { integrity: sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk= }
@@ -12170,7 +12168,6 @@ packages:
     engines: { node: '>=12' }
     dependencies:
       aggregate-error: 4.0.0
-    dev: false
 
   /p-reflect/3.0.0:
     resolution:
