@@ -111,6 +111,14 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+      - run: pnpm install
       - run: npx dnslink-cloudflare --record staging --domain nftstorage.link --link /ipfs/${{ needs.build.outputs.cid }}
         env:
           CF_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
