@@ -141,14 +141,15 @@ jobs:
           package-name: website
       - uses: actions/checkout@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
+      - uses: pnpm/action-setup@v2.0.1
+        if: ${{ steps.tag-release.outputs.releases_created }}
+        with:
+          version: 6.32.x
       - uses: actions/setup-node@v2
         if: ${{ steps.tag-release.outputs.releases_created }}
         with:
-          node-version: '16'
-          registry-url: https://registry.npmjs.org/
-      - uses: actions/setup-node@v2
-        with:
           cache: 'pnpm'
+          node-version: ${{ matrix.node }}
       - run: pnpm install
         if: ${{ steps.tag-release.outputs.releases_created }}
       - name: Website - Deploy
