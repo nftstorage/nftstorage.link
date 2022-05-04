@@ -144,7 +144,10 @@ jobs:
         with:
           node-version: '16'
           registry-url: https://registry.npmjs.org/
-      - uses: bahmutov/npm-install@v1
+      - uses: actions/setup-node@v2
+        with:
+          cache: 'pnpm'
+      - run: pnpm install
         if: ${{ steps.tag-release.outputs.releases_created }}
       - name: Website - Deploy
         if: ${{ steps.tag-release.outputs.releases_created }}
