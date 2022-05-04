@@ -6,10 +6,12 @@ on:
     paths:
       - 'packages/website/**'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/api.yml'
   pull_request:
     paths:
       - 'packages/website/**'
       - 'pnpm-lock.yaml'
+      - '.github/workflows/api.yml'
 
 jobs:
   check:
