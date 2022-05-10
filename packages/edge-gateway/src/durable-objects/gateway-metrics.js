@@ -19,11 +19,12 @@ import {
  */
 
 const GATEWAY_METRICS_ID = 'gateway_metrics'
+const SUCCESS_STATUS = 200
 
 /**
  * Durable Object for keeping Metrics state of a gateway.
  */
-export class GatewayMetrics0 {
+export class GatewayMetrics1 {
   constructor(state) {
     this.state = state
 
@@ -85,6 +86,16 @@ export class GatewayMetrics0 {
       this.gatewayMetrics.totalWinnerRequests += 1
     }
 
+    // Only update response time histogram if response is successful
+    if (stats.status === SUCCESS_STATUS) {
+      this._updateResponseTimeHistogram(stats)
+    }
+  }
+
+  /**
+   * @param {FetchStats} stats
+   */
+  _updateResponseTimeHistogram(stats) {
     // Update histogram
     const gwHistogram = {
       ...this.gatewayMetrics.responseTimeHistogram,

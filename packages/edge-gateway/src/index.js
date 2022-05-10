@@ -8,7 +8,7 @@ import { gatewayGet } from './gateway.js'
 import { metricsGet } from './metrics.js'
 
 // Export Durable Object namespace from the root module.
-export { GatewayMetrics0 } from './durable-objects/gateway-metrics.js'
+export { GatewayMetrics1 } from './durable-objects/gateway-metrics.js'
 export { SummaryMetrics1 } from './durable-objects/summary-metrics.js'
 export { CidsTracker0 } from './durable-objects/cids.js'
 export { GatewayRedirectCounter0 } from './durable-objects/gateway-redirect-counter.js'
