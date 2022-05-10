@@ -133,6 +133,15 @@ export async function metricsGet(request, env, ctx) {
       metricsCollected.summaryMetrics.totalWinnerSuccessfulRequests +
       metricsCollected.summaryMetrics.totalCachedResponses
     }`,
+    `# HELP nftgateway_race_responses_per_time_total total of responses per gateway race response time bucket`,
+    `# TYPE nftgateway_race_responses_per_time_total histogram`,
+    ...responseTimeHistogram.map(
+      (t) =>
+        `nftgateway_race_responses_per_time_total{le="${msToS(t)}",env="${
+          env.ENV
+        }"} ${metricsCollected.summaryMetrics.raceResponseTimeHistogram[t]}`
+    ),
+    `nftgateway_race_responses_per_time_total{le="+Inf",env="${env.ENV}"} ${metricsCollected.summaryMetrics.totalWinnerSuccessfulRequests}`,
     `# HELP nftgateway_response_time_seconds_total Accumulated response time of each gateway.`,
     `# TYPE nftgateway_response_time_seconds_total summary`,
     ...env.ipfsGateways.map(
