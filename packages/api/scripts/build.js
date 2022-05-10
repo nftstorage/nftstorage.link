@@ -30,7 +30,8 @@ export async function buildCmd(opts) {
       BRANCH: JSON.stringify(git.branch(__dirname)),
       global: 'globalThis',
     },
-    minify: opts.env === 'dev' ? false : true,
+    // minify: opts.env === 'dev' ? false : true,
+    minify: false,
     sourcemap: 'external',
   })
 

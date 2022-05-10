@@ -7,8 +7,7 @@ type = "javascript"
 
 account_id = ""
 watch_dir = "src"
-compatibility_date = "2021-12-03"
-compatibility_flags = ["r2_public_beta_bindings"]
+compatibility_date = "2022-04-26"
 
 [build]
 command = "npm run build"
@@ -34,9 +33,15 @@ DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
 
-#[env.production.r2_buckets]
-#binding = "SUPERHOT"
-#bucket_name = "super-hot"
+[[env.production.r2_buckets]]
+binding = "SUPERHOT"
+bucket_name = "super-hot"
+
+[[env.production.unsafe.bindings]]
+name = "GATEWAY"
+type = "service"
+service = "gateway-nft-storage-production"
+environment = "production"
 
 # Staging!
 [env.staging]
@@ -56,8 +61,14 @@ ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
 
 [[env.staging.r2_buckets]]
-bucket_name = "super-hot"
+bucket_name = "super-hot-staging"
 binding = "SUPERHOT"
+
+[[env.staging.unsafe.bindings]]
+name = "GATEWAY"
+type = "service"
+service = "gateway-nft-storage-production"
+environment = "production"
 
 # Test!
 [env.test]

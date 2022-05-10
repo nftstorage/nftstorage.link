@@ -25,7 +25,12 @@ export function getMiniflare() {
     modules: true,
     bindings: {
       ...globals,
+      // Cloudflare R2
       SUPERHOT: createR2Bucket(),
+      // Cloudflare Service Binding
+      GATEWAY: {
+        fetch,
+      },
     },
   })
 }

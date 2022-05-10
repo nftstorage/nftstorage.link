@@ -10,7 +10,8 @@ import { webcrypto } from 'crypto'
 global.crypto = webcrypto
 
 // Add web response for R2 mocking
-import { Response } from '@web-std/fetch'
+import { Response, fetch } from '@web-std/fetch'
 
 // @ts-ignore response does not have all the types
 global.Response = Response
+global.fetch = fetch

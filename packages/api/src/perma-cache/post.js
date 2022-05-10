@@ -108,7 +108,7 @@ async function getResponse(request, env, url) {
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
   try {
-    response = await fetch(url.toString(), {
+    response = await env.GATEWAY.fetch(url.toString(), {
       signal: controller.signal,
       headers: getHeaders(request),
     })

@@ -18,6 +18,7 @@ import { DBClient } from './utils/db-client.js'
  * @property {KVNamespace} PERMACACHE
  * @property {KVNamespace} PERMACACHE_HISTORY
  * @property {R2Bucket} SUPERHOT
+ * @property {CFService} GATEWAY
  *
  * @typedef {Object} EnvTransformed
  * @property {string} VERSION
@@ -117,6 +118,8 @@ function getSentry(request, env, ctx) {
  * @property {(key: string) => Promise<string | null>} get
  * @property {(key: string, value: string, options?: KVNamespacePutOptions) => Promise<string | null>} put
  * @property {(options: KVNamespaceListOptions) => Promise<KVNamespaceListResult>} list
+ *
+ * @typedef {{ fetch: fetch }} CFService
  *
  * @typedef {Object} R2PutOptions
  * @property {Headers} [httpMetadata]
