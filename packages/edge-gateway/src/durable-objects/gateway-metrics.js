@@ -2,6 +2,7 @@ import {
   responseTimeHistogram,
   createResponseTimeHistogramObject,
 } from '../utils/histogram.js'
+import { HTTP_STATUS_SUCCESS } from '../constants.js'
 
 /**
  * @typedef {Object} GatewayMetrics
@@ -19,7 +20,6 @@ import {
  */
 
 const GATEWAY_METRICS_ID = 'gateway_metrics'
-const SUCCESS_STATUS = 200
 
 /**
  * Durable Object for keeping Metrics state of a gateway.
@@ -87,7 +87,7 @@ export class GatewayMetrics1 {
     }
 
     // Only update response time histogram if response is successful
-    if (stats.status === SUCCESS_STATUS) {
+    if (stats.status === HTTP_STATUS_SUCCESS) {
       this._updateSuccessfulResponseTimeHistogram(stats)
     }
   }
