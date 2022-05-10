@@ -22,12 +22,16 @@ main = "worker.mjs"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
 zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
 route = "api.nftstorage.link/*"
+kv_namespaces = [
+  { binding = "DENYLIST", id = "785cf627e913468ca5319523ae929def" }
+]
 
 [env.production.vars]
 DATABASE_URL = "https://nft-link-prod.herokuapp.com"
 DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
+IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://nft-storage.mypinata.cloud/\"]"
 
 [[env.production.r2_buckets]]
 bucket_name = "super-hot"
@@ -39,12 +43,16 @@ binding = "SUPERHOT"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
 zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
 route = "api-staging.nftstorage.link/*"
+kv_namespaces = [
+  { binding = "DENYLIST", id = "f4eb0eca32e14e28b643604a82e00cb3" }
+]
 
 [env.staging.vars]
 DATABASE_URL = "https://nft-link-staging.herokuapp.com"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
+IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://nft-storage.mypinata.cloud/\"]"
 
 [[env.staging.r2_buckets]]
 bucket_name = "super-hot-staging"
@@ -58,6 +66,7 @@ workers_dev = true
 DEBUG = "true"
 ENV = "test"
 GATEWAY_DOMAIN = "localhost:9081"
+IPFS_GATEWAYS = "[\"http://127.0.0.1:9081\"]"
 
 # Dev!
 [env.vsantos]
