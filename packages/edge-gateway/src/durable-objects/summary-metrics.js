@@ -206,6 +206,10 @@ export class SummaryMetrics1 {
         RESPONSE_TIME_HISTOGRAM_ID,
         this.responseTimeHistogram
       ),
+      this.state.storage.put(
+        RACE_RESPONSE_TIME_HISTOGRAM_ID,
+        this.raceResponseTimeHistogram
+      ),
     ])
   }
 
