@@ -9,7 +9,7 @@ import {
  * @property {number} totalWinnerRequests number of performed requests where winner
  * @property {Record<string, number>} totalResponsesByStatus total responses received indexed by status code
  * @property {Record<string, number>} totalRequestsPreventedByReason total requests not sent to upstream gateway indexed by reason code
- * @property {Record<string, number>} responseTimeHistogram
+ * @property {Record<string, number>} successfulResponseTimeHistogram
  *
  * @typedef {Object} FetchStats
  * @property {number} status http response status
@@ -88,17 +88,17 @@ export class GatewayMetrics1 {
 
     // Only update response time histogram if response is successful
     if (stats.status === SUCCESS_STATUS) {
-      this._updateResponseTimeHistogram(stats)
+      this._updateSuccessfulResponseTimeHistogram(stats)
     }
   }
 
   /**
    * @param {FetchStats} stats
    */
-  _updateResponseTimeHistogram(stats) {
+  _updateSuccessfulResponseTimeHistogram(stats) {
     // Update histogram
     const gwHistogram = {
-      ...this.gatewayMetrics.responseTimeHistogram,
+      ...this.gatewayMetrics.successfulResponseTimeHistogram,
     }
 
     // Get all the histogram buckets where the response time is smaller
@@ -109,7 +109,7 @@ export class GatewayMetrics1 {
       gwHistogram[candidate] += 1
     })
 
-    this.gatewayMetrics.responseTimeHistogram = gwHistogram
+    this.gatewayMetrics.successfulResponseTimeHistogram = gwHistogram
   }
 }
 
@@ -120,7 +120,7 @@ function createMetricsTracker() {
     totalWinnerRequests: 0,
     totalResponsesByStatus: {},
     totalRequestsPreventedByReason: {},
-    responseTimeHistogram: createResponseTimeHistogramObject(),
+    successfulResponseTimeHistogram: createResponseTimeHistogramObject(),
   }
 
   return m

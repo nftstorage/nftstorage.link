@@ -233,7 +233,7 @@ export async function metricsGet(request, env, ctx) {
       (gw) =>
         `nftgateway_winner_requests_total{gateway="${gw}",env="${env.ENV}"} ${metricsCollected.ipfsGateways[gw].totalWinnerRequests}`
     ),
-    `# HELP nftgateway_requests_per_time_total total of requests per response time bucket`,
+    `# HELP nftgateway_requests_per_time_total total of successful requests per response time bucket`,
     `# TYPE nftgateway_requests_per_time_total histogram`,
     ...responseTimeHistogram.map((t) => {
       return env.ipfsGateways
@@ -242,7 +242,9 @@ export async function metricsGet(request, env, ctx) {
             `nftgateway_requests_per_time_total{gateway="${gw}",le="${msToS(
               t
             )}",env="${env.ENV}"} ${
-              metricsCollected.ipfsGateways[gw].responseTimeHistogram[t]
+              metricsCollected.ipfsGateways[gw].successfulResponseTimeHistogram[
+                t
+              ]
             }`
         )
         .join('\n')
