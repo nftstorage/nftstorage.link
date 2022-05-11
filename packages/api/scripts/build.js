@@ -12,7 +12,7 @@ const pkg = JSON.parse(
 )
 
 export async function buildCmd(opts) {
-  const sentryRelease = `nftstorage.link-api@${pkg.version}-${
+  const sentryRelease = `nftstoragelink-api@${pkg.version}-${
     opts.env || 'dev'
   }+${git.short(__dirname)}`
   console.log(`Building ${sentryRelease}`)
@@ -39,7 +39,7 @@ export async function buildCmd(opts) {
     const cli = new Sentry(undefined, {
       authToken: process.env.SENTRY_TOKEN,
       org: 'protocol-labs-it',
-      project: 'nftstorage.link-api',
+      project: 'nftstoragelink-api',
       dist: git.short(__dirname),
     })
 
