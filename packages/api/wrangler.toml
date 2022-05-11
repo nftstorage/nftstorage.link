@@ -7,8 +7,7 @@ type = "javascript"
 
 account_id = ""
 watch_dir = "src"
-compatibility_date = "2021-12-03"
-compatibility_flags = ["r2_public_beta_bindings"]
+compatibility_date = "2022-05-11"
 
 [build]
 command = "npm run build"
