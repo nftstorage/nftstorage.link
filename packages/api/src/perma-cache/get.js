@@ -33,11 +33,10 @@ export async function permaCacheListGet(request, env) {
   })
 
   const entries = keys.map((key) => {
-    const { date, r2Key } = decodeKey(key.name)
+    const { date } = decodeKey(key.name)
 
     return {
-      sourceUrl: key.metadata.sourceUrl,
-      normalizedUrl: r2Key,
+      url: key.metadata.sourceUrl,
       size: key.metadata.size,
       date,
     }

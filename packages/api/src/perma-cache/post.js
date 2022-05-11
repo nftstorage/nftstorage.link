@@ -90,8 +90,7 @@ export async function permaCachePost(request, env) {
   ])
 
   return new JSONResponse({
-    sourceUrl: sourceUrl.toString(),
-    normalizedUrl: r2Key,
+    url: sourceUrl.toString(),
     size: r2Object.size,
     date,
   })

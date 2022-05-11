@@ -130,11 +130,10 @@ test('Can paginate list', async (t) => {
 
 const validateList = (t, urls, entries) => {
   urls.forEach((url) => {
-    const { normalizedUrl, sourceUrl } = getParsedUrl(url)
+    const { sourceUrl } = getParsedUrl(url)
 
-    const target = entries.find((e) => normalizedUrl === e.normalizedUrl)
-    t.is(normalizedUrl, target.normalizedUrl)
-    t.is(sourceUrl, target.sourceUrl)
+    const target = entries.find((e) => sourceUrl === e.url)
+    t.is(sourceUrl, target.url)
     t.truthy(target.date)
     t.truthy(target.size)
   })

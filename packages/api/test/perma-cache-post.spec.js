@@ -172,8 +172,7 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
 
   // Validate expected body
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
-  t.is(body.normalizedUrl, normalizedUrl)
-  t.is(body.sourceUrl, sourceUrl)
+  t.is(body.url, sourceUrl)
   t.truthy(body.date)
   t.falsy(body.deletedAt)
   t.truthy(body.size)
@@ -188,7 +187,7 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   const { value, metadata } = await ns.getWithMetadata(kvKey)
   t.truthy(value)
   t.truthy(metadata)
-  t.is(body.sourceUrl, metadata.sourceUrl)
+  t.is(body.url, metadata.sourceUrl)
   t.is(body.size, metadata.size)
   t.is(body.date, metadata.date)
 
