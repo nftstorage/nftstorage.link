@@ -7,7 +7,7 @@ import {
   withApiToken,
   withSuperHotAuthorized,
 } from './auth.js'
-import { permaCachePost, permaCacheListGet, permaCacheStatusGet } from './perma-cache/index.js'
+import { permaCachePost, permaCacheListGet, permaCacheStatusGet, permaCacheDelete } from './perma-cache/index.js'
 
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
@@ -33,6 +33,10 @@ router
   .get(
     '/perma-cache/status',
     auth['🔒'](auth['🚫'](auth['🔥'](permaCacheStatusGet)))
+  )
+  .delete(
+    '/perma-cache/:url',
+    auth['🔒'](auth['🚫'](auth['🔥'](permaCacheDelete)))
   )
 
 /**
