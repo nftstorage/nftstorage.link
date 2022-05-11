@@ -38,7 +38,7 @@ export async function permaCacheListGet(request, env) {
     return {
       sourceUrl: key.metadata.sourceUrl,
       normalizedUrl: r2Key,
-      size: key.metadata.contentLength,
+      size: key.metadata.size,
       date,
     }
   })

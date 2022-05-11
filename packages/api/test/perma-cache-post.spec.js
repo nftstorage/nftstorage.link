@@ -176,7 +176,7 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   t.is(body.sourceUrl, sourceUrl)
   t.truthy(body.date)
   t.falsy(body.deletedAt)
-  t.truthy(body.contentLength)
+  t.truthy(body.size)
 
   // Validate KV
   const kvKey = encodeKey({
@@ -184,13 +184,12 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
     r2Key: normalizedUrl,
     date: body.date,
   })
-  console.log('kvKey', kvKey)
   const ns = await mf.getKVNamespace('PERMACACHE')
   const { value, metadata } = await ns.getWithMetadata(kvKey)
   t.truthy(value)
   t.truthy(metadata)
   t.is(body.sourceUrl, metadata.sourceUrl)
-  t.is(body.contentLength, metadata.contentLength)
+  t.is(body.size, metadata.size)
   t.is(body.date, metadata.date)
 
   const nsHistory = await mf.getKVNamespace('PERMACACHE_HISTORY')

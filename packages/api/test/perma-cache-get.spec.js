@@ -83,14 +83,16 @@ test('Can paginate list', async (t) => {
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
     'http://localhost:9081/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path',
   ]
-  await Promise.all(
-    urls.map(async (url) => {
+  await pMap(
+    urls,
+    async (url) => {
       const putResponse = await mf.dispatchFetch(getPermaCachePutUrl(url), {
         method: 'POST',
         headers: { Authorization: `Bearer ${user.token}` },
       })
       t.is(putResponse.status, 200)
-    })
+    },
+    { concurrency: 1 }
   )
 
   const pages = []
@@ -134,6 +136,6 @@ const validateList = (t, urls, entries) => {
     t.is(normalizedUrl, target.normalizedUrl)
     t.is(sourceUrl, target.sourceUrl)
     t.truthy(target.date)
-    t.truthy(target.contentLength)
+    t.truthy(target.size)
   })
 }
