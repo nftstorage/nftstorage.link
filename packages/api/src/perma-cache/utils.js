@@ -15,3 +15,17 @@ export function encodeKey({ userId, r2Key, date }) {
 
   return `${userId}:${encodeURIComponent(r2Key)}:${ts}`
 }
+
+/**
+ * @param {string} key
+ * @returns {Key}
+ */
+export function decodeKey(key) {
+  const parts = key.split(':')
+  const ts = parts.pop()
+  const r2Key = decodeURIComponent(parts.pop())
+  if (!r2Key || !ts) throw new Error('Invalid key')
+  const date = new Date(FAR_FUTURE - parseInt(ts)).toISOString()
+
+  return { date, r2Key, userId: parts.join(':') }
+}

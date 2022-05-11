@@ -29,7 +29,7 @@ export async function permaCachePost(request, env) {
   const r2Key = normalizedUrl.toString()
 
   // Validate if URL is not already perma cached by user
-  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}`
+  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}:`
   const { keys } = await env.PERMACACHE.list({
     prefix: kvPrefix,
   })
@@ -76,13 +76,13 @@ export async function permaCachePost(request, env) {
     await env.PERMACACHE.put(kvKey, r2Key, {
       metadata: {
         sourceUrl: sourceUrl.toString(),
-        contentLength: r2Object.size,
+        size: r2Object.size,
         date,
       },
     }),
     await env.PERMACACHE_HISTORY.put(kvKey, r2Key, {
       metadata: {
-        contentLength: r2Object.size,
+        size: r2Object.size,
         date,
         operation: 'put',
       },
@@ -90,9 +90,8 @@ export async function permaCachePost(request, env) {
   ])
 
   return new JSONResponse({
-    sourceUrl: sourceUrl.toString(),
-    normalizedUrl: r2Key,
-    contentLength: r2Object.size,
+    url: sourceUrl.toString(),
+    size: r2Object.size,
     date,
   })
 }

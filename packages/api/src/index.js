@@ -7,7 +7,7 @@ import {
   withApiToken,
   withSuperHotAuthorized,
 } from './auth.js'
-import { permaCachePost } from './perma-cache/index.js'
+import { permaCachePost, permaCacheListGet } from './perma-cache/index.js'
 
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
@@ -28,6 +28,7 @@ router
     const r = await env.SUPERHOT.get('0.csv')
     return new Response(r.body)
   })
+  .get('/perma-cache', auth['🔒'](auth['🚫'](auth['🔥'](permaCacheListGet))))
   .post('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePost))))
 
 /**

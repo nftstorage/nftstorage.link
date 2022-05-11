@@ -1,16 +1,18 @@
 import test from 'ava'
 
 import { encodeKey } from '../src/perma-cache/utils.js'
-import { normalizeCid } from '../src/utils/cid.js'
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
-import { globals } from './scripts/worker-globals.js'
+import { getParsedUrl, getPermaCachePutUrl } from './utils.js'
 
+let user
 test.before(async (t) => {
-  const user = await createTestUser({
+  user = await createTestUser({
     grantRequiredTags: true,
   })
+})
 
+test.beforeEach((t) => {
   // Create a new Miniflare environment for each test
   t.context = {
     mf: getMiniflare(),
@@ -170,11 +172,10 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
 
   // Validate expected body
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
-  t.is(body.normalizedUrl, normalizedUrl)
-  t.is(body.sourceUrl, sourceUrl)
+  t.is(body.url, sourceUrl)
   t.truthy(body.date)
   t.falsy(body.deletedAt)
-  t.truthy(body.contentLength)
+  t.truthy(body.size)
 
   // Validate KV
   const kvKey = encodeKey({
@@ -182,13 +183,12 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
     r2Key: normalizedUrl,
     date: body.date,
   })
-  console.log('kvKey', kvKey)
   const ns = await mf.getKVNamespace('PERMACACHE')
   const { value, metadata } = await ns.getWithMetadata(kvKey)
   t.truthy(value)
   t.truthy(metadata)
-  t.is(body.sourceUrl, metadata.sourceUrl)
-  t.is(body.contentLength, metadata.contentLength)
+  t.is(body.url, metadata.sourceUrl)
+  t.is(body.size, metadata.size)
   t.is(body.date, metadata.date)
 
   const nsHistory = await mf.getKVNamespace('PERMACACHE_HISTORY')
@@ -204,30 +204,4 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
 
   const r2Response = await r2Bucket.get(normalizedUrl)
   t.deepEqual(await r2Response.text(), responseTxt)
-}
-
-const getPermaCachePutUrl = (url) =>
-  `https://localhost:8788/perma-cache/${encodeURIComponent(url)}`
-
-const getParsedUrl = (url) => {
-  let normalizedUrl = new URL(url)
-  // Verify if IPFS path resolution URL
-  const ipfsPathParts = normalizedUrl.pathname.split('/ipfs/')
-  if (ipfsPathParts.length > 1) {
-    const pathParts = ipfsPathParts[1].split(/[\/\?](.*)/s)
-    const cid = normalizeCid(pathParts[0])
-    // Parse path + query params
-    const path = pathParts[1] ? `/${pathParts[1]}` : ''
-    const queryParamsString = normalizedUrl.searchParams.toString()
-    const queryParams = queryParamsString.length ? `?${queryParamsString}` : ''
-
-    normalizedUrl = new URL(
-      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAIN}${path}${queryParams}`
-    )
-  }
-
-  return {
-    normalizedUrl: normalizedUrl.toString(),
-    sourceUrl: new URL(url).toString(),
-  }
 }
