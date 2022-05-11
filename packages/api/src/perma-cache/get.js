@@ -38,7 +38,7 @@ export async function permaCacheListGet(request, env) {
     return {
       sourceUrl: key.metadata.sourceUrl,
       normalizedUrl: r2Key,
-      contentLength: key.metadata.contentLength,
+      size: key.metadata.contentLength,
       date,
     }
   })
@@ -47,7 +47,7 @@ export async function permaCacheListGet(request, env) {
   const headers =
     entries.length === limit && cursor && !listComplete
       ? {
-          Link: `<${requestUrl.pathname}?limit=${limit}&cursor=${cursor}>; rel="next"`,
+          Link: `<${requestUrl.pathname}?size=${limit}&cursor=${cursor}>; rel="next"`,
         }
       : undefined
   return new JSONResponse(entries, { headers })
