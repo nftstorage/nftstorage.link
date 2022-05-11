@@ -35,7 +35,7 @@ export async function permaCacheStatusGet(request, env) {
     }
 
     keys.forEach((key) => {
-      usedStorage += key.metadata.contentLength
+      usedStorage += key.metadata.size
     })
 
     endCursor = cursor

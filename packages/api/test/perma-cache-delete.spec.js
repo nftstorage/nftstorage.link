@@ -3,6 +3,7 @@ import test from 'ava'
 import { encodeKey } from '../src/perma-cache/utils.js'
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
+import { getParsedUrl } from './utils.js'
 
 let user
 test.before(async (t) => {
@@ -39,7 +40,8 @@ test('Can delete perma cache content', async (t) => {
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(responsePost.status, 200)
-  const { normalizedUrl, date } = await responsePost.json()
+  const { normalizedUrl } = getParsedUrl(url)
+  const { date } = await responsePost.json()
 
   // Verify R2
   const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
@@ -81,13 +83,14 @@ test('Can delete perma cache content with source url', async (t) => {
   const url =
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
 
+  const { normalizedUrl } = getParsedUrl(url)
   // Post
   const responsePost = await mf.dispatchFetch(getPermaCachePutUrl(url), {
     method: 'POST',
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(responsePost.status, 200)
-  const { normalizedUrl, sourceUrl, date } = await responsePost.json()
+  const { url: sourceUrl, date } = await responsePost.json()
 
   // Delete
   const responseDelete = await mf.dispatchFetch(
@@ -164,7 +167,8 @@ test('Can add content that was previously deleted', async (t) => {
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(responsePost2.status, 200)
-  const { normalizedUrl, date } = await responsePost2.json()
+  const { normalizedUrl } = getParsedUrl(url)
+  const { date } = await responsePost2.json()
 
   // Verify R2
   const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
