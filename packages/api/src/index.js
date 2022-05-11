@@ -7,7 +7,7 @@ import {
   withApiToken,
   withSuperHotAuthorized,
 } from './auth.js'
-import { permaCachePost, permaCacheListGet } from './perma-cache/index.js'
+import { permaCachePost, permaCacheListGet, permaCacheStatusGet } from './perma-cache/index.js'
 
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
@@ -30,6 +30,10 @@ router
   })
   .get('/perma-cache', auth['🔒'](auth['🚫'](auth['🔥'](permaCacheListGet))))
   .post('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePost))))
+  .get(
+    '/perma-cache/status',
+    auth['🔒'](auth['🚫'](auth['🔥'](permaCacheStatusGet)))
+  )
 
 /**
  * @param {Error} error
