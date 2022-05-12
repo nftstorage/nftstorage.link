@@ -251,7 +251,7 @@ export async function metricsGet(request, env, ctx) {
     }),
     ...env.ipfsGateways.map(
       (gw) =>
-        `nftgateway_requests_per_time_total{gateway="${gw}",le="+Inf",env="${
+        `nftgateway_successful_requests_per_time_total{gateway="${gw}",le="+Inf",env="${
           env.ENV
         }"} ${
           metricsCollected.ipfsGateways[gw].totalResponsesByStatus[
