@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.6.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.0...edge-gateway-v1.6.1) (2022-05-12)
+
+
+### Bug Fixes
+
+* prometheus header rename ([#83](https://github.com/nftstorage/nftstorage.link/issues/83)) ([3004d6c](https://github.com/nftstorage/nftstorage.link/commit/3004d6c1b45ae8388c72091995c9f156331b2447))
+
 ## [1.6.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.7...edge-gateway-v1.6.0) (2022-05-12)
 
 
