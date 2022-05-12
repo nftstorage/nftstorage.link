@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.6.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.7...edge-gateway-v1.6.0) (2022-05-12)
+
+
+### Features
+
+* add heartbeat to cron jobs ([#58](https://github.com/nftstorage/nftstorage.link/issues/58)) ([aa42e06](https://github.com/nftstorage/nftstorage.link/commit/aa42e06e06f3903bd2a02d15ba764df55ad1a90c))
+* http perma cache post ([#28](https://github.com/nftstorage/nftstorage.link/issues/28)) ([df4dce4](https://github.com/nftstorage/nftstorage.link/commit/df4dce47070fa4d24b088562fe8f62be028d5a66))
+* track histogram of race response times ([#79](https://github.com/nftstorage/nftstorage.link/issues/79)) ([7ee39e4](https://github.com/nftstorage/nftstorage.link/commit/7ee39e44a34a27892175c9d469b9b5cc26db8071))
+
+
+### Bug Fixes
+
+* gateway histogram response time only updated on 200 ([#80](https://github.com/nftstorage/nftstorage.link/issues/80)) ([02df16f](https://github.com/nftstorage/nftstorage.link/commit/02df16f9b77dd2e71a575fcca9d857b2412b1c10))
+
 ### [1.5.7](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.5.6...edge-gateway-v1.5.7) (2022-04-25)
 
 
