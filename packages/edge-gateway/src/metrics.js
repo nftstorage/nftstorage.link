@@ -239,7 +239,7 @@ export async function metricsGet(request, env, ctx) {
       return env.ipfsGateways
         .map(
           (gw) =>
-            `nftgateway_requests_per_time_total{gateway="${gw}",le="${msToS(
+            `nftgateway_successful_requests_per_time_total{gateway="${gw}",le="${msToS(
               t
             )}",env="${env.ENV}"} ${
               metricsCollected.ipfsGateways[gw].successfulResponseTimeHistogram[
