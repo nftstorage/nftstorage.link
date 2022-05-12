@@ -13,6 +13,7 @@ import {
  * @property {BigInt} totalCachedContentLengthBytes total content length of cached responses
  * @property {Record<string, number>} contentLengthHistogram
  * @property {Record<string, number>} responseTimeHistogram
+ * @property {Record<string, number>} raceResponseTimeHistogram
  *
  * @typedef {Object} FetchStats
  * @property {number} responseTime number of milliseconds to get response
@@ -35,11 +36,13 @@ const TOTAL_CACHED_CONTENT_LENGTH_BYTES_ID = 'totalCachedContentLengthBytes'
 const CONTENT_LENGTH_HISTOGRAM_ID = 'contentLengthHistogram'
 // Key to track response time histogram
 const RESPONSE_TIME_HISTOGRAM_ID = 'responseTimeHistogram'
+// Key to track race response time histogram
+const RACE_RESPONSE_TIME_HISTOGRAM_ID = 'raceResponseTimeHistogram'
 
 /**
  * Durable Object for keeping summary metrics of nft.storage Gateway
  */
-export class SummaryMetrics0 {
+export class SummaryMetrics1 {
   constructor(state) {
     this.state = state
 
@@ -73,6 +76,10 @@ export class SummaryMetrics0 {
       this.responseTimeHistogram =
         (await this.state.storage.get(RESPONSE_TIME_HISTOGRAM_ID)) ||
         createResponseTimeHistogramObject()
+      // Race response time histogram
+      this.raceResponseTimeHistogram =
+        (await this.state.storage.get(RACE_RESPONSE_TIME_HISTOGRAM_ID)) ||
+        createResponseTimeHistogramObject()
     })
   }
 
@@ -96,6 +103,7 @@ export class SummaryMetrics0 {
                 this.totalCachedContentLengthBytes.toString(),
               contentLengthHistogram: this.contentLengthHistogram,
               responseTimeHistogram: this.responseTimeHistogram,
+              raceResponseTimeHistogram: this.raceResponseTimeHistogram,
             })
           )
         default:
@@ -127,7 +135,10 @@ export class SummaryMetrics0 {
     this.totalCachedResponses += 1
     this.totalCachedContentLengthBytes += BigInt(stats.contentLength)
     this._updateContentLengthMetrics(stats)
-    this._updateResponseTimeHistogram(stats)
+    this.responseTimeHistogram = this._getUpdatedHistogram(
+      stats,
+      this.responseTimeHistogram
+    )
     // Save updated metrics
     await Promise.all([
       this.state.storage.put(
@@ -165,7 +176,14 @@ export class SummaryMetrics0 {
     this.totalWinnerResponseTime += stats.responseTime
     this.totalWinnerSuccessfulRequests += 1
     this._updateContentLengthMetrics(stats)
-    this._updateResponseTimeHistogram(stats)
+    this.responseTimeHistogram = this._getUpdatedHistogram(
+      stats,
+      this.responseTimeHistogram
+    )
+    this.raceResponseTimeHistogram = this._getUpdatedHistogram(
+      stats,
+      this.raceResponseTimeHistogram
+    )
     // Save updated Metrics
     await Promise.all([
       this.state.storage.put(
@@ -187,6 +205,10 @@ export class SummaryMetrics0 {
       this.state.storage.put(
         RESPONSE_TIME_HISTOGRAM_ID,
         this.responseTimeHistogram
+      ),
+      this.state.storage.put(
+        RACE_RESPONSE_TIME_HISTOGRAM_ID,
+        this.raceResponseTimeHistogram
       ),
     ])
   }
@@ -215,10 +237,11 @@ export class SummaryMetrics0 {
 
   /**
    * @param {FetchStats} stats
+   * @param {Record<number, number>} histogram
    */
-  _updateResponseTimeHistogram(stats) {
+  _getUpdatedHistogram(stats, histogram) {
     const tmpHistogram = {
-      ...this.responseTimeHistogram,
+      ...histogram,
     }
 
     // Get all the histogram buckets where the response time is smaller
@@ -230,7 +253,7 @@ export class SummaryMetrics0 {
       tmpHistogram[candidate] += 1
     })
 
-    this.responseTimeHistogram = tmpHistogram
+    return tmpHistogram
   }
 }
 

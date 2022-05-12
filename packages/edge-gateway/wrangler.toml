@@ -19,7 +19,7 @@ main = "worker.mjs"
 [durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -42,7 +42,7 @@ ENV = "production"
 [env.production.durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -65,7 +65,7 @@ ENV = "staging"
 [env.staging.durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -84,7 +84,7 @@ ENV = "test"
 [env.test.durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -102,7 +102,7 @@ IPFS_GATEWAYS = "[\"https://ipfs.io\"]"
 [env.vsantos.durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -119,7 +119,7 @@ IPFS_GATEWAYS = "[\"https://ipfs.io\"]"
 [env.alanshaw.durable_objects]
 bindings = [
   {name = "GATEWAYMETRICS", class_name = "GatewayMetrics0"},
-  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics0"},
+  {name = "SUMMARYMETRICS", class_name = "SummaryMetrics1"},
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
@@ -145,7 +145,10 @@ deleted_classes = ["GatewayRateLimits2"]
 tag = "v5" # Should be unique for each entry
 new_classes = ["GatewayRateLimits4"]
 deleted_classes = ["GatewayRateLimits3"]
-
 [[migrations]]
 tag = "v6" # Should be unique for each entry
 deleted_classes = ["GatewayRateLimits4"]
+[[migrations]]
+tag = "v7" # Should be unique for each entry
+new_classes = ["SummaryMetrics1"]
+deleted_classes = ["SummaryMetrics0"]
