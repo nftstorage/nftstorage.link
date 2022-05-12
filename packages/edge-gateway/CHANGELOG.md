@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.6.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.1...edge-gateway-v1.6.2) (2022-05-12)
+
+
+### Bug Fixes
+
+* +inf bucket ([d922927](https://github.com/nftstorage/nftstorage.link/commit/d92292771a8ec5effa6aaddf51be5721b14346df))
+
 ### [1.6.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.0...edge-gateway-v1.6.1) (2022-05-12)
 
 
