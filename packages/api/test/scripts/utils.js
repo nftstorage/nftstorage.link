@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { PostgrestClient } from '@supabase/postgrest-js'
 import { Miniflare } from 'miniflare'
 
 import { globals } from './worker-globals.js'
@@ -28,4 +29,61 @@ export function getMiniflare() {
       SUPERHOT: createR2Bucket(),
     },
   })
+}
+
+export class NftStorageDBClient {
+  /**
+   * DB client constructor
+   *
+   * @param {string} url
+   * @param {string} token
+   */
+  constructor(url, token) {
+    this.client = new PostgrestClient(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        apikey: `${token}`,
+      },
+      schema: 'nftstorage',
+    })
+  }
+
+  /**
+   * Upsert user
+   */
+  upsertUser(user) {
+    const query = this.client.from('user')
+
+    return query.upsert(user, { onConflict: 'github_id' })
+  }
+
+  /**
+   * Create a new auth key
+   *
+   * @param {Object} key
+   * @param {string} key.name
+   * @param {string} key.secret
+   * @param {number} key.userId
+   */
+  async createKey(key) {
+    const query = this.client.from('auth_key')
+
+    const { data, error } = await query
+      .upsert({
+        name: key.name,
+        secret: key.secret,
+        user_id: key.userId,
+      })
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    if (!data) {
+      throw new Error('Auth key not created.')
+    }
+
+    return data
+  }
 }

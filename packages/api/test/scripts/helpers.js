@@ -1,10 +1,16 @@
+import { DBClient } from '../../src/utils/db-client.js'
 import * as JWT from '../../src/utils/jwt.js'
 import { PostgrestClient } from '@supabase/postgrest-js'
 
-import { DBClient } from 'nft.storage-api/src/utils/db-client.js'
+import { NftStorageDBClient } from './utils.js'
 import { globals } from './worker-globals.js'
 
-export const client = new DBClient(
+export const dbClient = new DBClient({
+  endpoint: process.env.DATABASE_URL,
+  token: process.env.DATABASE_TOKEN,
+})
+
+export const nftStorageDbClient = new NftStorageDBClient(
   process.env.DATABASE_URL,
   process.env.DATABASE_TOKEN
 )
@@ -13,6 +19,7 @@ export const rawClient = new PostgrestClient(process.env.DATABASE_URL, {
   headers: {
     Authorization: `Bearer ${process.env.DATABASE_TOKEN}`,
   },
+  schema: 'nftstorage',
 })
 
 /**
@@ -23,7 +30,9 @@ export const rawClient = new PostgrestClient(process.env.DATABASE_URL, {
  * @param {boolean} [options.grantRequiredTags]
  */
 export async function createTestUser({
-  publicAddress = `0x73573${Date.now()}`,
+  publicAddress = `0x73573${Date.now()}${(Math.random() + 1)
+    .toString(36)
+    .substring(7)}`,
   issuer = `did:eth:${publicAddress}`,
   name = 'A Tester',
   grantRequiredTags = false,
@@ -63,7 +72,7 @@ export async function createTestUserWithFixedToken({
   issuer = `did:eth:${publicAddress}`,
   name = 'A Tester',
 } = {}) {
-  const { data: user, error } = await client
+  const { data: user, error } = await nftStorageDbClient
     .upsertUser({
       email: `a.tester@example.org`,
       github_id: issuer,
@@ -79,7 +88,7 @@ export async function createTestUserWithFixedToken({
     throw new Error('error creating user')
   }
 
-  await client.createKey({
+  await nftStorageDbClient.createKey({
     name: 'test',
     secret: token,
     userId: user.id,

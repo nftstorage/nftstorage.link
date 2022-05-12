@@ -48,7 +48,7 @@ test('Get perma cache status from user', async (t) => {
   t.is(statusResponseNotEmpty.status, 200)
 
   const statusNotEmpty = await statusResponseNotEmpty.json()
-  t.is(statusNotEmpty.usedStorage, body.size)
+  t.is(statusNotEmpty.usedStorage, String(body.size))
 })
 
 const getPermaCachePutUrl = (url) =>

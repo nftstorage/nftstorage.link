@@ -22,13 +22,9 @@ main = "worker.mjs"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
 zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
 route = "api.nftstorage.link/*"
-kv_namespaces = [
-  { binding = "PERMACACHE", id = "73fa71d7cadc4671b91a236cee82d502", preview_id = "73fa71d7cadc4671b91a236cee82d502" },
-  { binding = "PERMACACHE_HISTORY", id = "ed2c0aeb57eb4f72a7edf8e097efb3fa", preview_id = "ed2c0aeb57eb4f72a7edf8e097efb3fa" }
-]
 
 [env.production.vars]
-DATABASE_URL = "https://nft-storage-pgrest-prod.herokuapp.com"
+DATABASE_URL = "https://nft-link-prod.herokuapp.com"
 DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
@@ -43,13 +39,9 @@ GATEWAY_DOMAIN = "nftstorage.link"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
 zone_id = "c7795a0adce7609a95d62fec04705aff"    # nftstorage.link zone
 route = "api-staging.nftstorage.link/*"
-kv_namespaces = [
-  { binding = "PERMACACHE", id = "de8e81e8107d4b2497dfa9e288f5dc8c", preview_id = "de8e81e8107d4b2497dfa9e288f5dc8c" },
-  { binding = "PERMACACHE_HISTORY", id = "bac8069051ee4796a305b4d3f366b930", preview_id = "bac8069051ee4796a305b4d3f366b930" }
-]
 
 [env.staging.vars]
-DATABASE_URL = "https://nft-storage-pgrest-staging.herokuapp.com"
+DATABASE_URL = "https://nft-link-staging.herokuapp.com"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
@@ -61,7 +53,6 @@ binding = "SUPERHOT"
 # Test!
 [env.test]
 workers_dev = true
-kv_namespaces = [{ binding = "PERMACACHE" }, { binding = "PERMACACHE_HISTORY" }]
 
 [env.test.vars]
 DEBUG = "true"
@@ -72,10 +63,6 @@ GATEWAY_DOMAIN = "localhost:9081"
 [env.vsantos]
 workers_dev = true
 account_id = "7ec0b7cf2ec201b2580374e53ba5f37b"
-kv_namespaces = [
-  { binding = "PERMACACHE", id = "63929be6928343d0b915e98d6882ccba", preview_id = "63929be6928343d0b915e98d6882ccba" },
-  { binding = "PERMACACHE_HISTORY", id = "f6befe419c5f4a84bf55e79a01f4faf3", preview_id = "f6befe419c5f4a84bf55e79a01f4faf3" }
-]
 
 [env.vsantos.vars]
 DEBUG = "true"

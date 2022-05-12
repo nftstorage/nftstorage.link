@@ -113,12 +113,14 @@ export class ConstraintError extends Error {
    * @param {{
    *   message: string
    *   details?: string
+   *   status?: number
    * }} cause
    */
-  constructor({ message, details }) {
+  constructor({ message, details, status }) {
     super(`${message}, details: ${details}`)
     this.name = 'ConstraintError'
     this.code = ConstraintError.CODE
+    this.status = status || 500
   }
 }
 

@@ -2,7 +2,6 @@
 /* global Response */
 
 import { JSONResponse } from '../utils/json-response.js'
-import { decodeKey } from './utils.js'
 
 /**
  * @typedef {import('../env').Env} Env
@@ -17,36 +16,28 @@ import { decodeKey } from './utils.js'
 export async function permaCacheListGet(request, env) {
   const requestUrl = new URL(request.url)
   const { searchParams } = requestUrl
-  const { limit } = parseSearchParams(searchParams)
+  const { before, size } = parseSearchParams(searchParams)
 
-  // Get user perma-cache entries by requested size recursively until requested limit or complete
-  const kvPrefix = `${request.auth.user.id}`
+  const sortBy = searchParams.get('sortBy') || 'Date'
+  const sortOrder = searchParams.get('sortOrder') || 'Desc'
 
-  const {
-    keys,
-    cursor,
-    list_complete: listComplete,
-  } = await env.PERMACACHE.list({
-    prefix: kvPrefix,
-    limit: limit,
-    cursor: searchParams.get('cursor') || undefined,
+  const entries = await env.db.listPermaCache(request.auth.user.id, {
+    size,
+    before: before.toISOString(),
+    sortBy,
+    sortOrder,
   })
-
-  const entries = keys.map((key) => {
-    const { date } = decodeKey(key.name)
-
-    return {
-      url: key.metadata.sourceUrl,
-      size: key.metadata.size,
-      date,
-    }
-  })
+  const oldest = entries[entries.length - 1]
 
   // Get next page link
   const headers =
-    entries.length === limit && cursor && !listComplete
+    entries.length === size
       ? {
-          Link: `<${requestUrl.pathname}?size=${limit}&cursor=${cursor}>; rel="next"`,
+          Link: `<${
+            requestUrl.pathname
+          }?size=${size}&before=${encodeURIComponent(
+            oldest.insertedAt
+          )}>; rel="next"`,
         }
       : undefined
   return new JSONResponse(entries, { headers })
@@ -57,16 +48,27 @@ export async function permaCacheListGet(request, env) {
  */
 function parseSearchParams(searchParams) {
   // Parse size parameter
-  let limit = 25
+  let size = 25
   if (searchParams.has('size')) {
     const parsedSize = parseInt(searchParams.get('size'))
     if (isNaN(parsedSize) || parsedSize <= 0 || parsedSize > 1000) {
       throw Object.assign(new Error('invalid page size'), { status: 400 })
     }
-    limit = parsedSize
+    size = parsedSize
+  }
+
+  // Parse cursor parameter
+  let before = new Date()
+  if (searchParams.has('before')) {
+    const parsedBefore = new Date(searchParams.get('before'))
+    if (isNaN(parsedBefore.getTime())) {
+      throw Object.assign(new Error('invalid before date'), { status: 400 })
+    }
+    before = parsedBefore
   }
 
   return {
-    limit,
+    before,
+    size,
   }
 }
