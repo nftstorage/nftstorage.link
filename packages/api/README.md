@@ -30,19 +30,6 @@ One time set up of your cloudflare worker subdomain for dev:
     wrangler secret put DATABASE_TOKEN --env $(whoami) # Get from database account
   ```
 
-- Add KV namespaces
-
-  ```sh
-  wrangler kv:namespace create PERMACACHE --preview --env $(whoami)
-  # Outputs something like: `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4" }`
-  # but you need to put `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4", id = "7e441603d1bc4d5a87f6cecb959018e4" }` inside the `kv_namespaces`.
-  # for production: wrangler kv:namespace create PERMACACHE --env production
-  wrangler kv:namespace create PERMACACHE_HISTORY --preview --env $(whoami)
-  # Outputs something like: `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930" }`
-  # but you need to put `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930", id = "bac8069051ee4796a305b4d3f366b930" }` inside the `kv_namespaces`.
-  # for production: wrangler kv:namespace create PERMACACHE_HISTORY --env production
-  ```
-
 - Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
 
   ```sh
@@ -58,13 +45,30 @@ You only need to `pnpm start` for subsequent runs. PR your env config to the `wr
 
 ## High level architecture
 
-TODO
+The HTTP API to optimize content retrieval from nftstorage.link IPFS gateway. It is serverless code running across the globe to write content into our Cloud storage, and consequently offering lightning fast content retrieval.
 
-![High level Architecture](./nftstorage.link-super-hot.jpg)
+![High level Architecture](./nftstorage.link-api.jpg)
 
 ## Usage
 
-TODO
+As a requirement, you need an account in https://nft.storage and access granted to the feature (at the time of writing). With that, you can simply create an API key and you are ready to go.
+
+### 🔒 `POST /perma-cache/:url`
+
+🚧🚧🚧🚧🚧🚧🚧🚧
+
+Perma-cache a URL for fast retrieval.
+
+```console
+curl -X POST -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
+{
+  "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link"
+  "size": 28
+  "inserted_at" ""
+}
+```
+
+TODO: Add others
 
 ### Rate limiting
 
