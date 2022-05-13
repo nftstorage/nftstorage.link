@@ -1,7 +1,10 @@
+@import './tailwind.css';
+
 html,
 body {
   padding: 0;
   margin: 0;
+  line-height: 1.6;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -13,4 +16,57 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+[class^='animate-travel'] {
+  transform: translate3d(0, 250vh, 0);
+  animation-name: travel;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0, 0.9, 0.9, 0.25);
+}
+
+.animate-travel-1 {
+  animation-delay: 0s;
+  animation-duration: 4s;
+}
+.animate-travel-2 {
+  animation-delay: 3s;
+  animation-duration: 5s;
+}
+.animate-travel-3 {
+  animation-delay: 1s;
+  animation-duration: 5s;
+}
+.animate-travel-4 {
+  animation-delay: 2.5s;
+  animation-duration: 6s;
+}
+
+@keyframes travel {
+  0% {
+    transform: translate3d(0, 250vh, 0);
+  }
+  50% {
+    transform: translate3d(0, 100vh, 0);
+  }
+  100% {
+    transform: translate3d(0, 0vh, 0);
+  }
+}
+
+.circle-container {
+  display: flex;
+  margin-bottom: -80px;
+  position: relative;
+}
+
+.circle {
+  margin-left: -30px;
+  width: 160px;
+  height: 160px;
+  min-width: 160px;
+  border-radius: 160px;
+  border-width: 30px;
+  transform: rotate(45deg);
 }

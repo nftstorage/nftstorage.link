@@ -1,9 +1,11 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import Hero from '../components/hero'
+import Gateway from '../components/gateway'
+import Superhot from '../components/superhot'
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div className="relative bg-gray-50">
       <Head>
         <title>nftstorage.link</title>
         <meta
@@ -11,57 +13,60 @@ export default function Home() {
           content="The IPFS gateway for nft.storage is not 'another gateway', but a caching layer for NFT’s that sits on top of existing IPFS public gateways."
         />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap"
+          rel="stylesheet"
+        />
       </Head>
 
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">nftstorage.link</a>!
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
-        </div>
+      <main className="lg:relative font-open-sans">
+        <Hero />
+        <Gateway />
+        <Superhot />
       </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by Vercel
-        </a>
+      <footer className="bg-peach">
+        <div className="mx-auto max-w-6xl w-full pt-16 pb-20 6">
+          <div className="text-center lg:text-left lg:flex justify-between items-center px-6 space-y-6">
+            <img
+              src="/images/nft.storage-foot-logo.png"
+              alt="NFT.Storage logo"
+              width="150"
+              class="mx-auto lg:mx-0"
+            />
+            <div className="space-x-4">
+              <a href="#" class="" target="_blank" rel="noopener noreferrer">
+                NFT.Storage
+              </a>
+              <a
+                href="#"
+                class="border-l border-l-black pl-4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                IPFS
+              </a>
+              <a
+                href="#"
+                class="border-l border-l-black pl-4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="#"
+                class="border-l border-l-black pl-4"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Legal
+              </a>
+              <span>&copy; 2022 Copyright NFT.STORAGE</span>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   )
