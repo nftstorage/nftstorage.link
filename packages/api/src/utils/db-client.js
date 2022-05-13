@@ -84,14 +84,14 @@ export class DBClient {
    * List perma cache
    *
    * @param {number} userId
-   * @param {Object} [opts]
-   * @param {number} [opts.size=10]
-   * @param {string} [opts.before]
-   * @param {'Date'|'Size'} [opts.sortBy='inserted_at']
-   * @param {'Desc'|'Asc'} [opts.sortOrder='Desc']
+   * @param {Object} opts
+   * @param {number} opts.size
+   * @param {number} opts.page
+   * @param {'date'|'size'} opts.sort
+   * @param {'cesc'|'asc'} opts.order
    * @return {Promise<Array<{ url: string, size: number, insertedAt: string }>>}
    */
-  async listPermaCache(userId, opts = {}) {
+  async listPermaCache(userId, opts) {
     let query = this._client
       .from('perma_cache')
       .select(
@@ -103,14 +103,11 @@ export class DBClient {
       )
       .eq('user_id', userId)
       .is('deleted_at', null)
-      .limit(opts.size || 10)
-      .order(opts.sortBy === 'Size' ? 'size' : 'inserted_at', {
-        ascending: opts.sortOrder === 'Asc',
+      .limit(opts.size)
+      .range(opts.page * opts.size, (opts.page + 1) * opts.size - 1)
+      .order(opts.sort === 'size' ? 'size' : 'inserted_at', {
+        ascending: opts.order === 'asc',
       })
-
-    if (opts.before) {
-      query = query.lt('inserted_at', opts.before)
-    }
 
     const { data, error } = await query
 

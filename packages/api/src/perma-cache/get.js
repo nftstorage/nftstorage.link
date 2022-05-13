@@ -16,25 +16,22 @@ import { JSONResponse } from '../utils/json-response.js'
 export async function permaCacheListGet(request, env) {
   const requestUrl = new URL(request.url)
   const { searchParams } = requestUrl
-  const { before, size, sortBy, sortOrder } = parseSearchParams(searchParams)
+  const { size, page, sort, order } = parseSearchParams(searchParams)
 
   const entries = await env.db.listPermaCache(request.auth.user.id, {
     size,
-    before: before.toISOString(),
-    sortBy,
-    sortOrder,
+    page,
+    sort,
+    order,
   })
-  const oldest = entries[entries.length - 1]
 
   // Get next page link
   const headers =
     entries.length === size
       ? {
-          Link: `<${
-            requestUrl.pathname
-          }?size=${size}&before=${encodeURIComponent(
-            oldest.insertedAt
-          )}>; rel="next"`,
+          Link: `<${requestUrl.pathname}?size=${size}&page=${
+            page + 1
+          }>; rel="next"`,
         }
       : undefined
   return new JSONResponse(entries, { headers })
@@ -55,22 +52,45 @@ function parseSearchParams(searchParams) {
   }
 
   // Parse cursor parameter
-  let before = new Date()
-  if (searchParams.has('before')) {
-    const parsedBefore = new Date(searchParams.get('before'))
-    if (isNaN(parsedBefore.getTime())) {
-      throw Object.assign(new Error('invalid before date'), { status: 400 })
+  let page = 0
+  if (searchParams.has('page')) {
+    const parsedPage = parseInt(searchParams.get('page'))
+    if (isNaN(parsedPage) || parsedPage <= 0) {
+      throw Object.assign(new Error('invalid page number'), { status: 400 })
     }
-    before = parsedBefore
+    page = parsedPage
   }
 
-  const sortBy = searchParams.get('sortBy') || 'Date'
-  const sortOrder = searchParams.get('sortOrder') || 'Desc'
+  // Parse sort parameter
+  let sort = 'date'
+  if (searchParams.has('sort')) {
+    const parsedSort = searchParams.get('sort')
+    if (parsedSort !== 'date' && parsedSort !== 'size') {
+      throw Object.assign(
+        new Error('invalid list sort, either "date" or "size"'),
+        { status: 400 }
+      )
+    }
+    sort = parsedSort
+  }
+
+  // Parse order parameter
+  let order = 'asc'
+  if (searchParams.has('order')) {
+    const parsedOrder = searchParams.get('order')
+    if (parsedOrder !== 'asc' && parsedOrder !== 'desc') {
+      throw Object.assign(
+        new Error('invalid list sort order, either "asc" or "desc"'),
+        { status: 400 }
+      )
+    }
+    sort = parsedOrder
+  }
 
   return {
-    before,
     size,
-    sortBy,
-    sortOrder,
+    page,
+    sort,
+    order,
   }
 }
