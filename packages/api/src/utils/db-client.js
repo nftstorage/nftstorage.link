@@ -23,26 +23,24 @@ export class DBClient {
   /**
    * @param {Object} permaCache
    * @param {number} permaCache.userId
-   * @param {string} permaCache.url
+   * @param {string} permaCache.normalizedUrl
+   * @param {string} permaCache.sourceUrl
    * @param {number} permaCache.size
-   * @param {string} permaCache.insertedAt
    */
   async createPermaCache(permaCache) {
     const { data, error, status } = await this._client
       .from('perma_cache')
       .insert({
         user_id: permaCache.userId,
-        url: permaCache.url,
+        normalized_url: permaCache.normalizedUrl,
+        source_url: permaCache.sourceUrl,
         size: permaCache.size,
-        inserted_at: permaCache.insertedAt,
       })
-      .single()
 
     if (error) {
       if (status === HTTP_STATUS_CONFLICT) {
         throw new ConstraintError({
           message: 'URL already found for user',
-          status: HTTP_STATUS_CONFLICT,
         })
       }
       throw new DBError(error)
@@ -52,7 +50,7 @@ export class DBClient {
       throw new Error('Perma cache not created.')
     }
 
-    return data
+    return data[0]
   }
 
   /**
@@ -63,28 +61,23 @@ export class DBClient {
    * @return {Promise<{ url: string, size: number }>}
    */
   async getPermaCache(userId, url) {
-    const { data, status, error } = await this._client
+    const { data, error } = await this._client
       .from('perma_cache')
       .select(
         `
-      url,
+      url:source_url,
       size,
       insertedAt:inserted_at
       `
       )
       .eq('user_id', userId)
-      .eq('url', url)
+      .eq('normalized_url', url)
       .is('deleted_at', null)
-      .single()
 
-    if (status === 406 || !data) {
-      return
-    }
     if (error) {
       throw new DBError(error)
     }
-
-    return data
+    return data[0]
   }
 
   /**
@@ -103,7 +96,7 @@ export class DBClient {
       .from('perma_cache')
       .select(
         `
-      url,
+      url:source_url,
       size,
       insertedAt:inserted_at
       `
@@ -142,7 +135,7 @@ export class DBClient {
         deleted_at: date,
         updated_at: date,
       })
-      .match({ url: url, user_id: userId })
+      .match({ normalized_url: url, user_id: userId })
       .is('deleted_at', null)
 
     if (!data || !data.length) {
@@ -169,7 +162,7 @@ export class DBClient {
       throw new DBError(error)
     }
 
-    return data
+    return data || 0
   }
 
   /**

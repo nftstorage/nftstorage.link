@@ -20,7 +20,7 @@ export async function permaCacheDelete(request, env) {
 
   const res = await env.db.deletePermaCache(
     request.auth.user.id,
-    sourceUrl.toString()
+    normalizedUrl.toString()
   )
   await env.SUPERHOT.delete(r2Key)
 

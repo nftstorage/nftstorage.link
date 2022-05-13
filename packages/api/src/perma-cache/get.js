@@ -16,10 +16,7 @@ import { JSONResponse } from '../utils/json-response.js'
 export async function permaCacheListGet(request, env) {
   const requestUrl = new URL(request.url)
   const { searchParams } = requestUrl
-  const { before, size } = parseSearchParams(searchParams)
-
-  const sortBy = searchParams.get('sortBy') || 'Date'
-  const sortOrder = searchParams.get('sortOrder') || 'Desc'
+  const { before, size, sortBy, sortOrder } = parseSearchParams(searchParams)
 
   const entries = await env.db.listPermaCache(request.auth.user.id, {
     size,
@@ -67,8 +64,13 @@ function parseSearchParams(searchParams) {
     before = parsedBefore
   }
 
+  const sortBy = searchParams.get('sortBy') || 'Date'
+  const sortOrder = searchParams.get('sortOrder') || 'Desc'
+
   return {
     before,
     size,
+    sortBy,
+    sortOrder,
   }
 }

@@ -18,6 +18,6 @@ export async function permaCacheStatusGet(request, env) {
   )
 
   return new JSONResponse({
-    usedStorage: usedStorage || 0,
+    usedStorage: usedStorage,
   })
 }

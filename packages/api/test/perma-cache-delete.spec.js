@@ -50,7 +50,7 @@ test('Can delete perma cache content', async (t) => {
     .from('perma_cache')
     .select(
       `
-      url,
+      url:source_url,
       deletedAt:deleted_at
       `
     )
@@ -97,7 +97,7 @@ test('Can delete perma cache content with source url', async (t) => {
     .from('perma_cache')
     .select(
       `
-      url,
+      url:source_url,
       deletedAt:deleted_at
       `
     )
@@ -165,7 +165,7 @@ test('Can add content that was previously deleted', async (t) => {
     .from('perma_cache')
     .select(
       `
-      url,
+      url:source_url,
       deletedAt:deleted_at
       `
     )

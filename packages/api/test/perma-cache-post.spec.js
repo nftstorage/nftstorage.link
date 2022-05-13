@@ -198,7 +198,7 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   t.truthy(body.size)
 
   // Validate DB
-  const permaCache = await dbClient.getPermaCache(user.userId, sourceUrl)
+  const permaCache = await dbClient.getPermaCache(user.userId, normalizedUrl)
   t.is(body.url, permaCache.url)
   t.is(body.size, permaCache.size)
 

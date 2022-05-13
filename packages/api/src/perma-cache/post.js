@@ -30,7 +30,7 @@ export async function permaCachePost(request, env) {
 
   // Checking if existent does not protect us of concurrent perma cache
   // but avoids downloading content to fail later.
-  const existing = await env.db.getPermaCache(userId, sourceUrl.toString())
+  const existing = await env.db.getPermaCache(userId, normalizedUrl.toString())
   if (existing) {
     throw new HTTPError('The provided URL was already perma cached', 400)
   }
@@ -45,7 +45,6 @@ export async function permaCachePost(request, env) {
     console.log(err)
   }
 
-  const insertedAt = new Date().toISOString()
   if (!r2Object) {
     // Fetch Response from provided URL
     const response = await getResponse(request, env, normalizedUrl)
@@ -64,17 +63,17 @@ export async function permaCachePost(request, env) {
   }
 
   // Will fail on concurrent perma cache of pair (userId, url)
-  await env.db.createPermaCache({
+  const data = await env.db.createPermaCache({
     userId,
-    url: sourceUrl.toString(),
+    sourceUrl: sourceUrl.toString(),
+    normalizedUrl: normalizedUrl.toString(),
     size: r2Object.size,
-    insertedAt,
   })
 
   return new JSONResponse({
     url: sourceUrl.toString(),
     size: r2Object.size,
-    insertedAt,
+    insertedAt: data.inserted_at,
   })
 }
 

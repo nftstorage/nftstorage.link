@@ -14,7 +14,8 @@ CREATE TABLE IF NOT EXISTS public.perma_cache
 (
     id             BIGSERIAL PRIMARY KEY,
     user_id        BIGINT                                                          NOT NULL,
-    url            TEXT                                                          NOT NULL,
+    source_url     TEXT                                                           NOT NULL,
+    normalized_url TEXT                                                           NOT NULL,
     size           BIGINT                                                         NOT NULL,
     inserted_at    TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
     updated_at     TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
@@ -22,7 +23,7 @@ CREATE TABLE IF NOT EXISTS public.perma_cache
 );
 
 CREATE INDEX IF NOT EXISTS perma_cache_user_id_idx ON perma_cache (user_id);
-CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_deleted_idx ON perma_cache (user_id, url, deleted_at)
+CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_deleted_idx ON perma_cache (user_id, source_url, deleted_at)
 WHERE deleted_at IS NOT NULL;
-CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_not_deleted_idx ON perma_cache (user_id, url)
+CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_not_deleted_idx ON perma_cache (user_id, source_url)
 WHERE deleted_at IS NULL;
