@@ -50,7 +50,11 @@ Thanks to IPFS immutable nature, a CDN cache is an excellent fit for content ret
 
 In the event of content not being already cached, a race with multiple IPFS gateways is performed. As soon as one gateway successfully responds, its response is forwarded to the user and added to Cloudflare Cache.
 
-![High level Architecture](./nftstorage.link-edge-gateway.jpg)
+![High level Architecture](./nftstorage.link-edge-gateway-high-level.jpg)
+
+Zooming in on the actual edge gateway:
+
+![Edge gateway](./nftstorage.link-edge-gateway.jpg)
 
 Notes:
 
@@ -71,7 +75,7 @@ Hello nft.storage! 😎
 In practice, when nft.storage Gateway receives a IPFS path style request, it will redirect to a subdomain style resolution maintaining compliance with the [same-origin policy](https://en.wikipedia.org/wiki/Same-origin_policy). The canonical form of access `https://{CID}.ipfs.nftstorage.link/{optional path to resource}` causes the browser to interpret each returned file as being from a different origin.
 
 ```
-curl https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link
+> curl https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link
 Hello nft.storage! 😎
 ```
 
