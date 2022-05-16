@@ -9,21 +9,38 @@ CREATE TYPE user_tag_type AS ENUM
   'StorageLimitBytes'
 );
 
--- A transaction in nftstorage.link perma cache.
+-- Perma cache transaction type.
+CREATE TYPE perma_cache_event_type AS ENUM (
+    -- A PUT event on perma cache.
+    'Put',
+    -- A DELETE event on perma cache.
+    'Delete'
+    );
+
+-- A nftstorage.link perma cache entry.
 CREATE TABLE IF NOT EXISTS public.perma_cache
 (
     id             BIGSERIAL PRIMARY KEY,
-    user_id        BIGINT                                                          NOT NULL,
-    source_url     TEXT                                                           NOT NULL,
-    normalized_url TEXT                                                           NOT NULL,
-    size           BIGINT                                                         NOT NULL,
+    user_id        BIGINT                                                        NOT NULL,
+    source_url     TEXT                                                          NOT NULL,
+    normalized_url TEXT                                                          NOT NULL,
+    size           BIGINT                                                        NOT NULL,
     inserted_at    TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    updated_at     TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    deleted_at     TIMESTAMP WITH TIME ZONE
+    UNIQUE (user_id, normalized_url)
 );
 
 CREATE INDEX IF NOT EXISTS perma_cache_user_id_idx ON perma_cache (user_id);
-CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_deleted_idx ON perma_cache (user_id, source_url, deleted_at)
-WHERE deleted_at IS NOT NULL;
-CREATE UNIQUE INDEX IF NOT EXISTS perma_cache_is_not_deleted_idx ON perma_cache (user_id, source_url)
-WHERE deleted_at IS NULL;
+
+-- A nftstorage.link perma cache event.
+CREATE TABLE IF NOT EXISTS public.perma_cache_event
+(
+    id             BIGSERIAL PRIMARY KEY,
+    user_id        BIGINT                                                        NOT NULL,
+    source_url     TEXT                                                          NOT NULL,
+    normalized_url TEXT                                                          NOT NULL,
+    size           BIGINT                                                        NOT NULL,
+    inserted_at    TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    type           perma_cache_event_type                                                   NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS perma_cache_event_user_id_idx ON perma_cache_event (user_id);

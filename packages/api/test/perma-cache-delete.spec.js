@@ -47,17 +47,20 @@ test('Can delete perma cache content', async (t) => {
 
   // Verify Value set as deleted
   const { data } = await dbClient._client
-    .from('perma_cache')
+    .from('perma_cache_event')
     .select(
       `
       url:source_url,
-      deletedAt:deleted_at
+      type
       `
     )
     .eq('user_id', user.userId)
-    .single()
-  t.truthy(data.deletedAt)
-  t.is(data.url, url)
+    .eq('normalized_url', url)
+  t.is(data.length, 2)
+  // Exists PUT event
+  t.truthy(data.find((event) => event.type === 'Put'))
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 
   // Verify R2
   const r2ResponseNonExistent = await r2Bucket.get(normalizedUrl)
@@ -94,17 +97,20 @@ test('Can delete perma cache content with source url', async (t) => {
 
   // Verify Value set as deleted
   const { data } = await dbClient._client
-    .from('perma_cache')
+    .from('perma_cache_event')
     .select(
       `
       url:source_url,
-      deletedAt:deleted_at
+      type
       `
     )
     .eq('user_id', user.userId)
-    .single()
-  t.truthy(data.deletedAt)
-  t.is(data.url, url)
+    .eq('normalized_url', normalizedUrl)
+  t.is(data.length, 2)
+  // Exists PUT event
+  t.truthy(data.find((event) => event.type === 'Put'))
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 
   // Verify R2
   const r2ResponseNonExistent = await r2Bucket.get(normalizedUrl)
@@ -160,19 +166,22 @@ test('Can add content that was previously deleted', async (t) => {
   const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
   t.truthy(r2ResponseExistent)
 
-  // Verify Value set as deleted and 2 rows
+  // Verify Value set as deleted and 3 rows
   const { data } = await dbClient._client
-    .from('perma_cache')
+    .from('perma_cache_event')
     .select(
       `
       url:source_url,
-      deletedAt:deleted_at
+      type
       `
     )
     .eq('user_id', user.userId)
-  t.is(data.length, 2)
-  t.truthy(data[0].deletedAt)
-  t.falsy(data[1].deletedAt)
+    .eq('normalized_url', normalizedUrl)
+  t.is(data.length, 3)
+  // Exists 2 PUT events
+  t.is(data.filter((event) => event.type === 'Put').length, 2)
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 })
 
 const getPermaCachePutUrl = (url) =>
