@@ -196,6 +196,7 @@ importers:
       eslint-plugin-import: ^2.25.3
       eslint-plugin-node: ^11.1.0
       eslint-plugin-promise: ^5.1.0
+      kwesforms: ^2.1.20
       next: ^12.1.4
       next-images: ^1.8.4
       postcss: ^8.4.13
@@ -207,6 +208,7 @@ importers:
       url-loader: 4.1.1
       webpack: ^5.72.1
     dependencies:
+      kwesforms: 2.1.20
       next: 12.1.5_ef5jwxihqo6n7gxfmzogljlgcm
       next-images: 1.8.4_webpack@5.72.1
       react: 18.1.0
@@ -11552,6 +11554,13 @@ packages:
       }
     engines: { node: '>=6' }
     dev: true
+
+  /kwesforms/2.1.20:
+    resolution:
+      {
+        integrity: sha512-pJnHeOVHgIC1nWcPk338k6B82GdN5/5WLPwWdSn82I1feQzvSD42U3z4KEaz9EDZ4cAOcsLecjF4L7WOz5RAmA==,
+      }
+    dev: false
 
   /language-subtag-registry/0.3.21:
     resolution:

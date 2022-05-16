@@ -21,10 +21,10 @@ export default function Hero() {
           </p>
           <div className="mt-10 sm:flex justify-start">
             <a
-              href="#"
+              href="#try-it"
               className="uppercase underline underline-offset-4 text-orangred font-bold"
             >
-              Learn More
+              Try it Out
             </a>
           </div>
         </div>

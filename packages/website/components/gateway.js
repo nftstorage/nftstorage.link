@@ -11,7 +11,7 @@ export default function Gateway() {
   }
 
   return (
-    <div className="bg-white relative overflow-hidden text-center">
+    <div id="try-it" className="bg-white relative overflow-hidden text-center">
       <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:py-32 px-6">
         <div className="relative px-4 sm:px-8">
           <h1 className="font-open-sans text-3xl font-bold text-black lg:text-4xl">

@@ -1,5 +1,12 @@
 import Circles from './circles'
+import kwesforms from 'kwesforms'
+import { useEffect } from 'react'
+
 export default function Superhot() {
+  useEffect(() => {
+    kwesforms.init()
+  }, [])
+
   return (
     <>
       <div className="circle-container overflow-hidden">
@@ -47,7 +54,7 @@ export default function Superhot() {
                   <li className="flex text-left mb-8 mt-12 items-start">
                     <img src="images/check.svg" alt="check" className="mr-4" />
                     <p className="">
-                      <small class="block absolute uppercase font-bold text-xs -mt-4 text-blue">
+                      <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                         Coming Soon
                       </small>
                       Centralized URL support (cache even non-IPFS data)
@@ -75,7 +82,10 @@ export default function Superhot() {
                   Fill out the form below and we will reach out to discuss plans
                   and pricing.
                 </p>
-                <form className="text-left max-w-lg text-lg mx-auto mt-12">
+                <form
+                  className="kwes-form text-left max-w-lg text-lg mx-auto mt-12"
+                  action="https://kwesforms.com/api/foreign/forms/KM4DKZXvoyTrgzJ21Do6"
+                >
                   <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <div className="sm:col-span-3">
                       <label
@@ -209,7 +219,7 @@ export default function Superhot() {
                     className="mr-8 w-12"
                   />
                   <div>
-                    <small class="block absolute uppercase font-bold text-xs -mt-4 text-blue">
+                    <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                       Coming Soon
                     </small>
                     <h5 className="text-xl font-bold">Image Resizing</h5>
@@ -226,7 +236,7 @@ export default function Superhot() {
                     className="mr-8 w-12"
                   />
                   <div>
-                    <small class="block absolute uppercase font-bold text-xs -mt-4 text-blue">
+                    <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                       Coming Soon
                     </small>
                     <h5 className="text-xl font-bold">IPNS Caching</h5>

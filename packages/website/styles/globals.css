@@ -2,6 +2,7 @@
 
 html,
 body {
+  scroll-behavior: smooth;
   padding: 0;
   margin: 0;
   line-height: 1.6;
@@ -83,4 +84,12 @@ a {
     border-radius: 100px;
     border-width: 20px;
   }
+}
+
+.kwes-form .kw-border-success {
+  border: 2px solid #47aed7 !important;
+}
+
+.kwes-form .kw-border-error {
+  border-width: 2px !important;
 }
