@@ -33,9 +33,9 @@ DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
 
-#[env.production.r2_buckets]
-#binding = "SUPERHOT"
-#bucket_name = "super-hot"
+[[env.production.r2_buckets]]
+bucket_name = "super-hot"
+binding = "SUPERHOT"
 
 # Staging!
 [env.staging]
@@ -55,7 +55,7 @@ ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
 
 [[env.staging.r2_buckets]]
-bucket_name = "super-hot"
+bucket_name = "super-hot-staging"
 binding = "SUPERHOT"
 
 # Test!
