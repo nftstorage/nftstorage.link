@@ -70,3 +70,17 @@ a {
   border-width: 30px;
   transform: rotate(45deg);
 }
+
+@media screen and (max-width: 1024px) {
+  .circle-container {
+    margin-bottom: -50px;
+  }
+  .circle {
+    margin-left: -20px;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    border-radius: 100px;
+    border-width: 20px;
+  }
+}

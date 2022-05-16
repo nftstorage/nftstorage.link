@@ -1,17 +1,17 @@
 export default function Hero() {
   return (
     <div className="bg-peach relative overflow-hidden">
-      <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:pb-36 lg:py-16">
+      <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:pb-36 lg:py-16 px-4">
         <div className="relative z-10 px-4 md:w-3/5 sm:px-8 xl:pr-16">
           {/* <NFTStorageLogo /> */}
           <img
             src="images/nftstorage.link-logo.svg"
             alt="logo"
-            className="mb-24"
+            className="mb-24 max-w-[70vw]"
           />
-          <h1 className="font-open-sans text-3xl font-bold text-gray-900 lg:text-4xl xl:text-5xl lg:leading-tight">
-            <span className="block">Lightning fast NFT reads</span>
-            <span className="block">from the IPFS network</span>
+          <h1 className="font-open-sans text-3xl font-bold text-gray-900 md:max-w-3xl lg:text-4xl xl:text-5xl lg:leading-tight">
+            <span className="inline sm:block">Lightning fast NFT reads </span>
+            <span className="inline sm:block">from the IPFS network</span>
           </h1>
           <p className="mt-3 max-w-md text-lg text-gray-900 sm:text-xl md:mt-5 md:max-w-3xl">
             Using IPFS to ensure your NFTs are cryptographically tied to your
@@ -52,12 +52,6 @@ export default function Hero() {
             </div>
           </div>
         </div>
-
-        {/* <img
-                    className="absolute inset-0 w-full h-full object-cover"
-                    src="https://images.unsplash.com/photo-1520333789090-1afc82db536a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"
-                    alt=""
-                /> */}
       </div>
     </div>
   )
