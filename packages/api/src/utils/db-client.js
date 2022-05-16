@@ -172,18 +172,10 @@ export class DBClient {
     let select = query
       .select(
         `
-        id,
-        github_id,
-        did,
-        keys:auth_key_user_id_fkey(user_id,id,name,secret),
-        tags:user_tag_user_id_fkey(user_id,id,tag,value)
+        id
         `
       )
       .or(`magic_link_id.eq.${id},github_id.eq.${id},did.eq.${id}`)
-      // @ts-ignore
-      .filter('keys.deleted_at', 'is', null)
-      // @ts-ignore
-      .filter('tags.deleted_at', 'is', null)
 
     const { data, error, status } = await select.single()
 
@@ -194,7 +186,27 @@ export class DBClient {
       throw new DBError(error)
     }
 
-    return data
+    // Get Tags
+    const { data: tags, error: errorTags } = await this._clientNftStorage
+      .from('user_tag')
+      .select(
+        `
+        id,
+        tag,
+        value
+      `
+      )
+      .eq('user_id', data.id)
+      .filter('deleted_at', 'is', null)
+
+    if (errorTags) {
+      throw new DBError(errorTags)
+    }
+
+    return {
+      ...data,
+      tags,
+    }
   }
 
   /**

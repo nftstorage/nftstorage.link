@@ -194,7 +194,6 @@ const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
   t.is(body.url, sourceUrl)
   t.truthy(body.insertedAt)
-  t.falsy(body.deletedAt)
   t.truthy(body.size)
 
   // Validate DB

@@ -12,7 +12,6 @@ import { toDenyListAnchor } from './utils/deny-list.js'
 import {
   CIDS_TRACKER_ID,
   SUMMARY_METRICS_ID,
-  GATEWAY_RATE_LIMIT_ID,
   REDIRECT_COUNTER_METRICS_ID,
   CF_CACHE_MAX_OBJECT_SIZE,
   HTTP_STATUS_RATE_LIMITED,
@@ -29,6 +28,12 @@ import {
  * @property {boolean} [aborted]
  *
  * @typedef {import('./env').Env} Env
+ * @typedef {import('p-settle').PromiseResult<GatewayResponse>} PromiseResultGatewayResponse
+ *
+ * @typedef {Object} IPFSResolutionOptions
+ * @property {(response: Response, responseTime: number) => void} [onCdnResolution]
+ * @property {(winnerGwResponse: GatewayResponse, gatewayReqs: Promise<GatewayResponse>[], cid: string) => void} [onRaceResolution]
+ * @property {(gwResponses: PromiseResultGatewayResponse[], wasRateLimited: boolean) => void} [onRaceError]
  */
 
 /**
@@ -47,11 +52,57 @@ export async function gatewayGet(request, env, ctx) {
     )
   }
 
+  return await gatewayIpfs(request, env, ctx, {
+    onCdnResolution: (res, responseTime) => {
+      ctx.waitUntil(updateSummaryCacheMetrics(request, env, res, responseTime))
+    },
+    onRaceResolution: (winnerGwResponse, gatewayReqs, cid) => {
+      ctx.waitUntil(
+        (async () => {
+          await Promise.all([
+            storeWinnerGwResponse(request, env, winnerGwResponse),
+            settleGatewayRequests(
+              request,
+              env,
+              gatewayReqs,
+              winnerGwResponse.url,
+              cid
+            ),
+          ])
+        })()
+      )
+    },
+    onRaceError: (gwResponses, wasRateLimited) => {
+      ctx.waitUntil(
+        (async () => {
+          // Update metrics as all requests failed
+          await Promise.all(
+            gwResponses.map((r) =>
+              updateGatewayMetrics(request, env, r.value, false)
+            )
+          )
+          wasRateLimited && updateGatewayRedirectCounter(request, env)
+        })()
+      )
+    },
+  })
+}
+
+/**
+ * Perform edge gateway IPFS content resolution.
+ *
+ * @param {Request} request
+ * @param {Env} env
+ * @param {import('./index').Ctx} ctx
+ * @param {IPFSResolutionOptions} [options]
+ */
+export async function gatewayIpfs(request, env, ctx, options = {}) {
   const startTs = Date.now()
   const reqUrl = new URL(request.url)
   const cid = getCidFromSubdomainUrl(reqUrl)
   const pathname = reqUrl.pathname
 
+  // Validation layer
   if (env.DENYLIST) {
     const anchor = await toDenyListAnchor(cid)
     // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
@@ -69,6 +120,7 @@ export async function gatewayGet(request, env, ctx) {
     }
   }
 
+  // 1st layer resolution - CDN
   const cache = caches.default
   const res = await cache.match(request.url)
 
@@ -76,52 +128,36 @@ export async function gatewayGet(request, env, ctx) {
     // Update cache metrics in background
     const responseTime = Date.now() - startTs
 
-    ctx.waitUntil(updateSummaryCacheMetrics(request, env, res, responseTime))
+    options.onCdnResolution && options.onCdnResolution(res, responseTime)
     return res
   }
 
-  // Prepare IPFS gateway requests
+  // 2nd layer resolution - Public Gateways race
   const gatewayReqs = env.ipfsGateways.map((gwUrl) =>
     gatewayFetch(gwUrl, cid, request, {
       pathname,
       timeout: env.REQUEST_TIMEOUT,
     })
   )
+
   try {
     /** @type {GatewayResponse} */
     const winnerGwResponse = await pAny(gatewayReqs, {
       filter: (res) => res.response?.ok,
     })
-
-    async function settleGatewayRequests() {
-      // Wait for remaining responses
-      const responses = await pSettle(gatewayReqs)
-      const successFullResponses = responses.filter(
-        (r) => r.value?.response?.ok
-      )
-
-      await Promise.all([
-        // Filter out winner and update remaining gateway metrics
-        ...responses
-          .filter((r) => r.value?.url !== winnerGwResponse.url)
-          .map((r) => updateGatewayMetrics(request, env, r.value, false)),
-        updateCidsTracker(request, env, successFullResponses, cid),
-      ])
-    }
-
+    options.onRaceResolution &&
+      options.onRaceResolution(winnerGwResponse, gatewayReqs, cid)
+    // Cache response
     ctx.waitUntil(
       (async () => {
         const contentLengthMb = Number(
           winnerGwResponse.response.headers.get('content-length')
         )
 
-        await Promise.all([
-          storeWinnerGwResponse(request, env, winnerGwResponse),
-          settleGatewayRequests(),
-          // Cache request URL in Cloudflare CDN if smaller than CF_CACHE_MAX_OBJECT_SIZE
-          contentLengthMb <= CF_CACHE_MAX_OBJECT_SIZE &&
-            cache.put(request.url, winnerGwResponse.response.clone()),
-        ])
+        // Cache request URL in Cloudflare CDN if smaller than CF_CACHE_MAX_OBJECT_SIZE
+        if (contentLengthMb <= CF_CACHE_MAX_OBJECT_SIZE) {
+          await cache.put(request.url, winnerGwResponse.response.clone())
+        }
       })()
     )
 
@@ -137,17 +173,7 @@ export async function gatewayGet(request, env, ctx) {
         r.value?.reason === REQUEST_PREVENTED_RATE_LIMIT_CODE
     )
 
-    ctx.waitUntil(
-      (async () => {
-        // Update metrics as all requests failed
-        await Promise.all(
-          responses.map((r) =>
-            updateGatewayMetrics(request, env, r.value, false)
-          )
-        )
-        wasRateLimited && updateGatewayRedirectCounter(request, env)
-      })()
-    )
+    options.onRaceError && options.onRaceError(responses, wasRateLimited)
 
     if (wasRateLimited) {
       const ipfsUrl = new URL('ipfs', env.ipfsGateways[0])
@@ -174,6 +200,35 @@ export async function gatewayGet(request, env, ctx) {
 
     throw err
   }
+}
+
+/**
+ * Settle all gateway requests and update metrics.
+ *
+ * @param {Request} request
+ * @param {Env} env
+ * @param {Promise<GatewayResponse>[]} gatewayReqs
+ * @param {string} winnerUrl
+ * @param {string} cid
+ */
+async function settleGatewayRequests(
+  request,
+  env,
+  gatewayReqs,
+  winnerUrl,
+  cid
+) {
+  // Wait for remaining responses
+  const responses = await pSettle(gatewayReqs)
+  const successFullResponses = responses.filter((r) => r.value?.response?.ok)
+
+  await Promise.all([
+    // Filter out winner and update remaining gateway metrics
+    ...responses
+      .filter((r) => r.value?.url !== winnerUrl)
+      .map((r) => updateGatewayMetrics(request, env, r.value, false)),
+    updateCidsTracker(request, env, successFullResponses, cid),
+  ])
 }
 
 /**

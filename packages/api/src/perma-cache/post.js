@@ -6,6 +6,8 @@ import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
 
+import { gatewayIpfs } from 'edge-gateway/src/gateway.js'
+
 /**
  * @typedef {import('../env').Env} Env
  * @typedef {{ userId: string, r2Key: string, date: string }} Key
@@ -21,8 +23,9 @@ import { normalizeCid } from '../utils/cid.js'
  *
  * @param {Request} request
  * @param {Env} env
+ * @param {import('..').Ctx} ctx
  */
-export async function permaCachePost(request, env) {
+export async function permaCachePost(request, env, ctx) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
@@ -47,7 +50,7 @@ export async function permaCachePost(request, env) {
 
   if (!r2Object) {
     // Fetch Response from provided URL
-    const response = await getResponse(request, env, normalizedUrl)
+    const response = await getResponse(request, env, ctx, normalizedUrl)
     if (!response.ok) {
       throw new HTTPError(
         'Failed to get response from provided URL',
@@ -81,9 +84,12 @@ export async function permaCachePost(request, env) {
  * Fetch Response from provided URL.
  * @param {Request} request
  * @param {Env} env
+ * @param {import('..').Ctx} ctx
  * @param {URL} url
  */
-async function getResponse(request, env, url) {
+async function getResponse(request, env, ctx, url) {
+  // TODO: Wait for CF services support
+  /*
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
@@ -101,6 +107,12 @@ async function getResponse(request, env, url) {
     clearTimeout(timer)
   }
   return response
+  */
+
+  request = new Request(url.toString())
+
+  // @ts-ignore Env does not match entirely
+  return await gatewayIpfs(request, env, ctx)
 }
 
 /**
