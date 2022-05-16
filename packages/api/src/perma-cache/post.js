@@ -73,7 +73,7 @@ export async function permaCachePost(request, env) {
   return new JSONResponse({
     url: sourceUrl.toString(),
     size: r2Object.size,
-    insertedAt: data.inserted_at,
+    insertedAt: data,
   })
 }
 

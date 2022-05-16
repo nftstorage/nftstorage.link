@@ -61,13 +61,13 @@ heroku pg:psql nft-link-prod-0 --app=nft-link-prod < grant-postgrest.sql
 # PGREST config vars
 heroku config:set DB_ANON_ROLE=web_anon --app=nft-link-prod
 heroku config:set DB_POOL=450 --app=nft-link-prod
-heroku config:set DB_SCHEMA=public --app=nft-link-prod
+heroku config:set DB_SCHEMA=public,nftstorage --app=nft-link-prod
 heroku config:set JWT_SECRET=secret --app=nft-link-prod # Obtain secret from 1password vault!
 heroku config:set POSTGREST_VER=9.0.0 --app=nft-link-prod
 
 heroku config:set DB_ANON_ROLE=web_anon --app=nft-link-staging
 heroku config:set DB_POOL=450 --app=nft-link-staging
-heroku config:set DB_SCHEMA=public --app=nft-link-staging
+heroku config:set DB_SCHEMA=public,nftstorage --app=nft-link-staging
 heroku config:set JWT_SECRET=secret --app=nft-link-staging # Obtain secret from 1password vault!
 heroku config:set POSTGREST_VER=9.0.0 --app=nft-link-staging
 

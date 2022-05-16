@@ -28,14 +28,17 @@ export class DBClient {
    * @param {number} permaCache.size
    */
   async createPermaCache(permaCache) {
-    const { data, error, status } = await this._client
-      .from('perma_cache')
-      .insert({
-        user_id: permaCache.userId,
-        normalized_url: permaCache.normalizedUrl,
-        source_url: permaCache.sourceUrl,
-        size: permaCache.size,
-      })
+    const { data, error, status } = await this._client.rpc(
+      'create_perma_cache',
+      {
+        data: {
+          user_id: permaCache.userId,
+          normalized_url: permaCache.normalizedUrl,
+          source_url: permaCache.sourceUrl,
+          size: permaCache.size,
+        },
+      }
+    )
 
     if (error) {
       if (status === HTTP_STATUS_CONFLICT) {
@@ -72,7 +75,6 @@ export class DBClient {
       )
       .eq('user_id', userId)
       .eq('normalized_url', url)
-      .is('deleted_at', null)
 
     if (error) {
       throw new DBError(error)
@@ -102,7 +104,6 @@ export class DBClient {
       `
       )
       .eq('user_id', userId)
-      .is('deleted_at', null)
       .limit(opts.size)
       .range(opts.page * opts.size, (opts.page + 1) * opts.size - 1)
       .order(opts.sort === 'size' ? 'size' : 'inserted_at', {
@@ -125,15 +126,12 @@ export class DBClient {
    * @param {string} url
    */
   async deletePermaCache(userId, url) {
-    const date = new Date().toISOString()
-    const { data } = await this._client
-      .from('perma_cache')
-      .update({
-        deleted_at: date,
-        updated_at: date,
-      })
-      .match({ normalized_url: url, user_id: userId })
-      .is('deleted_at', null)
+    const { data } = await this._client.rpc('delete_perma_cache', {
+      data: {
+        user_id: userId,
+        normalized_url: url,
+      },
+    })
 
     if (!data || !data.length) {
       return undefined
