@@ -5,6 +5,7 @@ GRANT nft_link TO authenticator;
 GRANT USAGE ON SCHEMA public TO nft_link;
 -- allow access to all tables/sequences/functions in the public schema currently
 GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO nft_link;
+GRANT DELETE ON TABLE perma_cache TO nft_link;
 GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO nft_link;
 GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA public TO nft_link;
 -- allow access to new tables/sequences/functions that are created in the public schema in the future
