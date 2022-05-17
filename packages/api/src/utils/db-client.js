@@ -43,7 +43,7 @@ export class DBClient {
     if (error) {
       if (status === HTTP_STATUS_CONFLICT) {
         throw new ConstraintError({
-          message: 'URL already found for user',
+          message: 'URL already cached for user',
         })
       }
       throw new DBError(error)
