@@ -1,4 +1,6 @@
+/* eslint-disable @next/next/no-page-custom-font */
 import Head from 'next/head'
+import Img from '../components/cloudflareImage'
 import Hero from '../components/hero'
 import Gateway from '../components/gateway'
 import Superhot from '../components/superhot'
@@ -14,7 +16,7 @@ export default function Home() {
         />
         <link rel="icon" href="/favicon.ico" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
         <link
           href="https://fonts.googleapis.com/css2?family=Goldman:wght@400;700&family=Open+Sans:wght@400;600;700&display=swap"
           rel="stylesheet"
@@ -28,20 +30,26 @@ export default function Home() {
       </main>
       <footer className="bg-peach">
         <div className="mx-auto max-w-6xl w-full pt-16 pb-20 6">
-          <div className="text-center lg:text-left lg:flex justify-between items-center px-6 space-y-6">
-            <img
+          <div className="text-center lg:text-left lg:flex justify-between items-center px-6 space-y-6 lg:space-y-0">
+            <Img
               src="/images/nft.storage-foot-logo.png"
               alt="NFT.Storage logo"
               width="150"
-              class="mx-auto lg:mx-0"
+              height="21"
+              className="mx-auto lg:mx-0"
             />
             <div className="space-x-4">
-              <a href="#" class="" target="_blank" rel="noopener noreferrer">
+              <a
+                href="#"
+                className=""
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 NFT.Storage
               </a>
               <a
                 href="#"
-                class="border-l border-l-black pl-4"
+                className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -49,7 +57,7 @@ export default function Home() {
               </a>
               <a
                 href="#"
-                class="border-l border-l-black pl-4"
+                className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -57,7 +65,7 @@ export default function Home() {
               </a>
               <a
                 href="#"
-                class="border-l border-l-black pl-4"
+                className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
               >

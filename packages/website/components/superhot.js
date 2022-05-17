@@ -1,5 +1,7 @@
-import Circles from './circles'
+import Img from '../components/cloudflareImage'
 import kwesforms from 'kwesforms'
+import Circles from './circles'
+import CheckMark from './checkMark'
 import { useEffect } from 'react'
 
 export default function Superhot() {
@@ -13,7 +15,7 @@ export default function Superhot() {
         <Circles />
       </div>
       <div className="bg-peach relative overflow-hidden text-center">
-        <div className="circle-container overflow-hidden -mt-[50px] lg:mt-[-80px]">
+        <div className="circle-container overflow-hidden -mt-[50px] lg:mt-[-70px]">
           <Circles />
         </div>
         <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:py-32 mt-12">
@@ -28,7 +30,7 @@ export default function Superhot() {
           <div className="px-6 max-w-6xl mx-auto mt-12">
             <div className="relative  before:bg-[#F5C32C] before:absolute before:w-full before:h-full before:left-4 before:-top-4">
               <div className="relative bg-white p-6 sm:p-10 lg:p-16 border-2 border-black">
-                <img
+                <Img
                   src="images/superhot-logo.svg"
                   alt="logo"
                   className="mb-12 mx-auto block"
@@ -41,18 +43,18 @@ export default function Superhot() {
 
                 <ul className="max-w-lg text-lg mx-auto mt-12">
                   <li className="flex text-left my-8 items-start">
-                    <img src="images/check.svg" alt="check" className="mr-4" />
+                    <CheckMark />
                     <p className="">
                       50 ms time-to-first-byte for 95% of the world’s
                       Internet-connected population
                     </p>
                   </li>
                   <li className="flex text-left my-8 items-start">
-                    <img src="images/check.svg" alt="check" className="mr-4" />
+                    <CheckMark />
                     <p className="">Best-in-class pricing</p>
                   </li>
                   <li className="flex text-left mb-8 mt-12 items-start">
-                    <img src="images/check.svg" alt="check" className="mr-4" />
+                    <CheckMark />
                     <p className="">
                       <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                         Coming Soon
@@ -61,7 +63,7 @@ export default function Superhot() {
                     </p>
                   </li>
                   <li className="flex text-left mb-8 mt-12 items-start">
-                    <img src="images/check.svg" alt="check" className="mr-4" />
+                    <CheckMark />
                     <p className="">
                       <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                         Coming Soon
@@ -213,7 +215,7 @@ export default function Superhot() {
             <div className="max-w-4xl mx-auto mt-24 px-6">
               <div className="rounded-lg sm:grid sm:grid-cols-2 text-left gap-12 space-y-16 sm:space-y-0">
                 <div className="flex">
-                  <img
+                  <Img
                     src="images/icon-resize.svg"
                     alt="resize"
                     className="mr-8 w-12"
@@ -230,7 +232,7 @@ export default function Superhot() {
                   </div>
                 </div>
                 <div className="flex">
-                  <img
+                  <Img
                     src="images/icon-speed.svg"
                     alt="resize"
                     className="mr-8 w-12"

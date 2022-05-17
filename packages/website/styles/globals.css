@@ -58,16 +58,16 @@ a {
 
 .circle-container {
   display: flex;
-  margin-bottom: -80px;
+  margin-bottom: -70px;
   position: relative;
 }
 
 .circle {
   margin-left: -30px;
-  width: 160px;
-  height: 160px;
-  min-width: 160px;
-  border-radius: 160px;
+  width: 140px;
+  height: 140px;
+  min-width: 140px;
+  border-radius: 140px;
   border-width: 30px;
   transform: rotate(45deg);
 }

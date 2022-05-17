@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Gateway() {
   const [cid, setCid] = useState(
@@ -20,11 +20,11 @@ export default function Gateway() {
           <p className="mt-3 mx-auto text-lg text-gray-900 sm:text-xl md:mt-5 md:max-w-4xl">
             The NFT.Storage gateway is optimized for NFT content stored on IPFS,
             and is especially fast if that content is stored on NFT.Storage.
-            Plug your NFT's content ID (CID) below to try it out.
+            Plug your NFT&apos;s content ID (CID) below to try it out.
           </p>
         </div>
         <form>
-          <div className="mt-1 sm:flex rounded-md max-w-3xl mx-auto mt-12 space-y-2 sm:space-y-0">
+          <div className="sm:flex rounded-md max-w-3xl mx-auto mt-12 space-y-2 sm:space-y-0">
             <span className="sm:inline-flex items-center px-3 sm:rounded-l-md sm:border-2 sm:border-r-0 sm:border-black sm:bg-gray-100 text-gray-500 sm:text-sm md:text-lg">
               https://nftstorage.link/ipfs/
             </span>
