@@ -28,6 +28,7 @@ kv_namespaces = [
 
 [env.production.vars]
 DATABASE_URL = "https://nft-link-prod.herokuapp.com"
+NFT_STORAGE_API = "https://api.nft.storage"
 DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
@@ -49,6 +50,7 @@ kv_namespaces = [
 
 [env.staging.vars]
 DATABASE_URL = "https://nft-link-staging.herokuapp.com"
+NFT_STORAGE_API = "https://api-staging.nft.storage"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"

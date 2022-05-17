@@ -1,4 +1,4 @@
-import { PostgrestClient, PostgrestQueryBuilder } from '@supabase/postgrest-js'
+import { PostgrestClient } from '@supabase/postgrest-js'
 
 import { HTTP_STATUS_CONFLICT } from '../constants.js'
 import { DBError, ConstraintError } from '../errors.js'
@@ -161,32 +161,26 @@ export class DBClient {
   }
 
   /**
-   * Get user by did
+   * Get user by auth token
    *
-   * @param {string} id
+   * @param {string} secret
    */
-  async getUser(id) {
-    /** @type {PostgrestQueryBuilder<import('nft.storage-api/src/utils/db-client-types').UserOutput>} */
-    const query = this._clientNftStorage.from('user')
-
-    let select = query
+  async getUser(secret) {
+    const { data, error } = await this._clientNftStorage
+      .from('auth_key')
       .select(
         `
-        id
+        id:user_id
         `
       )
-      .or(`magic_link_id.eq.${id},github_id.eq.${id},did.eq.${id}`)
+      .eq('secret', secret)
+      .filter('deleted_at', 'is', null)
 
-    const { data, error, status } = await select.single()
-
-    if (status === 406 || !data) {
-      return
-    }
     if (error) {
       throw new DBError(error)
     }
 
-    return data
+    return data[0]
   }
 
   /**
