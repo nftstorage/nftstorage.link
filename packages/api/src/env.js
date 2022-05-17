@@ -56,6 +56,13 @@ export function envAll(request, env, ctx) {
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')
+
+  /**
+   * Add gateway environment
+   * will be removed once workers bindings are in place.
+   */
+  // @ts-ignore types not complete - Special inputs for Env
+  env.ipfsGateways = JSON.parse(env.IPFS_GATEWAYS)
 }
 
 /**
