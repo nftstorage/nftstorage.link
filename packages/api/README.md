@@ -72,4 +72,4 @@ TODO: Add others
 
 ### Rate limiting
 
-nft.storage Gateway is currently rate limited at 200 requests per minute to a given IP Address. In the event of a rate limit, the IP will be blocked for 30 seconds.
+nft.storage Gateway is currently rate limited at 100 requests per minute to a given IP Address. In the event of a rate limit, the IP will be blocked for 30 seconds.
