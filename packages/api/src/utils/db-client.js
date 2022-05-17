@@ -126,19 +126,18 @@ export class DBClient {
    * @param {string} url
    */
   async deletePermaCache(userId, url) {
-    const { data } = await this._client.rpc('delete_perma_cache', {
-      data: {
-        user_id: userId,
-        normalized_url: url,
-      },
+    const { data, error } = await this._client.rpc('delete_perma_cache', {
+      query_user_id: userId,
+      query_normalized_url: url,
     })
 
-    if (!data || !data.length) {
-      return undefined
+    if (error) {
+      throw new DBError(error)
     }
 
     return {
-      id: data[0].id,
+      deletedAt: data.deleted_at,
+      hasMoreReferences: data.has_more_references,
     }
   }
 

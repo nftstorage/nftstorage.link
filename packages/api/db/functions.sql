@@ -30,34 +30,43 @@ BEGIN
 END
 $$;
 
-CREATE OR REPLACE FUNCTION delete_perma_cache(data json) RETURNS TIMESTAMP
+CREATE TYPE deleted_entry AS (deleted_at TIMESTAMP, has_more_references BOOLEAN);
+
+CREATE OR REPLACE FUNCTION delete_perma_cache(query_user_id BIGINT, query_normalized_url TEXT) RETURNS deleted_entry
     LANGUAGE plpgsql
     volatile
     PARALLEL UNSAFE
 AS
 $$
 DECLARE
-  deleted_at_ts TIMESTAMP;
+  deleted_entry deleted_entry;
 BEGIN
     SET LOCAL statement_timeout = '30s';
 
+    -- Delete requested value
     WITH deleted AS (
       DELETE FROM perma_cache
-      WHERE user_id = (data ->> 'user_id')::BIGINT AND normalized_url = data ->> 'normalized_url'
+      WHERE user_id = query_user_id AND normalized_url = query_normalized_url
       returning source_url, size
     )
     INSERT INTO perma_cache_event (user_id, normalized_url, data, type)
-     SELECT (data ->> 'user_id')::BIGINT,
-            data ->> 'normalized_url',
+     SELECT query_user_id,
+            query_normalized_url,
             jsonb_build_object(
               'source_url', deleted.source_url,
               'size', deleted.size
             ),
             ('Delete')::perma_cache_event_type
     FROM deleted
-    returning inserted_at INTO deleted_at_ts;
+    returning inserted_at INTO deleted_entry.deleted_at;
 
-    RETURN deleted_at_ts;
+    deleted_entry.has_more_references := (SELECT EXISTS (
+      SELECT 1
+      FROM perma_cache
+      WHERE normalized_url = query_normalized_url
+    ));
+
+    RETURN deleted_entry;
 END
 $$;
 
