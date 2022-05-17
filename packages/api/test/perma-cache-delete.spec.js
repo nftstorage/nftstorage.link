@@ -1,38 +1,28 @@
 import test from 'ava'
 
-import { encodeKey } from '../src/perma-cache/utils.js'
 import { getMiniflare } from './scripts/utils.js'
-import { createTestUser } from './scripts/helpers.js'
+import { createTestUser, dbClient } from './scripts/helpers.js'
 import { getParsedUrl } from './utils.js'
 
-let user
-test.before(async (t) => {
-  user = await createTestUser({
+test.beforeEach(async (t) => {
+  const user = await createTestUser({
     grantRequiredTags: true,
   })
-})
 
-test.beforeEach(async (t) => {
-  // Create a new Miniflare environment for each test case
-  const mf = getMiniflare()
-  const ns = await mf.getKVNamespace('PERMACACHE')
-  const nsHistory = await mf.getKVNamespace('PERMACACHE_HISTORY')
-
+  // Create a new Miniflare environment for each test
   t.context = {
-    mf,
+    mf: getMiniflare(),
     user,
-    ns,
-    nsHistory,
   }
 })
 
 // DELETE /perma-cache
 test('Can delete perma cache content', async (t) => {
-  const { mf, user, ns, nsHistory } = t.context
+  const { mf, user } = t.context
   const bindings = await mf.getBindings()
   const r2Bucket = bindings.SUPERHOT
   const url =
-    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
+    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081/'
 
   // Post
   const responsePost = await mf.dispatchFetch(getPermaCachePutUrl(url), {
@@ -41,7 +31,6 @@ test('Can delete perma cache content', async (t) => {
   })
   t.is(responsePost.status, 200)
   const { normalizedUrl } = getParsedUrl(url)
-  const { date } = await responsePost.json()
 
   // Verify R2
   const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
@@ -56,20 +45,21 @@ test('Can delete perma cache content', async (t) => {
   const success = await responseDelete.json()
   t.truthy(success)
 
-  // Verify both KVs
-  const kvKey = encodeKey({
-    userId: user.userId,
-    r2Key: normalizedUrl,
-    date: date,
-  })
-  const valueNonExistent = await ns.get(kvKey)
-  t.falsy(valueNonExistent)
-
-  const { keys } = await nsHistory.list(`${user.userId}`)
-  t.is(keys.length, 2)
-  t.truthy(keys.find((k) => k.metadata.operation === 'put'))
-  t.truthy(keys.find((k) => k.metadata.operation === 'delete'))
-  t.is(keys[0].metadata.contentLength, keys[1].metadata.contentLength)
+  // Verify Value set as deleted
+  const { data } = await dbClient._client
+    .from('perma_cache_event')
+    .select(
+      `
+      type
+      `
+    )
+    .eq('user_id', user.userId)
+    .eq('normalized_url', url)
+  t.is(data.length, 2)
+  // Exists PUT event
+  t.truthy(data.find((event) => event.type === 'Put'))
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 
   // Verify R2
   const r2ResponseNonExistent = await r2Bucket.get(normalizedUrl)
@@ -77,11 +67,11 @@ test('Can delete perma cache content', async (t) => {
 })
 
 test('Can delete perma cache content with source url', async (t) => {
-  const { mf, user, ns, nsHistory } = t.context
+  const { mf, user } = t.context
   const bindings = await mf.getBindings()
   const r2Bucket = bindings.SUPERHOT
   const url =
-    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq/'
 
   const { normalizedUrl } = getParsedUrl(url)
   // Post
@@ -90,7 +80,7 @@ test('Can delete perma cache content with source url', async (t) => {
     headers: { Authorization: `Bearer ${user.token}` },
   })
   t.is(responsePost.status, 200)
-  const { url: sourceUrl, date } = await responsePost.json()
+  const { url: sourceUrl } = await responsePost.json()
 
   // Delete
   const responseDelete = await mf.dispatchFetch(
@@ -104,20 +94,21 @@ test('Can delete perma cache content with source url', async (t) => {
   const success = await responseDelete.json()
   t.truthy(success)
 
-  // Verify both KVs
-  const kvKey = encodeKey({
-    userId: user.userId,
-    r2Key: normalizedUrl,
-    date: date,
-  })
-  const valueNonExistent = await ns.get(kvKey)
-  t.falsy(valueNonExistent)
-
-  const { keys } = await nsHistory.list(`${user.userId}`)
-  t.is(keys.length, 2)
-  t.truthy(keys.find((k) => k.metadata.operation === 'put'))
-  t.truthy(keys.find((k) => k.metadata.operation === 'delete'))
-  t.is(keys[0].metadata.contentLength, keys[1].metadata.contentLength)
+  // Verify Value set as deleted
+  const { data } = await dbClient._client
+    .from('perma_cache_event')
+    .select(
+      `
+      type
+      `
+    )
+    .eq('user_id', user.userId)
+    .eq('normalized_url', normalizedUrl)
+  t.is(data.length, 2)
+  // Exists PUT event
+  t.truthy(data.find((event) => event.type === 'Put'))
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 
   // Verify R2
   const r2ResponseNonExistent = await r2Bucket.get(normalizedUrl)
@@ -139,7 +130,7 @@ test('Fails to delete unexistent perma cache content', async (t) => {
 })
 
 test('Can add content that was previously deleted', async (t) => {
-  const { mf, user, ns, nsHistory } = t.context
+  const { mf, user } = t.context
   const bindings = await mf.getBindings()
   const r2Bucket = bindings.SUPERHOT
   const url =
@@ -168,25 +159,26 @@ test('Can add content that was previously deleted', async (t) => {
   })
   t.is(responsePost2.status, 200)
   const { normalizedUrl } = getParsedUrl(url)
-  const { date } = await responsePost2.json()
 
   // Verify R2
   const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
   t.truthy(r2ResponseExistent)
 
-  // Verify both KVs
-  const kvKey = encodeKey({
-    userId: user.userId,
-    r2Key: normalizedUrl,
-    date: date,
-  })
-  const valueNonExistent = await ns.get(kvKey)
-  t.truthy(valueNonExistent)
-
-  const { keys } = await nsHistory.list(`${user.userId}`)
-  t.is(keys.length, 3)
-  t.is(keys.filter((k) => k.metadata.operation === 'put').length, 2)
-  t.is(keys.filter((k) => k.metadata.operation === 'delete').length, 1)
+  // Verify Value set as deleted and 3 rows
+  const { data } = await dbClient._client
+    .from('perma_cache_event')
+    .select(
+      `
+      type
+      `
+    )
+    .eq('user_id', user.userId)
+    .eq('normalized_url', normalizedUrl)
+  t.is(data.length, 3)
+  // Exists 2 PUT events
+  t.is(data.filter((event) => event.type === 'Put').length, 2)
+  // Exists DELETE event
+  t.truthy(data.find((event) => event.type === 'Delete'))
 })
 
 const getPermaCachePutUrl = (url) =>

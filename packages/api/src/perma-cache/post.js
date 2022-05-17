@@ -5,7 +5,6 @@ import { MAX_ALLOWED_URL_LENGTH } from '../constants.js'
 import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
-import { encodeKey } from './utils.js'
 
 /**
  * @typedef {import('../env').Env} Env
@@ -27,13 +26,12 @@ export async function permaCachePost(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
+  const userId = request.auth.user.id
 
-  // Validate if URL is not already perma cached by user
-  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}:`
-  const { keys } = await env.PERMACACHE.list({
-    prefix: kvPrefix,
-  })
-  if (keys.length > 0) {
+  // Checking if existent does not protect us of concurrent perma cache
+  // but avoids downloading content to fail later.
+  const existing = await env.db.getPermaCache(userId, normalizedUrl.toString())
+  if (existing) {
     throw new HTTPError('The provided URL was already perma cached', 400)
   }
 
@@ -64,35 +62,18 @@ export async function permaCachePost(request, env) {
     })
   }
 
-  const date = new Date().toISOString()
-  const kvKey = encodeKey({
-    userId: request.auth.user.id,
-    r2Key,
-    date,
+  // Will fail on concurrent perma cache of pair (userId, url)
+  const data = await env.db.createPermaCache({
+    userId,
+    sourceUrl: sourceUrl.toString(),
+    normalizedUrl: normalizedUrl.toString(),
+    size: r2Object.size,
   })
-
-  // Store in KV
-  await Promise.all([
-    await env.PERMACACHE.put(kvKey, r2Key, {
-      metadata: {
-        sourceUrl: sourceUrl.toString(),
-        size: r2Object.size,
-        date,
-      },
-    }),
-    await env.PERMACACHE_HISTORY.put(kvKey, r2Key, {
-      metadata: {
-        size: r2Object.size,
-        date,
-        operation: 'put',
-      },
-    }),
-  ])
 
   return new JSONResponse({
     url: sourceUrl.toString(),
     size: r2Object.size,
-    date,
+    insertedAt: data,
   })
 }
 

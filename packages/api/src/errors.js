@@ -1,3 +1,5 @@
+import { HTTP_STATUS_CONFLICT } from './constants.js'
+
 export class InvalidUrlError extends Error {
   /**
    * @param {string} message
@@ -119,6 +121,7 @@ export class ConstraintError extends Error {
     super(`${message}, details: ${details}`)
     this.name = 'ConstraintError'
     this.code = ConstraintError.CODE
+    this.status = HTTP_STATUS_CONFLICT
   }
 }
 

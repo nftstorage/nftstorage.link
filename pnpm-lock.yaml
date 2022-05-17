@@ -39,6 +39,8 @@ importers:
       nft.storage-api: https://gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326
       npm-run-all: ^4.1.5
       p-map: ^5.3.0
+      p-retry: ^5.1.1
+      p-settle: ^5.0.0
       pg: ^8.7.3
       sade: ^1.7.4
       toucan-js: ^2.5.0
@@ -63,6 +65,8 @@ importers:
       nft.storage-api: '@gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326'
       npm-run-all: 4.1.5
       p-map: 5.3.0
+      p-retry: 5.1.1
+      p-settle: 5.0.0
       pg: 8.7.3
       sade: 1.8.1
       uint8arrays: 3.0.0
@@ -157,6 +161,9 @@ importers:
       sade: 1.8.1
       smoke: 3.1.1
       toml: 3.0.0
+
+  packages/infra:
+    specifiers: {}
 
   packages/status-api:
     specifiers: {}
@@ -4668,7 +4675,6 @@ packages:
       {
         integrity: sha512-xoDlM2S4ortawSWORYqsdU+2rxdh4LRW9ytc3zmT37RIKQh6IHyKwwtKhKis9ah8ol07DCkZxPt8BBvPjC6v4g==,
       }
-    dev: false
 
   /@types/sade/1.7.4:
     resolution:
@@ -12115,7 +12121,6 @@ packages:
     engines: { node: ^12.20.0 || ^14.13.1 || >=16.0.0 }
     dependencies:
       yocto-queue: 1.0.0
-    dev: false
 
   /p-locate/2.0.0:
     resolution: { integrity: sha1-IKAQOyIqcMj9OcwuWAaA893l7EM= }
@@ -12189,7 +12194,6 @@ packages:
         integrity: sha512-rOgYyrvUxnJdSYKGSK7UnO7RxFSnT/IJYFPiosuQ2/AtRWIryIrv8lecWqJXWbKnMcUjJvxiHDMp80m0Yj4eLA==,
       }
     engines: { node: '>=12' }
-    dev: false
 
   /p-retry/5.1.1:
     resolution:
@@ -12200,7 +12204,6 @@ packages:
     dependencies:
       '@types/retry': 0.12.1
       retry: 0.13.1
-    dev: false
 
   /p-settle/5.0.0:
     resolution:
@@ -12211,7 +12214,6 @@ packages:
     dependencies:
       p-limit: 4.0.0
       p-reflect: 3.0.0
-    dev: false
 
   /p-some/5.0.0:
     resolution:
@@ -13555,7 +13557,6 @@ packages:
         integrity: sha512-XQBQ3I8W1Cge0Seh+6gjj03LbmRFWuoszgK9ooCpwYIrhhoO80pfq4cUkU5DkknwfOfFteRwlZ56PYOGYyFWdg==,
       }
     engines: { node: '>= 4' }
-    dev: false
 
   /reusify/1.0.4:
     resolution:
@@ -15712,7 +15713,6 @@ packages:
         integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==,
       }
     engines: { node: '>=12.20' }
-    dev: false
 
   /youch/2.2.2:
     resolution:

@@ -2,7 +2,6 @@
 /* global Response */
 
 import { JSONResponse } from '../utils/json-response.js'
-import { decodeKey } from './utils.js'
 
 /**
  * @typedef {import('../env').Env} Env
@@ -17,36 +16,22 @@ import { decodeKey } from './utils.js'
 export async function permaCacheListGet(request, env) {
   const requestUrl = new URL(request.url)
   const { searchParams } = requestUrl
-  const { limit } = parseSearchParams(searchParams)
+  const { size, page, sort, order } = parseSearchParams(searchParams)
 
-  // Get user perma-cache entries by requested size recursively until requested limit or complete
-  const kvPrefix = `${request.auth.user.id}`
-
-  const {
-    keys,
-    cursor,
-    list_complete: listComplete,
-  } = await env.PERMACACHE.list({
-    prefix: kvPrefix,
-    limit: limit,
-    cursor: searchParams.get('cursor') || undefined,
-  })
-
-  const entries = keys.map((key) => {
-    const { date } = decodeKey(key.name)
-
-    return {
-      url: key.metadata.sourceUrl,
-      size: key.metadata.size,
-      date,
-    }
+  const entries = await env.db.listPermaCache(request.auth.user.id, {
+    size,
+    page,
+    sort,
+    order,
   })
 
   // Get next page link
   const headers =
-    entries.length === limit && cursor && !listComplete
+    entries.length === size
       ? {
-          Link: `<${requestUrl.pathname}?size=${limit}&cursor=${cursor}>; rel="next"`,
+          Link: `<${requestUrl.pathname}?size=${size}&page=${
+            page + 1
+          }>; rel="next"`,
         }
       : undefined
   return new JSONResponse(entries, { headers })
@@ -57,16 +42,55 @@ export async function permaCacheListGet(request, env) {
  */
 function parseSearchParams(searchParams) {
   // Parse size parameter
-  let limit = 25
+  let size = 25
   if (searchParams.has('size')) {
     const parsedSize = parseInt(searchParams.get('size'))
     if (isNaN(parsedSize) || parsedSize <= 0 || parsedSize > 1000) {
       throw Object.assign(new Error('invalid page size'), { status: 400 })
     }
-    limit = parsedSize
+    size = parsedSize
+  }
+
+  // Parse cursor parameter
+  let page = 0
+  if (searchParams.has('page')) {
+    const parsedPage = parseInt(searchParams.get('page'))
+    if (isNaN(parsedPage) || parsedPage <= 0) {
+      throw Object.assign(new Error('invalid page number'), { status: 400 })
+    }
+    page = parsedPage
+  }
+
+  // Parse sort parameter
+  let sort = 'date'
+  if (searchParams.has('sort')) {
+    const parsedSort = searchParams.get('sort')
+    if (parsedSort !== 'date' && parsedSort !== 'size') {
+      throw Object.assign(
+        new Error('invalid list sort, either "date" or "size"'),
+        { status: 400 }
+      )
+    }
+    sort = parsedSort
+  }
+
+  // Parse order parameter
+  let order = 'asc'
+  if (searchParams.has('order')) {
+    const parsedOrder = searchParams.get('order')
+    if (parsedOrder !== 'asc' && parsedOrder !== 'desc') {
+      throw Object.assign(
+        new Error('invalid list sort order, either "asc" or "desc"'),
+        { status: 400 }
+      )
+    }
+    sort = parsedOrder
   }
 
   return {
-    limit,
+    size,
+    page,
+    sort,
+    order,
   }
 }

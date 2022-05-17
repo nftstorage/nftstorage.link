@@ -27,7 +27,6 @@ export function withApiToken(handler) {
     if (apiToken) {
       const userTags = await env.db.getUserTags(apiToken.user.id)
       request.auth = {
-        authToken: apiToken.key,
         user: apiToken.user,
         userTags,
       }
@@ -99,7 +98,6 @@ async function tryApiToken(token, env) {
 
   return {
     user: user,
-    key: user.keys.find((k) => k?.secret === token),
   }
 }
 

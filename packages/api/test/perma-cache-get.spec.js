@@ -5,14 +5,11 @@ import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
 import { getParsedUrl, getPermaCachePutUrl } from './utils.js'
 
-let user
-test.before(async (t) => {
-  user = await createTestUser({
+test.beforeEach(async (t) => {
+  const user = await createTestUser({
     grantRequiredTags: true,
   })
-})
 
-test.beforeEach((t) => {
   // Create a new Miniflare environment for each test
   t.context = {
     mf: getMiniflare(),
@@ -134,7 +131,7 @@ const validateList = (t, urls, entries) => {
 
     const target = entries.find((e) => sourceUrl === e.url)
     t.is(sourceUrl, target.url)
-    t.truthy(target.date)
+    t.truthy(target.insertedAt)
     t.truthy(target.size)
   })
 }

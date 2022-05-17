@@ -1,0 +1,7 @@
+{
+  "name": "infra",
+  "version": "0.0.0",
+  "description": "Infrastructure scripts",
+  "private": true,
+  "license": "(Apache-2.0 OR MIT)"
+}

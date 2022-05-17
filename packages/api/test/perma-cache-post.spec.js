@@ -1,18 +1,15 @@
 import test from 'ava'
+import pSettle from 'p-settle'
 
-import { encodeKey } from '../src/perma-cache/utils.js'
 import { getMiniflare } from './scripts/utils.js'
-import { createTestUser } from './scripts/helpers.js'
+import { createTestUser, dbClient } from './scripts/helpers.js'
 import { getParsedUrl, getPermaCachePutUrl } from './utils.js'
 
-let user
-test.before(async (t) => {
-  user = await createTestUser({
+test.beforeEach(async (t) => {
+  const user = await createTestUser({
     grantRequiredTags: true,
   })
-})
 
-test.beforeEach((t) => {
   // Create a new Miniflare environment for each test
   t.context = {
     mf: getMiniflare(),
@@ -167,36 +164,43 @@ test('Fails when it was already perma cached', async (t) => {
   t.is(body, 'The provided URL was already perma cached')
 })
 
+test('Fails on concurrent perma cache attempt of same URL', async (t) => {
+  const { mf, user } = t.context
+  const urls = [
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
+  ]
+
+  const promises = await pSettle(
+    urls.map(async (url) => {
+      const putResponse = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${user.token}` },
+      })
+      return putResponse
+    })
+  )
+
+  // Exists success response
+  t.truthy(promises.find((p) => p?.value.status === 200))
+  // Exists conflict response
+  t.truthy(promises.find((p) => p?.value.status === 409))
+})
+
 const validateSuccessfulPut = async (t, url, body, responseTxt) => {
   const { mf, user } = t.context
 
   // Validate expected body
   const { normalizedUrl, sourceUrl } = getParsedUrl(url)
   t.is(body.url, sourceUrl)
-  t.truthy(body.date)
+  t.truthy(body.insertedAt)
   t.falsy(body.deletedAt)
   t.truthy(body.size)
 
-  // Validate KV
-  const kvKey = encodeKey({
-    userId: user.userId,
-    r2Key: normalizedUrl,
-    date: body.date,
-  })
-  const ns = await mf.getKVNamespace('PERMACACHE')
-  const { value, metadata } = await ns.getWithMetadata(kvKey)
-  t.truthy(value)
-  t.truthy(metadata)
-  t.is(body.url, metadata.sourceUrl)
-  t.is(body.size, metadata.size)
-  t.is(body.date, metadata.date)
-
-  const nsHistory = await mf.getKVNamespace('PERMACACHE_HISTORY')
-  const { value: valueHistory, metadata: metadataHistory } =
-    await nsHistory.getWithMetadata(kvKey)
-  t.truthy(valueHistory)
-  t.truthy(metadataHistory)
-  t.is(metadataHistory.operation, 'put')
+  // Validate DB
+  const permaCache = await dbClient.getPermaCache(user.userId, normalizedUrl)
+  t.is(body.url, permaCache.url)
+  t.is(body.size, permaCache.size)
 
   // Validate R2
   const bindings = await mf.getBindings()
