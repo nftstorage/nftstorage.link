@@ -24,7 +24,6 @@ One time set up of your cloudflare worker subdomain for dev:
 - Add secrets
 
   ```sh
-    wrangler secret put SALT --env production # open `https://csprng.xyz/v1/api` in the browser and use the value of `Data`
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
     wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
     wrangler secret put DATABASE_TOKEN --env $(whoami) # Get from database account

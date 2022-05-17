@@ -1,9 +1,7 @@
 import { DBClient } from '../../src/utils/db-client.js'
-import * as JWT from '../../src/utils/jwt.js'
 import { PostgrestClient } from '@supabase/postgrest-js'
 
 import { NftStorageDBClient } from './utils.js'
-import { globals } from './worker-globals.js'
 
 export const dbClient = new DBClient({
   endpoint: process.env.DATABASE_URL,
@@ -37,15 +35,7 @@ export async function createTestUser({
   name = 'A Tester',
   grantRequiredTags = false,
 } = {}) {
-  const token = await JWT.sign(
-    {
-      sub: issuer,
-      iss: 'nft-storage',
-      iat: Date.now(),
-      name: 'test',
-    },
-    globals.SALT
-  )
+  const token = publicAddress
   const user = await createTestUserWithFixedToken({
     token,
     publicAddress,
@@ -133,3 +123,6 @@ async function createUserTag(tag) {
 
   return data
 }
+
+export const USER_WITHOUT_SUPER_HOT_ACCESS = 'USER_WITHOUT_SUPER_HOT_ACCESS'
+export const USER_WITH_ACCOUNT_RESTRICTED = 'USER_WITH_ACCOUNT_RESTRICTED'

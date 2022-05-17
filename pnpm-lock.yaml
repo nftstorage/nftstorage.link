@@ -43,6 +43,7 @@ importers:
       p-settle: ^5.0.0
       pg: ^8.7.3
       sade: ^1.7.4
+      smoke: ^3.1.1
       toucan-js: ^2.5.0
       uint8arrays: ^3.0.0
     dependencies:
@@ -69,6 +70,7 @@ importers:
       p-settle: 5.0.0
       pg: 8.7.3
       sade: 1.8.1
+      smoke: 3.1.1
       uint8arrays: 3.0.0
 
   packages/client:
@@ -5279,7 +5281,10 @@ packages:
     dev: true
 
   /arrify/1.0.1:
-    resolution: { integrity: sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0= }
+    resolution:
+      {
+        integrity: sha512-3CYzex9M9FGQjCGMGyi6/31c8GJbgb0qGyrx5HWxPd0aCwh4cB2YjMb2Xf9UuoogrMrlO9cTqnB5rI5GHZTcUA==,
+      }
     engines: { node: '>=0.10.0' }
     dev: true
 

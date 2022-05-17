@@ -9,7 +9,7 @@ import { DBClient } from './utils/db-client.js'
  * @typedef {Object} EnvInput
  * @property {string} ENV
  * @property {string} GATEWAY_DOMAIN
- * @property {string} SALT
+ * @property {string} NFT_STORAGE_API
  * @property {string} DATABASE_URL
  * @property {string} DATABASE_TOKEN
  * @property {string} [SENTRY_DSN]
@@ -47,12 +47,12 @@ export function envAll(request, env, ctx) {
 
   env.sentry = getSentry(request, env, ctx)
   env.REQUEST_TIMEOUT = env.REQUEST_TIMEOUT || 30000
-  env.SALT = env.SALT
 
   env.db = new DBClient({
     endpoint: env.DATABASE_URL,
     token: env.DATABASE_TOKEN,
   })
+  env.NFT_STORAGE_API = env.NFT_STORAGE_API
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')
