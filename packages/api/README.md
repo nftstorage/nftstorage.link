@@ -37,6 +37,15 @@ One time set up of your cloudflare worker subdomain for dev:
   # ✨  Success!
   ```
 
+- Add KV namespaces
+
+  ```sh
+  wrangler kv:namespace create PERMACACHE_LOCK --preview --env USER
+  # Outputs something like: `{ binding = "PERMACACHE_LOCK", preview_id = "d703976275864a3a8b4cb965de7cb8e4" }`
+  # but you need to put `{ binding = "PERMACACHE_LOCK", preview_id = "d703976275864a3a8b4cb965de7cb8e4", id = "d703976275864a3a8b4cb965de7cb8e4" }` inside the `kv_namespaces`.
+  # for production: wrangler kv:namespace create PERMACACHE_LOCK --env production
+  ```
+
 - `pnpm run publish` - Publish the worker under your env. An alias for `wrangler publish --env $(whoami)`
 - `pnpm start` - Run the worker in dev mode. An alias for `wrangler dev --env $(whoami)`
 

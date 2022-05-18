@@ -1,5 +1,6 @@
 import ava from 'ava'
 
+import { encodeKey } from '../src/perma-cache/utils.js'
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser, dbClient } from './scripts/helpers.js'
 import { getParsedUrl } from './utils.js'
@@ -181,6 +182,41 @@ test('Can add content that was previously deleted', async (t) => {
   t.is(data.filter((event) => event.type === 'Put').length, 2)
   // Exists DELETE event
   t.truthy(data.find((event) => event.type === 'Delete'))
+})
+
+test('should not delete from R2 bucket if url is locked', async (t) => {
+  const { mf, user } = t.context
+  const bindings = await mf.getBindings()
+  const r2Bucket = bindings.SUPERHOT
+  const url =
+    'http://bafkreibxkbyybantsznyvlq2bhf24u4gew7pj6erjgduqp4mvqv54qjng4.ipfs.localhost:9081'
+  const { normalizedUrl } = getParsedUrl(url)
+
+  // Post 1
+  const responsePost1 = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  t.is(responsePost1.status, 200)
+
+  // Lock resource to simulate on going Post 2
+  const ns = await mf.getKVNamespace('PERMACACHE_LOCK')
+  const kvKey = encodeKey(normalizedUrl, user.userId)
+  console.log('kvKey', kvKey)
+  ns.put(kvKey, new Date().toISOString())
+
+  // Delete
+  const responseDelete = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'DELETE',
+    headers: { Authorization: `Bearer ${user.token}` },
+  })
+  t.is(responseDelete.status, 200)
+  const success = await responseDelete.json()
+  t.truthy(success)
+
+  // Verify R2 content still exists
+  const r2ResponseExistent = await r2Bucket.get(normalizedUrl)
+  t.truthy(r2ResponseExistent)
 })
 
 test('should not delete from R2 bucket if url was perma cached by other user', async (t) => {

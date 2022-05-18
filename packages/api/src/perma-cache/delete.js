@@ -1,7 +1,6 @@
 /* eslint-env serviceworker, browser */
 
-// TODO: Move to separate file
-import { getSourceUrl, getNormalizedUrl } from './post.js'
+import { encodeKeyPrefix, getSourceUrl, getNormalizedUrl } from './utils.js'
 import { JSONResponse } from '../utils/json-response.js'
 /**
  * @typedef {import('../env').Env} Env
@@ -23,9 +22,17 @@ export async function permaCacheDelete(request, env) {
     normalizedUrl.toString()
   )
 
-  // Delete from R2 if no more references
+  // Verify if should delete from R2 if has no more references
+  // and URL is not locked (on going POST)
   if (!hasMoreReferences) {
-    await env.SUPERHOT.delete(r2Key)
+    const kvKey = encodeKeyPrefix(r2Key)
+    const { keys } = await env.PERMACACHE_LOCK.list({
+      prefix: kvKey,
+    })
+
+    if (!keys.length) {
+      await env.SUPERHOT.delete(r2Key)
+    }
   }
 
   return new JSONResponse(Boolean(deletedAt))

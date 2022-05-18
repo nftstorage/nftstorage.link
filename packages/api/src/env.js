@@ -15,9 +15,8 @@ import { DBClient } from './utils/db-client.js'
  * @property {string} [SENTRY_DSN]
  * @property {string} [LOGTAIL_TOKEN]
  * @property {number} [REQUEST_TIMEOUT]
- * @property {KVNamespace} PERMACACHE
- * @property {KVNamespace} PERMACACHE_HISTORY
  * @property {R2Bucket} SUPERHOT
+ * @property {KVNamespace} PERMACACHE_LOCK
  *
  * @typedef {Object} EnvTransformed
  * @property {string} VERSION

@@ -1,10 +1,9 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
-import { MAX_ALLOWED_URL_LENGTH } from '../constants.js'
-import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
+import { HTTPError } from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
-import { normalizeCid } from '../utils/cid.js'
+import { encodeKey, getSourceUrl, getNormalizedUrl } from './utils.js'
 
 import { gatewayIpfs } from 'edge-gateway/src/gateway.js'
 
@@ -38,6 +37,10 @@ export async function permaCachePost(request, env, ctx) {
     throw new HTTPError('The provided URL was already perma cached', 400)
   }
 
+  // Lock URL
+  const kvKey = encodeKey(r2Key, userId)
+  await env.PERMACACHE_LOCK.put(kvKey, new Date().toISOString())
+
   // Validate if we already have it in R2
   let r2Object
   try {
@@ -52,6 +55,9 @@ export async function permaCachePost(request, env, ctx) {
     // Fetch Response from provided URL
     const response = await getResponse(request, env, ctx, normalizedUrl)
     if (!response.ok) {
+      // Unlock URL
+      await env.PERMACACHE_LOCK.delete(kvKey)
+
       throw new HTTPError(
         'Failed to get response from provided URL',
         response.status
@@ -72,6 +78,9 @@ export async function permaCachePost(request, env, ctx) {
     normalizedUrl: normalizedUrl.toString(),
     size: r2Object.size,
   })
+
+  // Unlock URL
+  await env.PERMACACHE_LOCK.delete(kvKey)
 
   return new JSONResponse({
     url: sourceUrl.toString(),
@@ -113,85 +122,6 @@ async function getResponse(request, env, ctx, url) {
 
   // @ts-ignore Env does not match entirely
   return await gatewayIpfs(request, env, ctx)
-}
-
-/**
- * Verify if provided url is a valid nftstorage.link URL
- * Returns subdomain format.
- *
- * @param {Request} request
- * @param {Env} env
- */
-export function getSourceUrl(request, env) {
-  let candidateUrl
-  try {
-    candidateUrl = new URL(decodeURIComponent(request.params.url))
-  } catch (err) {
-    throw new InvalidUrlError(
-      `invalid URL provided: ${request.params.url}: ${err.message}`
-    )
-  }
-
-  const urlString = candidateUrl.toString()
-  if (urlString.length > MAX_ALLOWED_URL_LENGTH) {
-    throw new InvalidUrlError(
-      `invalid URL provided: ${request.params.url}: maximum allowed length or URL is ${MAX_ALLOWED_URL_LENGTH}`
-    )
-  }
-  if (!urlString.includes(env.GATEWAY_DOMAIN)) {
-    throw new InvalidUrlError(
-      `invalid URL provided: ${urlString}: not nftstorage.link URL`
-    )
-  }
-
-  return candidateUrl
-}
-
-/**
- * Verify if candidate url has IPFS path or IPFS subdomain, returning subdomain format.
- *
- * @param {URL} candidateUrl
- * @param {Env} env
- */
-export function getNormalizedUrl(candidateUrl, env) {
-  // Verify if IPFS path resolution URL
-  const ipfsPathParts = candidateUrl.pathname.split('/ipfs/')
-  if (ipfsPathParts.length > 1) {
-    const pathParts = ipfsPathParts[1].split(/\/(.*)/s)
-    const cid = getCid(pathParts[0])
-
-    // Parse path + query params
-    const path = pathParts[1] ? `/${pathParts[1]}` : ''
-    const queryParamsCandidate = candidateUrl.searchParams.toString()
-    const queryParams = queryParamsCandidate.length
-      ? `?${queryParamsCandidate}`
-      : ''
-
-    return new URL(
-      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAIN}${path}${queryParams}`
-    )
-  }
-
-  // Verify if subdomain resolution URL
-  const subdomainParts = candidateUrl.hostname.split('.ipfs.')
-  if (subdomainParts.length <= 1) {
-    throw new InvalidUrlError(
-      `invalid URL provided: ${candidateUrl}: not subdomain nor ipfs path available`
-    )
-  }
-
-  return candidateUrl
-}
-
-/**
- * @param {string} candidateCid
- */
-function getCid(candidateCid) {
-  try {
-    return normalizeCid(candidateCid)
-  } catch (err) {
-    throw new InvalidUrlError(`invalid CID: ${candidateCid}: ${err.message}`)
-  }
 }
 
 /**
