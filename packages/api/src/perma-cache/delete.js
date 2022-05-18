@@ -18,11 +18,15 @@ export async function permaCacheDelete(request, env) {
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
 
-  const res = await env.db.deletePermaCache(
+  const { deletedAt, hasMoreReferences } = await env.db.deletePermaCache(
     request.auth.user.id,
     normalizedUrl.toString()
   )
-  await env.SUPERHOT.delete(r2Key)
 
-  return new JSONResponse(Boolean(res))
+  // Delete from R2 if no more references
+  if (!hasMoreReferences) {
+    await env.SUPERHOT.delete(r2Key)
+  }
+
+  return new JSONResponse(Boolean(deletedAt))
 }
