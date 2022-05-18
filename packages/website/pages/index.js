@@ -76,7 +76,7 @@ export default function Home() {
                 IPFS
               </a>
               <a
-                href="/terms"
+                href="https://nft.storage/terms/"
                 className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
