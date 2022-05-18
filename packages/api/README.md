@@ -51,23 +51,61 @@ The HTTP API to optimize content retrieval from nftstorage.link IPFS gateway. It
 ## Usage
 
 As a requirement, you need an account in https://nft.storage and access granted to the feature (at the time of writing). With that, you can simply create an API key and you are ready to go.
+To get access to this feature you can get more information at https://nftstorage.link.
+
+You can see full HTTP API specification at https://nftstorage.link/api-docs.
 
 ### 🔒 `POST /perma-cache/:url`
 
-🚧🚧🚧🚧🚧🚧🚧🚧
-
-Perma-cache a URL for fast retrieval.
+> Perma-cache a URL for fast retrieval.
 
 ```console
-curl -X POST -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
+$ curl -X POST -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
 {
-  "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link"
+  "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/"
   "size": 28
-  "inserted_at" ""
+  "inserted_at" "2022-05-18T11:37:27.878372"
 }
 ```
 
-TODO: Add others
+Note: During open beta is limited on a File size of `4.995 GB`.
+
+### 🔒 `DELETE /perma-cache/:url`
+
+> Delete a given URL from perma-cache.
+
+```console
+$ curl -X DELETE -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
+true
+```
+
+Please note that this will not remove the content from the IPFS network nor other caching layers.
+
+### 🔒 `GET /perma-cache/`
+
+> Get all user perma-cache URLs.
+
+```console
+$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache -s | jq
+[
+  {
+    "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/"
+    "size": 28
+    "inserted_at" "2022-05-18T11:37:27.878372"
+  }
+]
+```
+
+### 🔒 `GET /perma-cache/status`
+
+> Get perma-cache account status.
+
+```console
+$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache -s | jq
+{
+  "usedStorage": "8036759278"
+}
+```
 
 ### Rate limiting
 
