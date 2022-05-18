@@ -27,7 +27,7 @@ export default function Superhot() {
             </h1>
           </div>
 
-          <div className="px-6 max-w-6xl mx-auto mt-12">
+          <div className="px-6 max-w-5xl mx-auto mt-12">
             <div className="relative  before:bg-[#F5C32C] before:absolute before:w-full before:h-full before:left-4 before:-top-4">
               <div className="relative bg-white p-6 sm:p-10 lg:p-16 border-2 border-black">
                 <Img
@@ -69,13 +69,7 @@ export default function Superhot() {
                         Coming Soon
                       </small>
                       API for artists and collectors to perma-cache their
-                      collections.{' '}
-                      <a
-                        href=""
-                        className="text-orange underline underline-offset-4"
-                      >
-                        View API Docs
-                      </a>
+                      collections.
                     </p>
                   </li>
                 </ul>
@@ -94,7 +88,7 @@ export default function Superhot() {
                         htmlFor="first-name"
                         className="block text-sm font-semibold text-black"
                       >
-                        First name
+                        First name<span className="text-red">*</span>
                       </label>
                       <div className="mt-1">
                         <input
@@ -102,7 +96,8 @@ export default function Superhot() {
                           name="first-name"
                           id="first-name"
                           autoComplete="given-name"
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          rules="required"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
@@ -112,15 +107,16 @@ export default function Superhot() {
                         htmlFor="last-name"
                         className="block text-sm font-semibold text-black"
                       >
-                        Last name
+                        Last name<span className="text-red">*</span>
                       </label>
                       <div className="mt-1">
                         <input
                           type="text"
                           name="last-name"
                           id="last-name"
+                          rules="required"
                           autoComplete="family-name"
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
@@ -130,7 +126,8 @@ export default function Superhot() {
                         htmlFor="email"
                         className="block text-sm font-semibold text-black"
                       >
-                        Email address
+                        Email address (signed up in nft.storage)
+                        <span className="text-red">*</span>
                       </label>
                       <div className="mt-1">
                         <input
@@ -139,7 +136,8 @@ export default function Superhot() {
                           type="email"
                           autoComplete="email"
                           placeholder="name@email.com"
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          rules="required|email"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
@@ -156,7 +154,7 @@ export default function Superhot() {
                           name="size"
                           type="text"
                           placeholder="10,000"
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
@@ -173,7 +171,7 @@ export default function Superhot() {
                           name="org"
                           type="text"
                           placeholder="Acme Corp."
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
@@ -190,14 +188,14 @@ export default function Superhot() {
                           name="title"
                           type="text"
                           placeholder="Engineer"
-                          className="px-2 py-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full border-black border-2 rounded-md"
+                          className="px-2 py-1 focus:ring-indigo-500 focus:border-blue block w-full border-black border-2 rounded-md"
                         />
                       </div>
                     </div>
                     <div className="sm:col-span-6">
                       <button
                         type="submit"
-                        className="py-1 uppercase inline-flex items-center px-5 rounded-md border-2 border-red bg-orange text-white sm:text-sm md:text-lg font-semibold"
+                        className="btn py-2 uppercase inline-flex items-center px-5 rounded-md bg-orange text-white text-sm font-semibold"
                       >
                         Send
                       </button>

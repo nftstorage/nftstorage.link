@@ -3,8 +3,8 @@ import Img from '../components/cloudflareImage'
 export default function Hero() {
   return (
     <div className="bg-peach relative overflow-hidden">
-      <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:pb-36 lg:py-16 px-4">
-        <div className="relative z-10 px-4 md:w-3/5 sm:px-8 xl:pr-16">
+      <div className="mx-auto max-w-7xl w-full pt-16 pb-20 lg:pb-36 lg:py-16 px-6">
+        <div className="relative z-10 md:w-3/5 xl:pr-16">
           <Img
             src="images/nftstorage.link-logo.svg"
             alt="logo"
@@ -23,9 +23,16 @@ export default function Hero() {
           <div className="mt-10 sm:flex justify-start">
             <a
               href="#try-it"
-              className="uppercase underline underline-offset-4 text-orangred font-bold"
+              className="uppercase underline underline-offset-4 text-orangred font-bold hover:text-blue transition-colors"
             >
               Try it Out
+            </a>
+            <a
+              href="/api-docs"
+              target="_blank"
+              className="uppercase underline underline-offset-4 text-orangred font-bold ml-8 hover:text-blue transition-colors"
+            >
+              API Docs
             </a>
           </div>
         </div>

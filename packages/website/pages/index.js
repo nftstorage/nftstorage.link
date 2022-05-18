@@ -32,15 +32,13 @@ export default function Home() {
         <div className="mx-auto max-w-6xl w-full pt-16 pb-20 6">
           <div className="text-center lg:text-left lg:flex justify-between items-center px-6 space-y-6 lg:space-y-0">
             <Img
-              src="/images/nft.storage-foot-logo.png"
-              alt="NFT.Storage logo"
-              width="150"
-              height="21"
-              className="mx-auto lg:mx-0"
+              src="images/nftstorage.link-logo.svg"
+              alt="logo"
+              className="mx-auto lg:mx-0 max-w-[220px]"
             />
             <div className="space-x-4">
               <a
-                href="#"
+                href="https://nft.storage"
                 className=""
                 target="_blank"
                 rel="noopener noreferrer"
@@ -48,7 +46,7 @@ export default function Home() {
                 NFT.Storage
               </a>
               <a
-                href="#"
+                href="https://ipfs.io"
                 className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -56,22 +54,13 @@ export default function Home() {
                 IPFS
               </a>
               <a
-                href="#"
+                href="/terms"
                 className="border-l border-l-black pl-4"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Privacy Policy
+                Terms of Service
               </a>
-              <a
-                href="#"
-                className="border-l border-l-black pl-4"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Legal
-              </a>
-              <span>&copy; 2022 Copyright NFT.STORAGE</span>
             </div>
           </div>
         </div>
