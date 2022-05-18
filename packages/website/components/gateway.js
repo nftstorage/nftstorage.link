@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 export default function Gateway() {
   const [cid, setCid] = useState(
-    'QmSiLSBTJ7NRmw6P926tXVrRtkmXjc2grJtF28gtpoQ2JX'
+    'bafybeiedv7sowwxamly4oicivudp45rsfvbklnf3fvbvonxrwoxqylhtwq/0.json'
   )
   // QmcMBwDT8wEjNaVgFpQjhZMKPEgHAwNHTErpZTvPzLdvvi
   const handleCIDLink = (e) => {

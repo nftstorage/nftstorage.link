@@ -37,8 +37,8 @@ export default function Superhot() {
                 />
 
                 <h4 className="text-lg md:text-xl leading-snug lg:text-2xl font-semibold max-w-4xl mx-auto">
-                  Perma-cache your NFT data on the edge to guarantee the fastest
-                  possible read performance by anyone on the web.
+                  Permacache NFT data of up to 5GB on the edge to guarantee the
+                  fastest possible read performance by anyone on the web.
                 </h4>
 
                 <ul className="max-w-lg text-lg mx-auto mt-12">
