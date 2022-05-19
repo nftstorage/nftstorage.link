@@ -19,8 +19,10 @@ paths:
         Store the response of the nftstorage.link IPFS gateway in a edge perma-cache
         to accelerate future request to the gateway.
 
+        Note: During beta this is limited to 4.995 GB of content length per URL.
+
         ### Rate limits
-        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
       operationId: permaCachePost
       parameters:
         - name: url
@@ -51,12 +53,12 @@ paths:
         - nftstorage.link
       summary: Delete a given URL response from nftstorage.link perma-cache.
       description: |
-        Delete a given URL response from nftstorage.link perma cache if single reference to it.
+        Delete a given URL response from nftstorage.link perma cache.
 
-        Mark perma cache entry for user as deleted.
+        Note that content will continue to be available in the IPFS network.
 
         ### Rate limits
-        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
       operationId: permaCacheDelete
       parameters:
         - name: url
@@ -91,7 +93,7 @@ paths:
         Get all URLs previously perma-cached by the user.
 
         ### Rate limits
-        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 30 requests with the same API token within a 10 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits (note: the JS client automatically does this).
+        This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
       operationId: permaCacheGet
       parameters:
         - $ref: '#/components/parameters/size'
@@ -141,7 +143,7 @@ components:
         size:
           type: number
           example: 600
-        inserted_at:
+        insertedAat:
           $ref: '#/components/schemas/Date'
     PermaCacheStatus:
       type: object
