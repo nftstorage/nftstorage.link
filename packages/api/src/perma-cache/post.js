@@ -48,13 +48,6 @@ export async function permaCachePost(request, env, ctx) {
 
   // Fetch Response from provided URL
   const response = await getResponse(request, env, ctx, normalizedUrl)
-  if (!response.ok) {
-    throw new HTTPError(
-      'Failed to get response from provided URL',
-      response.status
-    )
-  }
-
   validateCacheControlHeader(response.headers.get('Cache-Control') || '')
 
   // Store in R2 and add to Database if not existent
@@ -103,13 +96,32 @@ async function getResponse(request, env, ctx, url) {
   } finally {
     clearTimeout(timer)
   }
-  return response
   */
-
   request = new Request(url.toString())
 
   // @ts-ignore Env does not match entirely
-  return await gatewayIpfs(request, env, ctx)
+  let response = await gatewayIpfs(request, env, ctx)
+  if (!response.ok) {
+    throw new HTTPError(
+      'Failed to get response from provided URL',
+      response.status
+    )
+  }
+
+  // Content length is mandatory given R2 needs a known size of the readable stream
+  // TODO: We need public gateways to set content-length for JSON content (maybe others)
+  // https://github.com/protocol/bifrost-infra/issues/1868
+  const contentLengthMb = response.headers.get('content-length')
+  if (!contentLengthMb) {
+    const headers = response.headers
+    const content = await response.blob()
+
+    response = new Response(content, {
+      headers: headers,
+    })
+  }
+
+  return response
 }
 
 /**
