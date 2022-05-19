@@ -18,7 +18,7 @@ export default function Hero() {
             Using IPFS to ensure your NFTs are cryptographically tied to your
             content, but tired of your NFTs loading slowly? The NFT.Storage
             Gateway (nftstorage.link) marries IPFS content IDs with CDNs to
-            provide a performant read experience.
+            provide a highly performant read experience.
           </p>
           <div className="mt-10 sm:flex justify-start">
             <a

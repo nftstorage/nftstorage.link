@@ -37,7 +37,7 @@ export default function Superhot() {
                 />
 
                 <h4 className="text-lg md:text-xl leading-snug lg:text-2xl font-semibold max-w-4xl mx-auto">
-                  Permacache NFT data of up to 5GB on the edge to guarantee the
+                  Permacache NFT files of up to 5GB on the edge to guarantee the
                   fastest possible read performance by anyone on the web.
                 </h4>
 
@@ -70,6 +70,15 @@ export default function Superhot() {
                       </small>
                       API for artists and collectors to perma-cache their
                       collections.
+                    </p>
+                  </li>
+                  <li className="flex text-left mb-8 mt-12 items-start">
+                    <CheckMark />
+                    <p className="">
+                      <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
+                        Coming Soon
+                      </small>
+                      Permacache files of any size
                     </p>
                   </li>
                 </ul>
@@ -126,7 +135,7 @@ export default function Superhot() {
                         htmlFor="email"
                         className="block text-sm font-semibold text-black"
                       >
-                        Email address (signed up in nft.storage)
+                        Email address associated with your NFT.Storage account
                         <span className="text-red">*</span>
                       </label>
                       <div className="mt-1">
@@ -146,7 +155,7 @@ export default function Superhot() {
                         htmlFor="email"
                         className="block text-sm font-semibold text-black"
                       >
-                        Collection Size
+                        Estimated number of files you&apos;d like to cache
                       </label>
                       <div className="mt-1">
                         <input

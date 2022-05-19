@@ -24,7 +24,7 @@ export default function Gateway() {
           </p>
         </div>
         <form>
-          <div className="sm:flex rounded-md max-w-3xl mt-12 space-y-2 sm:space-y-0">
+          <div className="sm:flex rounded-md max-w-6xl mt-12 space-y-2 sm:space-y-0">
             <span className="sm:inline-flex items-center sm:px-3 sm:rounded-l-md sm:border-2 sm:border-r-0 sm:border-black sm:bg-gray-100 text-gray-500 md:text-lg">
               https://nftstorage.link/ipfs/
             </span>

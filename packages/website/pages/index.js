@@ -61,7 +61,7 @@ export default function Home() {
             <div className="space-x-4">
               <a
                 href="https://nft.storage"
-                className=""
+                className=" hover:text-blue"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -69,7 +69,7 @@ export default function Home() {
               </a>
               <a
                 href="https://ipfs.io"
-                className="border-l border-l-black pl-4"
+                className="border-l border-l-black pl-4 hover:text-blue"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -77,7 +77,7 @@ export default function Home() {
               </a>
               <a
                 href="https://nft.storage/terms/"
-                className="border-l border-l-black pl-4"
+                className="border-l border-l-black pl-4 hover:text-blue"
                 target="_blank"
                 rel="noopener noreferrer"
               >
