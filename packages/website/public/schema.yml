@@ -161,95 +161,49 @@ components:
       description: 'nftstorage.link IPFS gateway URL properly encoded.'
     PermaCachePostResponse:
       type: object
-      properties:
-        ok:
-          type: boolean
-          default: true
-        value:
-          $ref: '#/components/schemas/PermaCacheEntry'
+      $ref: '#/components/schemas/PermaCacheEntry'
     PermaCacheGetResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-          default: true
-        value:
-          type: array
-          items:
-            $ref: '#/components/schemas/PermaCacheEntry'
+      type: array
+      items:
+        $ref: '#/components/schemas/PermaCacheEntry'
     PermaCacheDeleteResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-          default: true
-        value:
-          type: boolean
-          default: true
+      type: boolean
+      default: true
     StatusResponse:
       type: object
-      properties:
-        ok:
-          type: boolean
-          default: true
-        value:
-          $ref: '#/components/schemas/PermaCacheStatus'
+      $ref: '#/components/schemas/PermaCacheStatus'
     ErrorResponse:
       type: object
       properties:
-        ok:
-          type: boolean
-          default: false
-        error:
-          type: object
-          properties:
-            name:
-              type: string
-            message:
-              type: string
+        name:
+          type: string
+        message:
+          type: string
     UnauthorizedErrorResponse:
       type: object
       properties:
-        ok:
-          type: boolean
-          default: false
-        error:
-          type: object
-          properties:
-            name:
-              type: string
-              default: HTTP Error
-            message:
-              type: string
-              default: Unauthorized
+        name:
+          type: string
+          default: HTTP Error
+        message:
+          type: string
+          default: Unauthorized
     ForbiddenErrorResponse:
       type: object
       properties:
-        ok:
-          type: boolean
-          default: false
-        error:
-          type: object
-          properties:
-            name:
-              type: string
-              default: HTTP Error
-            message:
-              type: string
-              enum: [Token is not valid, Session expired]
+        name:
+          type: string
+          default: HTTP Error
+        message:
+          type: string
+          enum: [Token is not valid, Session expired]
     ConflictErrorResponse:
       type: object
       properties:
-        ok:
-          type: boolean
-          default: false
-        error:
-          type: object
-          properties:
-            name:
-              type: string
-            message:
-              type: string
+        name:
+          type: string
+        message:
+          type: string
   securitySchemes:
     bearerAuth:
       description: |
