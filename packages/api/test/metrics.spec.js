@@ -18,5 +18,16 @@ test('Gets metrics content when empty state', async (t) => {
   t.is(metricsResponse.includes('nftlinkapi_permacache_urls_total 0'), true)
   t.is(metricsResponse.includes('nftlinkapi_permacache_users_total 0'), true)
   t.is(metricsResponse.includes('nftlinkapi_permacache_size_total 0'), true)
-  t.is(metricsResponse.includes('nftlinkapi_permacache_events_total 0'), true)
+  t.is(
+    metricsResponse.includes(
+      'nftlinkapi_permacache_events_total{type="Put"} 0'
+    ),
+    true
+  )
+  t.is(
+    metricsResponse.includes(
+      'nftlinkapi_permacache_events_total{type="Delete"} 0'
+    ),
+    true
+  )
 })

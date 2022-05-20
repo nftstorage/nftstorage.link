@@ -11,9 +11,8 @@ const log = debug('metrics:updateMetrics')
 
 const COUNT_USERS = `
 SELECT COUNT(*) AS total
-FROM nftstorage.user u JOIN nftstorage.user_tag ut
-ON u.id = ut.user_id
-WHERE ut.tag = 'HasSuperHotAccess'::user_tag_type AND ut.value = 'true'
+FROM nftstorage.user_tag
+WHERE tag = 'HasSuperHotAccess'::user_tag_type AND value = 'true'
 `
 
 const COUNT_URLS = `
@@ -21,9 +20,10 @@ SELECT COUNT(*) AS total
 FROM perma_cache
 `
 
-const COUNT_EVENTS = `
+const COUNT_EVENTS_PER_TYPE = `
 SELECT COUNT(*) AS total
 FROM perma_cache_event
+WHERE type = $1
 `
 
 const SUM_SIZE = `
@@ -47,7 +47,12 @@ export async function updateMetrics({ roPg, rwPg }) {
   const results = await settle([
     withTimeLog('updateUsersCount', () => updateUsersCount(roPg, rwPg)),
     withTimeLog('updateUrlsCount', () => updateUrlsCount(roPg, rwPg)),
-    withTimeLog('updateEventsCount', () => updateEventsCount(roPg, rwPg)),
+    withTimeLog('updatePutEventsCount', () =>
+      updateEventsCount(roPg, rwPg, 'Put')
+    ),
+    withTimeLog('updateDeleteEventsCount', () =>
+      updateEventsCount(roPg, rwPg, 'Delete')
+    ),
     withTimeLog('updateSizeSum', () => updateSizeSum(roPg, rwPg)),
     { concurrency: MAX_CONCURRENT_QUERIES },
   ])
@@ -86,11 +91,15 @@ async function updateUrlsCount(roPg, rwPg) {
 /**
  * @param {Client} roPg
  * @param {Client} rwPg
+ * @param {'Put' | 'Delete'} type
  */
-async function updateEventsCount(roPg, rwPg) {
-  const { rows } = await roPg.query(COUNT_EVENTS)
+async function updateEventsCount(roPg, rwPg, type) {
+  const { rows } = await roPg.query(COUNT_EVENTS_PER_TYPE, [type])
   if (!rows.length) throw new Error('no rows returned counting events')
-  return rwPg.query(UPDATE_METRIC, ['events_total', rows[0].total])
+  return rwPg.query(UPDATE_METRIC, [
+    `events_${type.toLowerCase()}_total`,
+    rows[0].total,
+  ])
 }
 
 /**

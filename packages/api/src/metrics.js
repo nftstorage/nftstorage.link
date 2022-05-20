@@ -17,12 +17,14 @@ export async function metricsGet(request, env, ctx) {
     return res
   }
 
-  const [usersTotal, urlsTotal, eventsTotal, sizeTotal] = await Promise.all([
-    env.db.getMetricsValue('users_total'),
-    env.db.getMetricsValue('urls_total'),
-    env.db.getMetricsValue('events_total'),
-    env.db.getMetricsValue('size_total'),
-  ])
+  const [usersTotal, urlsTotal, putEventsTotal, deleteEventsTotal, sizeTotal] =
+    await Promise.all([
+      env.db.getMetricsValue('users_total'),
+      env.db.getMetricsValue('urls_total'),
+      env.db.getMetricsValue('events_put_total'),
+      env.db.getMetricsValue('events_delete_total'),
+      env.db.getMetricsValue('size_total'),
+    ])
 
   const metrics = [
     `# HELP nftlinkapi_permacache_urls_total Total perma cached urls.`,
@@ -36,7 +38,8 @@ export async function metricsGet(request, env, ctx) {
     `nftlinkapi_permacache_size_total ${sizeTotal}`,
     `# HELP nftlinkapi_permacache_events_total Total perma cache events.`,
     `# TYPE nftlinkapi_permacache_events_total counter`,
-    `nftlinkapi_permacache_events_total ${eventsTotal}`,
+    `nftlinkapi_permacache_events_total{type="Put"} ${putEventsTotal}`,
+    `nftlinkapi_permacache_events_total{type="Delete"} ${deleteEventsTotal}`,
   ].join('\n')
 
   res = new Response(metrics, {
