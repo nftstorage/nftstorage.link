@@ -113,7 +113,6 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
       { retries: 5 }
     )
 
-    // const value = await env.DENYLIST.get(anchor)
     if (value) {
       const { status, reason } = JSON.parse(value)
       return new Response(reason || '', { status: status || 410 })
@@ -122,14 +121,17 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
 
   // 1st layer resolution - CDN
   const cache = caches.default
-  const res = await cache.match(request.url)
-
+  const res = await cdnResolution(request, env, cache)
   if (res) {
     // Update cache metrics in background
     const responseTime = Date.now() - startTs
 
     options.onCdnResolution && options.onCdnResolution(res, responseTime)
     return res
+  } else if (
+    (request.headers.get('Cache-Control') || '').includes('only-if-cached')
+  ) {
+    throw new TimeoutError()
   }
 
   // 2nd layer resolution - Public Gateways race
@@ -229,6 +231,35 @@ async function settleGatewayRequests(
       .map((r) => updateGatewayMetrics(request, env, r.value, false)),
     updateCidsTracker(request, env, successFullResponses, cid),
   ])
+}
+
+/**
+ * CDN url resolution.
+ *
+ * @param {Request} request
+ * @param {Env} env
+ * @param {Cache} cache
+ */
+async function cdnResolution(request, env, cache) {
+  // Should skip cache if instructed by headers
+  if ((request.headers.get('Cache-Control') || '').includes('no-cache')) {
+    return undefined
+  }
+
+  try {
+    const res = await pAny(
+      [cache.match(request.url), env.SUPERHOT.get(request.url)],
+      {
+        filter: (res) => !!res,
+      }
+    )
+    return res
+  } catch (err) {
+    if (err instanceof FilterError || err instanceof AggregateError) {
+      return undefined
+    }
+    throw err
+  }
 }
 
 /**

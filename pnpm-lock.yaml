@@ -114,6 +114,7 @@ importers:
       '@sentry/cli': ^1.71.0
       '@web-std/fetch': ^4.0.0
       ava: ^3.15.0
+      browser-env: ^3.3.0
       delay: ^5.0.0
       esbuild: ^0.14.2
       execa: ^5.1.1
@@ -151,6 +152,7 @@ importers:
       '@sentry/cli': 1.74.4
       '@web-std/fetch': 4.1.0
       ava: 3.15.0
+      browser-env: 3.3.0
       delay: 5.0.0
       esbuild: 0.14.38
       execa: 5.1.1

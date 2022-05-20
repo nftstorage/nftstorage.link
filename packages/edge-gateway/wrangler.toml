@@ -7,7 +7,7 @@ type = "javascript"
 
 account_id = ""
 watch_dir = "src"
-compatibility_date = "2021-12-03"
+compatibility_date = "2022-04-26"
 
 [build]
 command = "npm run build"
@@ -47,6 +47,10 @@ bindings = [
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
 
+[[env.production.r2_buckets]]
+bucket_name = "super-hot"
+binding = "SUPERHOT"
+
 # Staging!
 [env.staging]
 # name = "gateway-nft-storage-staging"
@@ -69,6 +73,10 @@ bindings = [
   {name = "CIDSTRACKER", class_name = "CidsTracker0"},
   {name = "GATEWAYREDIRECTCOUNTER", class_name = "GatewayRedirectCounter0"}
 ]
+
+[[env.staging.r2_buckets]]
+bucket_name = "super-hot-staging"
+binding = "SUPERHOT"
 
 # Test!
 [env.test]
