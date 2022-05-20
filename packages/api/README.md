@@ -68,7 +68,10 @@ $ curl -X POST -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.li
 }
 ```
 
-Note: During open beta is limited on a File size of `4.995 GB`.
+Notes:
+
+- During open beta is limited on a File size of `4.995 GB`
+- Content types `text/json`, `text/html` and `image/svg+xml` are limited to `120 MB` during the near future.
 
 ### 🔒 `DELETE /perma-cache/:url`
 
