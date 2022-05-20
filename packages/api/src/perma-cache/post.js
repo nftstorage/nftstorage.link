@@ -46,33 +46,21 @@ export async function permaCachePost(request, env, ctx) {
     throw new HTTPError('The provided URL was already perma cached', 400)
   }
 
-  // Validate if we already have it in R2
-  let r2Object
-  try {
-    r2Object = await env.SUPERHOT.head(normalizedUrl.toString())
-  } catch (err) {
-    // TODO: R2 currently throws error here and does not follow types to return undefined.
-    // They say it will change soon to return undefined...
-    console.log(err)
+  // Fetch Response from provided URL
+  const response = await getResponse(request, env, ctx, normalizedUrl)
+  if (!response.ok) {
+    throw new HTTPError(
+      'Failed to get response from provided URL',
+      response.status
+    )
   }
 
-  if (!r2Object) {
-    // Fetch Response from provided URL
-    const response = await getResponse(request, env, ctx, normalizedUrl)
-    if (!response.ok) {
-      throw new HTTPError(
-        'Failed to get response from provided URL',
-        response.status
-      )
-    }
+  validateCacheControlHeader(response.headers.get('Cache-Control') || '')
 
-    validateCacheControlHeader(response.headers.get('Cache-Control') || '')
-
-    // Store in R2 and add to Database if not existent
-    r2Object = await env.SUPERHOT.put(r2Key, response.body, {
-      httpMetadata: response.headers,
-    })
-  }
+  // Store in R2 and add to Database if not existent
+  const r2Object = await env.SUPERHOT.put(r2Key, response.body, {
+    httpMetadata: response.headers,
+  })
 
   // Will fail on concurrent perma cache of pair (userId, url)
   const data = await env.db.createPermaCache({
