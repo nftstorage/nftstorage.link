@@ -1,4 +1,5 @@
 @import './tailwind.css';
+@import 'swagger-ui-react/swagger-ui.css';
 
 html,
 body {

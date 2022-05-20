@@ -1,11 +1,20 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
-import { MAX_ALLOWED_URL_LENGTH } from '../constants.js'
-import { InvalidUrlError, TimeoutError, HTTPError } from '../errors.js'
+import {
+  MAX_ALLOWED_URL_LENGTH,
+  INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES,
+} from '../constants.js'
+import {
+  InvalidUrlError,
+  TimeoutError,
+  HTTPError,
+  ExpectationFailedError,
+} from '../errors.js'
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
-import { encodeKey } from './utils.js'
+
+import { gatewayIpfs } from 'edge-gateway/src/gateway.js'
 
 /**
  * @typedef {import('../env').Env} Env
@@ -22,77 +31,49 @@ import { encodeKey } from './utils.js'
  *
  * @param {Request} request
  * @param {Env} env
+ * @param {import('..').Ctx} ctx
  */
-export async function permaCachePost(request, env) {
+export async function permaCachePost(request, env, ctx) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
+  const userId = request.auth.user.id
 
-  // Validate if URL is not already perma cached by user
-  const kvPrefix = `${request.auth.user.id}:${encodeURIComponent(r2Key)}:`
-  const { keys } = await env.PERMACACHE.list({
-    prefix: kvPrefix,
-  })
-  if (keys.length > 0) {
+  // Checking if existent does not protect us of concurrent perma cache
+  // but avoids downloading content to fail later.
+  const existing = await env.db.getPermaCache(userId, normalizedUrl.toString())
+  if (existing) {
     throw new HTTPError('The provided URL was already perma cached', 400)
   }
 
-  // Validate if we already have it in R2
-  let r2Object
-  try {
-    r2Object = await env.SUPERHOT.head(normalizedUrl.toString())
-  } catch (err) {
-    // TODO: R2 currently throws error here and does not follow types to return undefined.
-    // They say it will change soon to return undefined...
-    console.log(err)
+  // Fetch Response from provided URL
+  const response = await getResponse(request, env, ctx, normalizedUrl)
+  if (!response.ok) {
+    throw new HTTPError(
+      'Failed to get response from provided URL',
+      response.status
+    )
   }
 
-  if (!r2Object) {
-    // Fetch Response from provided URL
-    const response = await getResponse(request, env, normalizedUrl)
-    if (!response.ok) {
-      throw new HTTPError(
-        'Failed to get response from provided URL',
-        response.status
-      )
-    }
+  validateCacheControlHeader(response.headers.get('Cache-Control') || '')
 
-    // TODO: Validate headers per https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
-    // Store in R2 and add to Database if not existent
-    r2Object = await env.SUPERHOT.put(r2Key, response.body, {
-      httpMetadata: response.headers,
-    })
-  }
-
-  const date = new Date().toISOString()
-  const kvKey = encodeKey({
-    userId: request.auth.user.id,
-    r2Key,
-    date,
+  // Store in R2 and add to Database if not existent
+  const r2Object = await env.SUPERHOT.put(r2Key, response.body, {
+    httpMetadata: response.headers,
   })
 
-  // Store in KV
-  await Promise.all([
-    await env.PERMACACHE.put(kvKey, r2Key, {
-      metadata: {
-        sourceUrl: sourceUrl.toString(),
-        size: r2Object.size,
-        date,
-      },
-    }),
-    await env.PERMACACHE_HISTORY.put(kvKey, r2Key, {
-      metadata: {
-        size: r2Object.size,
-        date,
-        operation: 'put',
-      },
-    }),
-  ])
+  // Will fail on concurrent perma cache of pair (userId, url)
+  const data = await env.db.createPermaCache({
+    userId,
+    sourceUrl: sourceUrl.toString(),
+    normalizedUrl: normalizedUrl.toString(),
+    size: r2Object.size,
+  })
 
   return new JSONResponse({
     url: sourceUrl.toString(),
     size: r2Object.size,
-    date,
+    insertedAt: data,
   })
 }
 
@@ -100,9 +81,12 @@ export async function permaCachePost(request, env) {
  * Fetch Response from provided URL.
  * @param {Request} request
  * @param {Env} env
+ * @param {import('..').Ctx} ctx
  * @param {URL} url
  */
-async function getResponse(request, env, url) {
+async function getResponse(request, env, ctx, url) {
+  // TODO: Wait for CF services support
+  /*
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
@@ -120,6 +104,12 @@ async function getResponse(request, env, url) {
     clearTimeout(timer)
   }
   return response
+  */
+
+  request = new Request(url.toString())
+
+  // @ts-ignore Env does not match entirely
+  return await gatewayIpfs(request, env, ctx)
 }
 
 /**
@@ -199,6 +189,21 @@ function getCid(candidateCid) {
   } catch (err) {
     throw new InvalidUrlError(`invalid CID: ${candidateCid}: ${err.message}`)
   }
+}
+
+/**
+ * Validates cache control header to verify if we should perma cache the response.
+ * Based on https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Cache-Control
+ * @param {string} cacheControl
+ */
+function validateCacheControlHeader(cacheControl) {
+  INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES.forEach((directive) => {
+    if (cacheControl.includes(directive)) {
+      throw new ExpectationFailedError(
+        'Expectation failed with cache control header content'
+      )
+    }
+  })
 }
 
 /**

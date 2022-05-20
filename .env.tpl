@@ -18,3 +18,4 @@ DATABASE_TOKEN=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzdXBhYmFzZSIsImlh
 
 # Postgres Database
 DATABASE_CONNECTION=postgresql://postgres:postgres@localhost:5432/postgres
+RO_DATABASE_CONNECTION=postgresql://postgres:postgres@localhost:5432/postgres

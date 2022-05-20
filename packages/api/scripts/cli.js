@@ -5,8 +5,8 @@ import { fileURLToPath } from 'url'
 import sade from 'sade'
 
 import { buildCmd } from './build.js'
-import { dbCmd } from '../node_modules/nft.storage-api/scripts/cmds/db.js'
-import { dbSqlCmd } from '../node_modules/nft.storage-api/scripts/cmds/db-sql.js'
+import { dbCmd } from './db.js'
+import { dbSqlCmd } from './db-sql.js'
 import { ipfsCmd } from '../node_modules/edge-gateway/scripts/ipfs.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -28,7 +28,7 @@ prog
   .action((opts) =>
     ipfsCmd({
       ...opts,
-      composePath: path.join(__dirname, '../docker/docker-compose.yml'),
+      composePath: path.join(__dirname, '../docker/docker-ipfs.yml'),
       containerName: 'ipfs1',
     })
   )

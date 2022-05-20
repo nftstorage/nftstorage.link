@@ -2,13 +2,14 @@
 
 import { Router } from 'itty-router'
 
+import { withAuth } from './auth.js'
 import {
-  withAccountNotRestricted,
-  withApiToken,
-  withSuperHotAuthorized,
-} from './auth.js'
-import { permaCachePost, permaCacheListGet, permaCacheStatusGet, permaCacheDelete } from './perma-cache/index.js'
-
+  permaCachePost,
+  permaCacheListGet,
+  permaCacheStatusGet,
+  permaCacheDelete,
+} from './perma-cache/index.js'
+import { metricsGet } from './metrics.js'
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
 import { envAll } from './env.js'
@@ -17,27 +18,16 @@ const router = Router()
 
 const auth = {
   '🤲': (handler) => withCorsHeaders(handler),
-  '🔒': (handler) => withCorsHeaders(withApiToken(handler)),
-  '🔥': (handler) => withSuperHotAuthorized(handler),
-  '🚫': (handler) => withAccountNotRestricted(handler),
+  '🔒': (handler) => withCorsHeaders(withAuth(handler)),
 }
 
 router
   .all('*', envAll)
-  .get('/test', async (request, env, ctx) => {
-    const r = await env.SUPERHOT.get('0.csv')
-    return new Response(r.body)
-  })
-  .get('/perma-cache', auth['🔒'](auth['🚫'](auth['🔥'](permaCacheListGet))))
-  .post('/perma-cache/:url', auth['🔒'](auth['🚫'](auth['🔥'](permaCachePost))))
-  .get(
-    '/perma-cache/status',
-    auth['🔒'](auth['🚫'](auth['🔥'](permaCacheStatusGet)))
-  )
-  .delete(
-    '/perma-cache/:url',
-    auth['🔒'](auth['🚫'](auth['🔥'](permaCacheDelete)))
-  )
+  .get('/metrics', withCorsHeaders(metricsGet))
+  .get('/perma-cache', auth['🔒'](permaCacheListGet))
+  .post('/perma-cache/:url', auth['🔒'](permaCachePost))
+  .get('/perma-cache/status', auth['🔒'](permaCacheStatusGet))
+  .delete('/perma-cache/:url', auth['🔒'](permaCacheDelete))
 
 /**
  * @param {Error} error

@@ -1,10 +1,14 @@
-import * as JWT from '../../src/utils/jwt.js'
+import { DBClient } from '../../src/utils/db-client.js'
 import { PostgrestClient } from '@supabase/postgrest-js'
 
-import { DBClient } from 'nft.storage-api/src/utils/db-client.js'
-import { globals } from './worker-globals.js'
+import { NftStorageDBClient } from './utils.js'
 
-export const client = new DBClient(
+export const dbClient = new DBClient({
+  endpoint: process.env.DATABASE_URL,
+  token: process.env.DATABASE_TOKEN,
+})
+
+export const nftStorageDbClient = new NftStorageDBClient(
   process.env.DATABASE_URL,
   process.env.DATABASE_TOKEN
 )
@@ -13,6 +17,7 @@ export const rawClient = new PostgrestClient(process.env.DATABASE_URL, {
   headers: {
     Authorization: `Bearer ${process.env.DATABASE_TOKEN}`,
   },
+  schema: 'nftstorage',
 })
 
 /**
@@ -23,20 +28,14 @@ export const rawClient = new PostgrestClient(process.env.DATABASE_URL, {
  * @param {boolean} [options.grantRequiredTags]
  */
 export async function createTestUser({
-  publicAddress = `0x73573${Date.now()}`,
+  publicAddress = `0x73573${Date.now()}${(Math.random() + 1)
+    .toString(36)
+    .substring(7)}`,
   issuer = `did:eth:${publicAddress}`,
   name = 'A Tester',
   grantRequiredTags = false,
 } = {}) {
-  const token = await JWT.sign(
-    {
-      sub: issuer,
-      iss: 'nft-storage',
-      iat: Date.now(),
-      name: 'test',
-    },
-    globals.SALT
-  )
+  const token = publicAddress
   const user = await createTestUserWithFixedToken({
     token,
     publicAddress,
@@ -63,7 +62,7 @@ export async function createTestUserWithFixedToken({
   issuer = `did:eth:${publicAddress}`,
   name = 'A Tester',
 } = {}) {
-  const { data: user, error } = await client
+  const { data: user, error } = await nftStorageDbClient
     .upsertUser({
       email: `a.tester@example.org`,
       github_id: issuer,
@@ -79,7 +78,7 @@ export async function createTestUserWithFixedToken({
     throw new Error('error creating user')
   }
 
-  await client.createKey({
+  await nftStorageDbClient.createKey({
     name: 'test',
     secret: token,
     userId: user.id,
@@ -124,3 +123,6 @@ async function createUserTag(tag) {
 
   return data
 }
+
+export const USER_WITHOUT_SUPER_HOT_ACCESS = 'USER_WITHOUT_SUPER_HOT_ACCESS'
+export const USER_WITH_ACCOUNT_RESTRICTED = 'USER_WITH_ACCOUNT_RESTRICTED'

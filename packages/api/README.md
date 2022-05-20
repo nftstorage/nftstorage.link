@@ -24,23 +24,9 @@ One time set up of your cloudflare worker subdomain for dev:
 - Add secrets
 
   ```sh
-    wrangler secret put SALT --env production # open `https://csprng.xyz/v1/api` in the browser and use the value of `Data`
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
     wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
     wrangler secret put DATABASE_TOKEN --env $(whoami) # Get from database account
-  ```
-
-- Add KV namespaces
-
-  ```sh
-  wrangler kv:namespace create PERMACACHE --preview --env $(whoami)
-  # Outputs something like: `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4" }`
-  # but you need to put `{ binding = "PERMACACHE", preview_id = "7e441603d1bc4d5a87f6cecb959018e4", id = "7e441603d1bc4d5a87f6cecb959018e4" }` inside the `kv_namespaces`.
-  # for production: wrangler kv:namespace create PERMACACHE --env production
-  wrangler kv:namespace create PERMACACHE_HISTORY --preview --env $(whoami)
-  # Outputs something like: `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930" }`
-  # but you need to put `{ binding = "PERMACACHE_HISTORY", preview_id = "bac8069051ee4796a305b4d3f366b930", id = "bac8069051ee4796a305b4d3f366b930" }` inside the `kv_namespaces`.
-  # for production: wrangler kv:namespace create PERMACACHE_HISTORY --env production
   ```
 
 - Add R2 bucket (Note that it is only available as Private Beta at the time of writing)
@@ -58,14 +44,69 @@ You only need to `pnpm start` for subsequent runs. PR your env config to the `wr
 
 ## High level architecture
 
-TODO
+The HTTP API to optimize content retrieval from nftstorage.link IPFS gateway. It is serverless code running across the globe to write content into our Cloud storage, and consequently offering lightning fast content retrieval.
 
-![High level Architecture](./nftstorage.link-super-hot.jpg)
+![High level Architecture](./nftstorage.link-api.jpg)
 
 ## Usage
 
-TODO
+As a requirement, you need an account in https://nft.storage and access granted to the feature (at the time of writing). With that, you can simply create an API key and you are ready to go.
+To get access to this feature you can get more information at https://nftstorage.link.
+
+You can see full HTTP API specification at https://nftstorage.link/api-docs.
+
+### 🔒 `POST /perma-cache/:url`
+
+> Perma-cache a URL for fast retrieval.
+
+```console
+$ curl -X POST -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
+{
+  "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/"
+  "size": 28
+  "inserted_at" "2022-05-18T11:37:27.878372"
+}
+```
+
+Note: During open beta is limited on a File size of `4.995 GB`.
+
+### 🔒 `DELETE /perma-cache/:url`
+
+> Delete a given URL from perma-cache.
+
+```console
+$ curl -X DELETE -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/https%3A%2F%2Fbafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link%2F -s | jq
+true
+```
+
+Please note that this will not remove the content from the IPFS network nor other caching layers.
+
+### 🔒 `GET /perma-cache/`
+
+> Get all user perma-cache URLs.
+
+```console
+$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache -s | jq
+[
+  {
+    "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/"
+    "size": 28
+    "inserted_at" "2022-05-18T11:37:27.878372"
+  }
+]
+```
+
+### 🔒 `GET /perma-cache/status`
+
+> Get perma-cache account status.
+
+```console
+$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache -s | jq
+{
+  "usedStorage": "8036759278"
+}
+```
 
 ### Rate limiting
 
-nft.storage Gateway is currently rate limited at 200 requests per minute to a given IP Address. In the event of a rate limit, the IP will be blocked for 30 seconds.
+nft.storage Gateway is currently rate limited at 100 requests per minute to a given IP Address. In the event of a rate limit, the IP will be blocked for 30 seconds.
