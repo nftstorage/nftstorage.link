@@ -120,16 +120,17 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
   }
 
   // 1st layer resolution - CDN
-  const cacheControl = request.headers.get('Cache-Control') || ''
   const cache = caches.default
-  const res = await cdnResolution(request, env, cache, cacheControl)
+  const res = await cdnResolution(request, env, cache)
   if (res) {
     // Update cache metrics in background
     const responseTime = Date.now() - startTs
 
     options.onCdnResolution && options.onCdnResolution(res, responseTime)
     return res
-  } else if (cacheControl.includes('only-if-cached')) {
+  } else if (
+    (request.headers.get('Cache-Control') || '').includes('only-if-cached')
+  ) {
     throw new TimeoutError()
   }
 
@@ -232,17 +233,16 @@ async function settleGatewayRequests(
   ])
 }
 
-/*
+/**
  * CDN url resolution.
  *
  * @param {Request} request
  * @param {Env} env
  * @param {Cache} cache
- * @param {string} cacheControl
  */
-async function cdnResolution(request, env, cache, cacheControl) {
+async function cdnResolution(request, env, cache) {
   // Should skip cache if instructed by headers
-  if (cacheControl.includes('no-cache')) {
+  if ((request.headers.get('Cache-Control') || '').includes('no-cache')) {
     return undefined
   }
 
