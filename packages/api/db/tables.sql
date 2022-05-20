@@ -43,3 +43,12 @@ CREATE TABLE IF NOT EXISTS public.perma_cache_event
 );
 
 CREATE INDEX IF NOT EXISTS perma_cache_event_user_id_idx ON perma_cache_event (user_id);
+
+-- Metric contains the current values of collected metrics.
+CREATE TABLE IF NOT EXISTS metric
+(
+    name TEXT PRIMARY KEY,
+    value BIGINT NOT NULL,
+    inserted_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+    updated_at  TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
+);

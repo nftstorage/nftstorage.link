@@ -9,7 +9,7 @@ import {
   permaCacheStatusGet,
   permaCacheDelete,
 } from './perma-cache/index.js'
-
+import { metricsGet } from './metrics.js'
 import { addCorsHeaders, withCorsHeaders } from './cors.js'
 import { errorHandler } from './error-handler.js'
 import { envAll } from './env.js'
@@ -23,6 +23,7 @@ const auth = {
 
 router
   .all('*', envAll)
+  .get('/metrics', withCorsHeaders(metricsGet))
   .get('/perma-cache', auth['🔒'](permaCacheListGet))
   .post('/perma-cache/:url', auth['🔒'](permaCachePost))
   .get('/perma-cache/status', auth['🔒'](permaCacheStatusGet))

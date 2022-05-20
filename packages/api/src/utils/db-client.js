@@ -160,7 +160,27 @@ export class DBClient {
   }
 
   /**
-   * Get user by auth token
+   * Get metrics for a given key.
+   *
+   * @param {string} key
+   */
+  async getMetricsValue(key) {
+    const query = this._client.from('metric')
+    const { data, error } = await query.select('value').eq('name', key)
+
+    if (error) {
+      throw new DBError(error)
+    }
+
+    if (!data || !data.length) {
+      return 0
+    }
+
+    return data[0].value
+  }
+
+  /**
+   * * Get user by auth token.
    *
    * @param {string} secret
    */

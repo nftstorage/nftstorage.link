@@ -6,7 +6,7 @@ export const USER_TAGS = {
 
 // KV maximum length is 512 bytes - we need to store space for user ID and timestamp
 export const MAX_ALLOWED_URL_LENGTH = 460
-
+export const METRICS_CACHE_MAX_AGE = 10 * 60 // in seconds (10 minutes)
 export const HTTP_STATUS_CONFLICT = 409
 
 export const INVALID_PERMA_CACHE_CACHE_CONTROL_DIRECTIVES = [
