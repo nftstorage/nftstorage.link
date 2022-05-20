@@ -1,9 +1,12 @@
+@import './tailwind.css';
 @import 'swagger-ui-react/swagger-ui.css';
 
 html,
 body {
+  scroll-behavior: smooth;
   padding: 0;
   margin: 0;
+  line-height: 1.6;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -15,4 +18,98 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+[class^='animate-travel'] {
+  transform: translate3d(0, 250vh, 0);
+  animation-name: travel;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0, 0.9, 0.9, 0.25);
+}
+
+.animate-travel-1 {
+  animation-delay: 0s;
+  animation-duration: 4s;
+}
+.animate-travel-2 {
+  animation-delay: 3s;
+  animation-duration: 5s;
+}
+.animate-travel-3 {
+  animation-delay: 1s;
+  animation-duration: 5s;
+}
+.animate-travel-4 {
+  animation-delay: 2.5s;
+  animation-duration: 6s;
+}
+
+@keyframes travel {
+  0% {
+    transform: translate3d(0, 250vh, 0);
+  }
+  50% {
+    transform: translate3d(0, 100vh, 0);
+  }
+  100% {
+    transform: translate3d(0, 0vh, 0);
+  }
+}
+
+.circle-container {
+  display: flex;
+  margin-bottom: -70px;
+  position: relative;
+}
+
+.circle {
+  margin-left: -30px;
+  width: 140px;
+  height: 140px;
+  min-width: 140px;
+  border-radius: 140px;
+  border-width: 30px;
+  transform: rotate(45deg);
+}
+
+@media screen and (max-width: 1024px) {
+  .circle-container {
+    margin-bottom: -50px;
+  }
+  .circle {
+    margin-left: -20px;
+    width: 100px;
+    height: 100px;
+    min-width: 100px;
+    border-radius: 100px;
+    border-width: 20px;
+  }
+}
+
+.kwes-form .kw-border-success {
+  border: 2px solid #47aed7 !important;
+}
+
+.kwes-form .kw-border-error {
+  border-width: 2px !important;
+}
+
+.kw-field-error-message {
+  font-size: 12px;
+}
+
+.btn {
+  box-shadow: 0 0px 0 0px #0a854c, 0 0px 0 0px #ee4116, 0 0px 0 0px #e2ba36;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover {
+  background-color: #47aed7;
+  box-shadow: 0 3px 0 0px #0a854c, 0 6px 0 0px #ee4116, 0 9px 0 0px #e2ba36;
+}
+
+.btn:active {
+  box-shadow: inset 0 0 0 2px #000, 0 3px 0 0px #0a854c, 0 6px 0 0px #ee4116,
+    0 9px 0 0px #e2ba36;
 }
