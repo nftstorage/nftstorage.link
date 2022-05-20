@@ -14,12 +14,12 @@ paths:
     post:
       tags:
         - nftstorage.link
-      summary: Put a given URL response in nftstorage.link perma-cache.
+      summary: Add the content of the given URL to the perma-cache.
       description: |
-        Store the response of the nftstorage.link IPFS gateway in a edge perma-cache
-        to accelerate future request to the gateway.
+        Store the response of the nftstorage.link IPFS gateway in an edge perma-cache
+        to accelerate future requests to the nftstorage.link gateway.
 
-        Note: During beta this is limited to 4.995 GB of content length per URL.
+        Note: During beta this is limited to 4.995 GB of content per URL.
 
         ### Rate limits
         This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
@@ -51,9 +51,9 @@ paths:
     delete:
       tags:
         - nftstorage.link
-      summary: Delete a given URL response from nftstorage.link perma-cache.
+      summary: Remove content for the given URL from the perma-cache.
       description: |
-        Delete a given URL response from nftstorage.link perma cache.
+        Remove previously added content for the given URL from the perma-cache.
 
         Note that content will continue to be available in the IPFS network.
 
@@ -88,9 +88,9 @@ paths:
     get:
       tags:
         - nftstorage.link
-      summary: Get all URLs perma cached in nftstorage.link by the user.
+      summary: List the URLs that have been added to the perma-cache.
       description: |
-        Get all URLs previously perma-cached by the user.
+        Retrieve a paginated list of the URLs that have been added to the perma-cache.
 
         ### Rate limits
         This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
