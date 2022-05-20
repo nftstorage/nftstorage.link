@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.7.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.2...edge-gateway-v1.7.0) (2022-05-20)
+
+
+### Features
+
+* edge gateway extend cdn resolution with r2 ([#61](https://github.com/nftstorage/nftstorage.link/issues/61)) ([fb78202](https://github.com/nftstorage/nftstorage.link/commit/fb78202a38d11ad81016136c6847253233fd798b))
+
+
+### Bug Fixes
+
+* add new cid to denylist ([#99](https://github.com/nftstorage/nftstorage.link/issues/99)) ([c973a8f](https://github.com/nftstorage/nftstorage.link/commit/c973a8fff9f84ed51e3de900f180b7171603ba1d))
+* add two new cids to denylist ([#100](https://github.com/nftstorage/nftstorage.link/issues/100)) ([6819e06](https://github.com/nftstorage/nftstorage.link/commit/6819e06cab4b6386051a20a846b328d4ee0778e7))
+* integrate edge gateway in api until workers bindings available ([#53](https://github.com/nftstorage/nftstorage.link/issues/53)) ([de8d45d](https://github.com/nftstorage/nftstorage.link/commit/de8d45d707758ceb0184eff0c0b1c46e4a2c1427))
+
 ### [1.6.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.1...edge-gateway-v1.6.2) (2022-05-12)
 
 
