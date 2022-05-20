@@ -117,7 +117,7 @@ test('Can delete perma cache content with source url', async (t) => {
   t.falsy(r2ResponseNonExistent)
 })
 
-test('Fails to delete unexistent perma cache content', async (t) => {
+test('Fails to delete unexistent perma-cache content', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
@@ -183,7 +183,7 @@ test('Can add content that was previously deleted', async (t) => {
   t.truthy(data.find((event) => event.type === 'Delete'))
 })
 
-test('should not delete from R2 bucket if url was perma cached by other user', async (t) => {
+test('should not delete from R2 bucket if url was perma-cached by other user', async (t) => {
   const { mf, user } = t.context
   const bindings = await mf.getBindings()
   const r2Bucket = bindings.SUPERHOT

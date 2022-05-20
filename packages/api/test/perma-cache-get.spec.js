@@ -18,7 +18,7 @@ test.beforeEach(async (t) => {
 })
 
 // PUT /perma-cache
-test('Gets empty list when there were no perma cached objects previously added', async (t) => {
+test('Gets empty list when there were no perma-cached objects previously added', async (t) => {
   const { mf, user } = t.context
   const response = await mf.dispatchFetch(
     'https://localhost:8788/perma-cache',
@@ -33,7 +33,7 @@ test('Gets empty list when there were no perma cached objects previously added',
   t.is(entries.length, 0)
 })
 
-test('Gets list when there were perma cached objects previously added', async (t) => {
+test('Gets list when there were perma-cached objects previously added', async (t) => {
   const { mf, user } = t.context
 
   // Perma cache URLs
@@ -74,7 +74,7 @@ test('Gets list when there were perma cached objects previously added', async (t
 test('Can paginate list', async (t) => {
   const { mf, user } = t.context
 
-  // Perma cache URLs
+  // Perma-cache URLs
   const urls = [
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true',
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',

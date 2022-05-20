@@ -139,7 +139,7 @@ components:
         url:
           type: string
           example: https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/
-          description: 'URL as provided for perma cache.'
+          description: 'URL as provided for perma-cache.'
         size:
           type: number
           example: 600

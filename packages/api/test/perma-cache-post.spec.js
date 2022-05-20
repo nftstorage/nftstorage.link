@@ -50,7 +50,7 @@ test('Fails when non nftstorage.link url is provided', async (t) => {
   )
 })
 
-test('Puts to perma cache IPFS path valid url without directory path', async (t) => {
+test('Puts to perma-cache IPFS path valid url without directory path', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
@@ -65,7 +65,7 @@ test('Puts to perma cache IPFS path valid url without directory path', async (t)
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
-test('Puts to perma cache IPFS path valid url with directory path', async (t) => {
+test('Puts to perma-cache IPFS path valid url with directory path', async (t) => {
   const { mf, user } = t.context
 
   const url =
@@ -81,7 +81,7 @@ test('Puts to perma cache IPFS path valid url with directory path', async (t) =>
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
-test('Puts to perma cache IPFS subdomain valid url without directory path', async (t) => {
+test('Puts to perma-cache IPFS subdomain valid url without directory path', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
@@ -96,7 +96,7 @@ test('Puts to perma cache IPFS subdomain valid url without directory path', asyn
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
-test('Puts to perma cache IPFS subdomain valid url with directory path', async (t) => {
+test('Puts to perma-cache IPFS subdomain valid url with directory path', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:9081/path'
@@ -111,7 +111,7 @@ test('Puts to perma cache IPFS subdomain valid url with directory path', async (
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
-test('Puts to perma cache IPFS subdomain valid url with query parameters', async (t) => {
+test('Puts to perma-cache IPFS subdomain valid url with query parameters', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true'
@@ -126,7 +126,7 @@ test('Puts to perma cache IPFS subdomain valid url with query parameters', async
   await validateSuccessfulPut(t, url, body, gatewayTxtResponse)
 })
 
-test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
+test('Fails to put to perma-cache ipfs path with invalid cid', async (t) => {
   const { mf, user } = t.context
 
   const response = await mf.dispatchFetch(
@@ -144,7 +144,7 @@ test('Fails to put to perma cache ipfs path with invalid cid', async (t) => {
   )
 })
 
-test('Fails when it was already perma cached', async (t) => {
+test('Fails when it was already perma-cached', async (t) => {
   const { mf, user } = t.context
   const url =
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
@@ -161,10 +161,10 @@ test('Fails when it was already perma cached', async (t) => {
   })
   t.is(response2.status, 400)
   const body = await response2.json()
-  t.is(body, 'The provided URL was already perma cached')
+  t.is(body, 'The provided URL was already perma-cached')
 })
 
-test('Fails on concurrent perma cache attempt of same URL', async (t) => {
+test('Fails on concurrent perma-cache attempt of same URL', async (t) => {
   const { mf, user } = t.context
   const urls = [
     'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',

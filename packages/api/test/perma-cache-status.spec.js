@@ -15,7 +15,7 @@ test.beforeEach(async (t) => {
   }
 })
 
-test('Get perma cache status from user', async (t) => {
+test('Get perma-cache status from user', async (t) => {
   const { mf, user } = t.context
   const statusResponseEmpty = await mf.dispatchFetch(
     'https://localhost:8788/perma-cache/status',

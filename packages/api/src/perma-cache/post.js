@@ -39,11 +39,11 @@ export async function permaCachePost(request, env, ctx) {
   const r2Key = normalizedUrl.toString()
   const userId = request.auth.user.id
 
-  // Checking if existent does not protect us of concurrent perma cache
+  // Checking if existent does not protect us of concurrent perma-cache
   // but avoids downloading content to fail later.
   const existing = await env.db.getPermaCache(userId, normalizedUrl.toString())
   if (existing) {
-    throw new HTTPError('The provided URL was already perma cached', 400)
+    throw new HTTPError('The provided URL was already perma-cached', 400)
   }
 
   // Fetch Response from provided URL
@@ -62,7 +62,7 @@ export async function permaCachePost(request, env, ctx) {
     httpMetadata: response.headers,
   })
 
-  // Will fail on concurrent perma cache of pair (userId, url)
+  // Will fail on concurrent perma-cache of pair (userId, url)
   const data = await env.db.createPermaCache({
     userId,
     sourceUrl: sourceUrl.toString(),
