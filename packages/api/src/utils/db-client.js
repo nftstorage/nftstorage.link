@@ -50,14 +50,14 @@ export class DBClient {
     }
 
     if (!data) {
-      throw new Error('Perma cache not created.')
+      throw new Error('Perma-cache not created.')
     }
 
     return data
   }
 
   /**
-   * Get perma cache Entry
+   * Get perma-cache Entry
    *
    * @param {number} userId
    * @param {string} url
@@ -83,7 +83,7 @@ export class DBClient {
   }
 
   /**
-   * List perma cache
+   * List perma-cache
    *
    * @param {number} userId
    * @param {Object} opts
@@ -120,7 +120,7 @@ export class DBClient {
   }
 
   /**
-   * List perma cache
+   * List perma-cache
    *
    * @param {number} userId
    * @param {string} url
@@ -142,7 +142,7 @@ export class DBClient {
   }
 
   /**
-   * Get perma cache storage in bytes.
+   * Get perma-cache storage in bytes.
    *
    * @param {number} userId
    * @returns {Promise<number>}

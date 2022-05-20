@@ -9,15 +9,15 @@ CREATE TYPE user_tag_type AS ENUM
   'StorageLimitBytes'
 );
 
--- Perma cache transaction type.
+-- Perma-cache transaction type.
 CREATE TYPE perma_cache_event_type AS ENUM (
-    -- A PUT event on perma cache.
+    -- A PUT event on perma-cache.
     'Put',
-    -- A DELETE event on perma cache.
+    -- A DELETE event on perma-cache.
     'Delete'
     );
 
--- A nftstorage.link perma cache entry.
+-- A nftstorage.link perma-cache entry.
 CREATE TABLE IF NOT EXISTS public.perma_cache
 (
     id             BIGSERIAL PRIMARY KEY,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS public.perma_cache
 
 CREATE INDEX IF NOT EXISTS perma_cache_user_id_idx ON perma_cache (user_id);
 
--- A nftstorage.link perma cache event.
+-- A nftstorage.link perma-cache event.
 CREATE TABLE IF NOT EXISTS public.perma_cache_event
 (
     id             BIGSERIAL PRIMARY KEY,

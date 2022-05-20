@@ -27,16 +27,16 @@ export async function metricsGet(request, env, ctx) {
     ])
 
   const metrics = [
-    `# HELP nftlinkapi_permacache_urls_total Total perma cached urls.`,
+    `# HELP nftlinkapi_permacache_urls_total Total perma-cached urls.`,
     `# TYPE nftlinkapi_permacache_urls_total counter`,
     `nftlinkapi_permacache_urls_total ${urlsTotal}`,
-    `# HELP nftlinkapi_permacache_users_total Total number of users with perma cached urls.`,
+    `# HELP nftlinkapi_permacache_users_total Total number of users with perma-cached urls.`,
     `# TYPE nftlinkapi_permacache_users_total counter`,
     `nftlinkapi_permacache_users_total ${usersTotal}`,
-    `# HELP nftlinkapi_permacache_size_total Total perma cached size.`,
+    `# HELP nftlinkapi_permacache_size_total Total perma-cached size.`,
     `# TYPE nftlinkapi_permacache_size_total counter`,
     `nftlinkapi_permacache_size_total ${sizeTotal}`,
-    `# HELP nftlinkapi_permacache_events_total Total perma cache events.`,
+    `# HELP nftlinkapi_permacache_events_total Total perma-cache events.`,
     `# TYPE nftlinkapi_permacache_events_total counter`,
     `nftlinkapi_permacache_events_total{type="Put"} ${putEventsTotal}`,
     `nftlinkapi_permacache_events_total{type="Delete"} ${deleteEventsTotal}`,
