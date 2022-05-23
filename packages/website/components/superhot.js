@@ -45,7 +45,7 @@ export default function Superhot() {
                   <li className="flex text-left my-8 items-start">
                     <CheckMark />
                     <p className="">
-                      50 ms time-to-first-byte for 95% of the world’s
+                      100 ms time-to-first-byte for 95% of the world’s
                       Internet-connected population
                     </p>
                   </li>
