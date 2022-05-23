@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/nftstorage/nftstorage.link/compare/nftstorage.link-v1.0.2...nftstorage.link-v1.1.0) (2022-05-20)
+
+
+### Features
+
+* http perma cache post ([#28](https://github.com/nftstorage/nftstorage.link/issues/28)) ([df4dce4](https://github.com/nftstorage/nftstorage.link/commit/df4dce47070fa4d24b088562fe8f62be028d5a66))
+
 ### [1.0.2](https://github.com/nftstorage/nftstorage.link/compare/nftstorage.link-v1.0.1...nftstorage.link-v1.0.2) (2022-04-27)
 
 
