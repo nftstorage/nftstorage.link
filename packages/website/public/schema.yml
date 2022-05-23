@@ -19,7 +19,9 @@ paths:
         Store the response of the nftstorage.link IPFS gateway in an edge perma-cache
         to accelerate future requests to the nftstorage.link gateway.
 
-        Note: During beta this is limited to 4.995 GB of content per URL.
+        Notes:
+        - During beta this is limited to 4.995 GB of content per URL.
+        - Content types `text/json`, `text/html` and `image/svg+xml` are limited to `120 MB` during the near future.
 
         ### Rate limits
         This API imposes rate limits to ensure quality of service. You may receive a 429 "Too many requests" error if you make more than 100 requests with the same API token within a 60 second window. Upon receiving a response with a 429 status, clients should retry the failed request after a small delay. To avoid 429 responses, you may wish to implement client-side request throttling to stay within the limits.
