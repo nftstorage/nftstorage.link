@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.1](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.0...website-v1.1.1) (2022-05-23)
+
+
+### Bug Fixes
+
+* ttfb perma cache ([#108](https://github.com/nftstorage/nftstorage.link/issues/108)) ([ccb6650](https://github.com/nftstorage/nftstorage.link/commit/ccb66508c3a553f84fd23722b3aed523e1b6a9d8))
+
 ## [1.1.0](https://github.com/nftstorage/nftstorage.link/compare/website-v1.0.0...website-v1.1.0) (2022-05-23)
 
 
