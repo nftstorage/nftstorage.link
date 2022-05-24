@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.2](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.1...website-v1.1.2) (2022-05-24)
+
+
+### Bug Fixes
+
+* copy changes for docs on superhot page ([#110](https://github.com/nftstorage/nftstorage.link/issues/110)) ([f06dc58](https://github.com/nftstorage/nftstorage.link/commit/f06dc582ccff2128a093e4648942cce37e9bbc4d))
+
 ### [1.1.1](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.0...website-v1.1.1) (2022-05-23)
 
 
