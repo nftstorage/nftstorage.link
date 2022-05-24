@@ -37,9 +37,21 @@ export default function Superhot() {
                 />
 
                 <h4 className="text-lg md:text-xl leading-snug lg:text-2xl font-semibold max-w-4xl mx-auto">
-                  Permacache NFT files of up to 5GB on the edge to guarantee the
-                  fastest possible read performance by anyone on the web.
+                  Perma-cache NFT files of up to 5GB on the edge to guarantee
+                  the fastest possible read performance by anyone on the web.{' '}
+                  <a
+                    href="https://nftstorage.link/api-docs"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline cursor-pointer underline-offset-4 text-orangred hover:text-blue transition-colors"
+                  >
+                    API Docs
+                  </a>
                 </h4>
+
+                {/* <p className="mt-8">
+                  
+                </p> */}
 
                 <ul className="max-w-lg text-lg mx-auto mt-12">
                   <li className="flex text-left my-8 items-start">
@@ -78,7 +90,7 @@ export default function Superhot() {
                       <small className="block absolute uppercase font-bold text-xs -mt-4 text-blue">
                         Coming Soon
                       </small>
-                      Permacache files of any size
+                      Perma-cache files of any size
                     </p>
                   </li>
                 </ul>

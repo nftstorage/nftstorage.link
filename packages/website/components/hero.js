@@ -28,11 +28,12 @@ export default function Hero() {
               Try it Out
             </a>
             <a
-              href="/api-docs"
+              href="https://nft.storage/docs/concepts/gateways/"
               target="_blank"
+              rel="noreferrer"
               className="uppercase underline underline-offset-4 text-orangred font-bold ml-8 hover:text-blue transition-colors"
             >
-              API Docs
+              Docs
             </a>
           </div>
         </div>
