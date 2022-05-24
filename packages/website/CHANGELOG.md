@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.0](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.2...website-v1.2.0) (2022-05-24)
+
+
+### Features
+
+* add superhot anchor ([#118](https://github.com/nftstorage/nftstorage.link/issues/118)) ([784325c](https://github.com/nftstorage/nftstorage.link/commit/784325c3d670c70440ae7b9ff3c2d48f007adfbc))
+
+
+### Bug Fixes
+
+* api beta docs ([#119](https://github.com/nftstorage/nftstorage.link/issues/119)) ([422e389](https://github.com/nftstorage/nftstorage.link/commit/422e3895b700699c168d334eb15ba9f8f8c27acf))
+
 ### [1.1.2](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.1...website-v1.1.2) (2022-05-24)
 
 
