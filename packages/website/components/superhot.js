@@ -45,7 +45,7 @@ export default function Superhot() {
                     rel="noreferrer"
                     className="underline cursor-pointer underline-offset-4 text-orangred hover:text-blue transition-colors"
                   >
-                    API Docs
+                    BETA API Docs
                   </a>
                 </h4>
 
