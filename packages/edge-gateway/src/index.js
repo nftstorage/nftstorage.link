@@ -6,6 +6,7 @@ import { ipfsGet } from './ipfs.js'
 import { ipnsGet } from './ipns.js'
 import { gatewayGet } from './gateway.js'
 import { metricsGet } from './metrics.js'
+import { versionGet } from './version.js'
 
 // Export Durable Object namespace from the root module.
 export { GatewayMetrics1 } from './durable-objects/gateway-metrics.js'
@@ -22,6 +23,7 @@ const router = Router()
 router
   .all('*', envAll)
   .get('/metrics', withCorsHeaders(metricsGet))
+  .get('/version', withCorsHeaders(versionGet))
   .get('/ipfs/:cid', withCorsHeaders(ipfsGet))
   .get('/ipfs/:cid/*', withCorsHeaders(ipfsGet))
   .head('/ipfs/:cid', withCorsHeaders(ipfsGet))
