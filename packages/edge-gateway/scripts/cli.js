@@ -34,7 +34,7 @@ prog
   .action(heartbeatCmd)
   .command('denylist sync')
   .describe('Sync the gateway deny list with various sources.')
-  .option('--env', 'Wrangler environment to use.', 'dev')
+  .option('--env', 'Wrangler environment to use.', process.env.ENV)
   .action(denylistSyncCmd)
   .command('denylist add <cid>')
   .describe(
