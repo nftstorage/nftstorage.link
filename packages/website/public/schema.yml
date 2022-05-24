@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: nftstorage.link API
-  version: '1.0'
+  version: '0.1-beta'
 
 servers:
   - url: https://api.nftstorage.link
