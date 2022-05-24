@@ -1,7 +1,7 @@
 import { JSONResponse } from './utils/json-response.js'
 
 /**
- * Get web3.storage API version information.
+ * Get API version information.
  *
  * @param {Request} request
  * @param {import('./env').Env} env
