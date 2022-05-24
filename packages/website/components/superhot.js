@@ -30,6 +30,7 @@ export default function Superhot() {
           <div className="px-6 max-w-5xl mx-auto mt-12">
             <div className="relative  before:bg-[#F5C32C] before:absolute before:w-full before:h-full before:left-4 before:-top-4">
               <div className="relative bg-white p-6 sm:p-10 lg:p-16 border-2 border-black">
+                <a name="superhot"></a>
                 <Img
                   src="images/superhot-logo.svg"
                   alt="logo"
