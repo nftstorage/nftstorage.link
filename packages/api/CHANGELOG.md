@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/nftstorage/nftstorage.link/compare/api-v1.0.0...api-v1.1.0) (2022-05-28)
+
+
+### Features
+
+* api and gateway version endpoint ([#115](https://github.com/nftstorage/nftstorage.link/issues/115)) ([3b5ad1a](https://github.com/nftstorage/nftstorage.link/commit/3b5ad1ac992e0dfd5e4b8d205056ad689e36c02a))
+
+
+### Bug Fixes
+
+* api docker project name not valid in new docker version ([7492b64](https://github.com/nftstorage/nftstorage.link/commit/7492b64fd59c24f6245b911b5bc395cd1fd85b29))
+
 ## 1.0.0 (2022-05-23)
 
 
