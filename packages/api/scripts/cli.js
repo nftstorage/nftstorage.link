@@ -37,7 +37,7 @@ prog
   .option('--init', 'Init docker container', false)
   .option('--start', 'Start docker container', false)
   .option('--stop', 'Stop docker container', false)
-  .option('--project', 'Project name', 'nftstorage.link-api')
+  .option('--project', 'Project name', 'nftstoragelink-api')
   .option('--clean', 'Clean all dockers artifacts', false)
   .action(dbCmd)
   .command('db-sql')
