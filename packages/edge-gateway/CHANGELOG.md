@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.8.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.7.0...edge-gateway-v1.8.0) (2022-05-28)
+
+
+### Features
+
+* api and gateway version endpoint ([#115](https://github.com/nftstorage/nftstorage.link/issues/115)) ([3b5ad1a](https://github.com/nftstorage/nftstorage.link/commit/3b5ad1ac992e0dfd5e4b8d205056ad689e36c02a))
+
+
+### Bug Fixes
+
+* add four new cids to denylist ([#104](https://github.com/nftstorage/nftstorage.link/issues/104)) ([6dd2c34](https://github.com/nftstorage/nftstorage.link/commit/6dd2c34d60b8d9113cdef54bedb0bc7ce0c54b00))
+* add to denylist ([dff2afa](https://github.com/nftstorage/nftstorage.link/commit/dff2afad415f1a0ca56fb64bc4c5671e7511f82a))
+* add to denylist 24-05-2022 ([#114](https://github.com/nftstorage/nftstorage.link/issues/114)) ([899e8dc](https://github.com/nftstorage/nftstorage.link/commit/899e8dc8b69342875c1d7ae45ce761d6f09c3da6))
+* api docker project name not valid in new docker version ([7492b64](https://github.com/nftstorage/nftstorage.link/commit/7492b64fd59c24f6245b911b5bc395cd1fd85b29))
+* block bad cids 28-05-2022 ([#125](https://github.com/nftstorage/nftstorage.link/issues/125)) ([ceab1d9](https://github.com/nftstorage/nftstorage.link/commit/ceab1d93b926e6726491bf4e472225c891da0059))
+
 ## [1.7.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.6.2...edge-gateway-v1.7.0) (2022-05-20)
 
 
