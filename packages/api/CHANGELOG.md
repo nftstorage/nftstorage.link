@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.1.1](https://github.com/nftstorage/nftstorage.link/compare/api-v1.1.0...api-v1.1.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* upgrade wrangler ([#128](https://github.com/nftstorage/nftstorage.link/issues/128)) ([1b11044](https://github.com/nftstorage/nftstorage.link/commit/1b11044b00f40a32126a2a1d04fc27ab929bd412))
+
 ## [1.1.0](https://github.com/nftstorage/nftstorage.link/compare/api-v1.0.0...api-v1.1.0) (2022-05-28)
 
 
