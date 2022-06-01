@@ -18,7 +18,6 @@ bindings = [
 [env.production]
 # name = "gateway-nft-storage-production"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
-route = "*.ipfs.nftstorage.link/*"
 routes = [
   "nftstorage.link/ipfs/*",
   "*.ipfs.nftstorage.link/*",
