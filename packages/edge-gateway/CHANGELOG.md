@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.8.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.0...edge-gateway-v1.8.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* add all routes to edge gateway wrangler file ([1a81e83](https://github.com/nftstorage/nftstorage.link/commit/1a81e8372b30779d6a13551f86489245de6c8f52))
+* upgrade wrangler ([#128](https://github.com/nftstorage/nftstorage.link/issues/128)) ([1b11044](https://github.com/nftstorage/nftstorage.link/commit/1b11044b00f40a32126a2a1d04fc27ab929bd412))
+
 ## [1.8.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.7.0...edge-gateway-v1.8.0) (2022-05-28)
 
 
