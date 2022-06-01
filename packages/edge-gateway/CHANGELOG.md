@@ -1,5 +1,12 @@
 # Changelog
 
+### [1.8.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.1...edge-gateway-v1.8.2) (2022-06-01)
+
+
+### Bug Fixes
+
+* edge gateway routes only ([f3a5bc0](https://github.com/nftstorage/nftstorage.link/commit/f3a5bc0acfc097d0e0987cee3f6a25fbd98806ac))
+
 ### [1.8.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.0...edge-gateway-v1.8.1) (2022-06-01)
 
 
