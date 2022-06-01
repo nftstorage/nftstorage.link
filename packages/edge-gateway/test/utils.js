@@ -5,6 +5,7 @@ export function getMiniflare() {
   return new Miniflare({
     // Autoload configuration from `.env`, `package.json` and `wrangler.toml`
     envPath: true,
+    scriptPath: 'dist/worker.mjs',
     packagePath: true,
     wranglerConfigPath: true,
     // We don't want to rebuild our worker for each test, we're already doing

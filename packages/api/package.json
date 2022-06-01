@@ -38,7 +38,7 @@
     "esbuild": "^0.14.2",
     "execa": "^5.1.1",
     "git-rev-sync": "^3.0.1",
-    "miniflare": "^2.2.0",
+    "miniflare": "^2.5.0",
     "nft.storage-api": "https://gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326",
     "npm-run-all": "^4.1.5",
     "pg": "^8.7.3",
