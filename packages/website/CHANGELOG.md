@@ -1,5 +1,13 @@
 # Changelog
 
+### [1.2.1](https://github.com/nftstorage/nftstorage.link/compare/website-v1.2.0...website-v1.2.1) (2022-06-01)
+
+
+### Bug Fixes
+
+* install wrangler in website dev deps ([f707435](https://github.com/nftstorage/nftstorage.link/commit/f70743574bf2385eb1de1010c01adaa3e71504c5))
+* upgrade wrangler ([#128](https://github.com/nftstorage/nftstorage.link/issues/128)) ([1b11044](https://github.com/nftstorage/nftstorage.link/commit/1b11044b00f40a32126a2a1d04fc27ab929bd412))
+
 ## [1.2.0](https://github.com/nftstorage/nftstorage.link/compare/website-v1.1.2...website-v1.2.0) (2022-05-24)
 
 
