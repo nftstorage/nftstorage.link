@@ -23,7 +23,6 @@
   },
   "dependencies": {
     "@supabase/postgrest-js": "^0.37.2",
-    "edge-gateway": "^1.5.5",
     "itty-router": "^2.4.5",
     "multiformats": "^9.6.4",
     "nanoid": "^3.1.30",
@@ -35,6 +34,7 @@
     "ava": "^3.15.0",
     "browser-env": "^3.3.0",
     "dotenv": "^16.0.0",
+    "edge-gateway": "^1.5.5",
     "esbuild": "^0.14.38",
     "execa": "^5.1.1",
     "git-rev-sync": "^3.0.1",

@@ -14,8 +14,6 @@ import {
 import { JSONResponse } from '../utils/json-response.js'
 import { normalizeCid } from '../utils/cid.js'
 
-import { gatewayIpfs } from 'edge-gateway/src/gateway.js'
-
 /**
  * @typedef {import('../env').Env} Env
  * @typedef {{ userId: string, r2Key: string, date: string }} Key
@@ -31,9 +29,8 @@ import { gatewayIpfs } from 'edge-gateway/src/gateway.js'
  *
  * @param {Request} request
  * @param {Env} env
- * @param {import('..').Ctx} ctx
  */
-export async function permaCachePost(request, env, ctx) {
+export async function permaCachePost(request, env) {
   const sourceUrl = getSourceUrl(request, env)
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
@@ -47,7 +44,7 @@ export async function permaCachePost(request, env, ctx) {
   }
 
   // Fetch Response from provided URL
-  const response = await getResponse(request, env, ctx, normalizedUrl)
+  const response = await getResponse(request, env, normalizedUrl)
   validateCacheControlHeader(response.headers.get('Cache-Control') || '')
 
   // Store in R2 and add to Database if not existent
@@ -74,17 +71,14 @@ export async function permaCachePost(request, env, ctx) {
  * Fetch Response from provided URL.
  * @param {Request} request
  * @param {Env} env
- * @param {import('..').Ctx} ctx
  * @param {URL} url
  */
-async function getResponse(request, env, ctx, url) {
-  // TODO: Wait for CF services support
-  /*
+async function getResponse(request, env, url) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), env.REQUEST_TIMEOUT)
   let response
   try {
-    response = await fetch(url.toString(), {
+    response = await env.GATEWAY.fetch(url.toString(), {
       signal: controller.signal,
       headers: getHeaders(request),
     })
@@ -96,11 +90,7 @@ async function getResponse(request, env, ctx, url) {
   } finally {
     clearTimeout(timer)
   }
-  */
-  request = new Request(url.toString())
 
-  // @ts-ignore Env does not match entirely
-  let response = await gatewayIpfs(request, env, ctx)
   if (!response.ok) {
     throw new HTTPError(
       'Failed to get response from provided URL',
@@ -222,12 +212,29 @@ function validateCacheControlHeader(cacheControl) {
  * @param {Request} request
  */
 function getHeaders(request) {
-  const existingProxies = request.headers.get('X-Forwarded-For')
-    ? `, ${request.headers.get('X-Forwarded-For')}`
+  const headers = cloneHeaders(request.headers)
+  const existingProxies = headers.get('X-Forwarded-For')
+    ? `, ${headers.get('X-Forwarded-For')}`
     : ''
-  return {
-    'X-Forwarded-For': `${request.headers.get(
-      'cf-connecting-ip'
-    )}${existingProxies}`,
+
+  // keep headers
+  headers.set(
+    'X-Forwarded-For',
+    `${headers.get('cf-connecting-ip')}${existingProxies}`
+  )
+
+  return headers
+}
+
+/**
+ * Clone headers to mutate them.
+ *
+ * @param {Headers} reqHeaders
+ */
+function cloneHeaders(reqHeaders) {
+  const headers = new Headers()
+  for (var kv of reqHeaders.entries()) {
+    headers.append(kv[0], kv[1])
   }
+  return headers
 }
