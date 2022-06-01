@@ -64,7 +64,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
       - run: npx playwright install --with-deps ${{ matrix.browser }} chromium
         working-directory: packages/website
-      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm --filter website run test:e2e -- --project=${{ matrix.browser }}
+      - run: xvfb-run --auto-servernum --server-args="-screen 0 1280x960x24" -- pnpm --filter website run test:e2e --project=${{ matrix.browser }}
       - name: Check for website test results
         id: check_website_test_results
         uses: andstor/file-existence-action@v1
@@ -158,8 +158,8 @@ jobs:
         env:
           # Fake environment vars required for build
           NEXT_PUBLIC_ENV: production
-          if: ${{ steps.tag-release.outputs.releases_created }}
         run: pnpm build:website
+        if: ${{ steps.tag-release.outputs.releases_created }}
       - run: pnpm exec wrangler pages publish --project-name nftstorage-link --branch master ./packages/website/out
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
