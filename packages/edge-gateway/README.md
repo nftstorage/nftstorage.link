@@ -85,6 +85,14 @@ Please note that subdomain resolution is only supported with [CIDv1](https://doc
 
 nft.storage Gateway is currently rate limited at 200 requests per minute to a given IP Address. In the event of a rate limit, the IP will be blocked for 30 seconds.
 
+## Deny List
+
+We rely on [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist together wtth our own denylist to prevent serving malicious content to the nftstorage.link users.
+
+When new malicious content is discovered, it should be reported to [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist given it is shared among multiple gateways. When the reported CIDs are added into badbits, we just need to force our [denylist sync workflow](https://github.com/nftstorage/nftstorage.link/actions/workflows/cron-denylist.yml) to run manually.
+
+As a workaround, or to block content only relevant for nftstorage.link we can simply use our denylist as described in our [CLI documentation](./scripts/README.md).
+
 ## Persistence
 
 Several metrics per gateway are persisted to track the performance of each public gateway over time. Moreover, the list of gateways that have previously fetched successfully a given CID are also persisted.
