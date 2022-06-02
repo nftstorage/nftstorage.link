@@ -102,21 +102,11 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
   const cid = getCidFromSubdomainUrl(reqUrl)
   const pathname = reqUrl.pathname
 
-  // Validation layer
-  if (env.DENYLIST) {
-    const anchor = await toDenyListAnchor(cid)
-    // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
-    const value = await pRetry(
-      // TODO: in theory we should check each subcomponent of the pathname also.
-      // https://github.com/nftstorage/nft.storage/issues/1737
-      () => env.DENYLIST.get(anchor),
-      { retries: 5 }
-    )
-
-    if (value) {
-      const { status, reason } = JSON.parse(value)
-      return new Response(reason || '', { status: status || 410 })
-    }
+  // Validation layer - root CID
+  const denyListRootCidEntry = await getFromDenyList(env, cid)
+  if (denyListRootCidEntry) {
+    const { status, reason } = JSON.parse(denyListRootCidEntry)
+    return new Response(reason || '', { status: status || 410 })
   }
 
   // 1st layer resolution - CDN
@@ -147,6 +137,19 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
     const winnerGwResponse = await pAny(gatewayReqs, {
       filter: (res) => res.response?.ok,
     })
+
+    // Validation layer - resource CID
+    if (pathname !== '/') {
+      const resourceCid = decodeURIComponent(
+        winnerGwResponse.response.headers.get('etag')
+      )
+      const denyListResource = await getFromDenyList(env, resourceCid)
+      if (denyListResource) {
+        const { status, reason } = JSON.parse(denyListResource)
+        return new Response(reason || '', { status: status || 410 })
+      }
+    }
+
     options.onRaceResolution &&
       options.onRaceResolution(winnerGwResponse, gatewayReqs, cid)
     // Cache response
@@ -202,6 +205,27 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
 
     throw err
   }
+}
+
+/**
+ * Get a given entry from the deny list if CID exists.
+ *
+ * @param {Env} env
+ * @param {string} cid
+ */
+async function getFromDenyList(env, cid) {
+  if (!env.DENYLIST) {
+    return undefined
+  }
+
+  const anchor = await toDenyListAnchor(cid)
+  // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
+  return await pRetry(
+    // TODO: in theory we should check each subcomponent of the pathname also.
+    // https://github.com/nftstorage/nft.storage/issues/1737
+    () => env.DENYLIST.get(anchor),
+    { retries: 5 }
+  )
 }
 
 /**
