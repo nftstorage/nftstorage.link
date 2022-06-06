@@ -6,7 +6,8 @@ CREATE TYPE user_tag_type AS ENUM
   'HasAccountRestriction',
   'HasPsaAccess',
   'HasSuperHotAccess',
-  'StorageLimitBytes'
+  'StorageLimitBytes',
+  'HasDeleteRestriction'
 );
 
 -- Perma-cache transaction type.
