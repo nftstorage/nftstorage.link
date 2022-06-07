@@ -42,9 +42,10 @@ const ABORTABLE_ERRORS_STATUS = [
  * @typedef { import('./lib/interface.js').PutOptions} PutOptions
  * @typedef { import('./lib/interface.js').DeleteOptions} DeleteOptions
  * @typedef { import('./lib/interface.js').ListOptions} ListOptions
- * @typedef { import('./lib/interface.js').PermaCacheEntry} PermaCacheEntry
- * @typedef { import('./lib/interface.js').PermaCacheDeletedEntry} PermaCacheDeletedEntry
- * @typedef { import('./lib/interface.js').PermaCacheStatus} PermaCacheStatus
+ * @typedef { import('./lib/interface.js').CacheResult} CacheResult
+ * @typedef { import('./lib/interface.js').CacheDeleteResult} CacheDeleteResult
+ * @typedef { import('./lib/interface.js').CacheEntry} CacheEntry
+ * @typedef { import('./lib/interface.js').AccountInfo} AccountInfo
  */
 
 /**
@@ -103,64 +104,79 @@ export class PermaCache {
    * @param {Service} service
    * @param {string[]} urls
    * @param {PutOptions} [options]
-   * @returns {Promise<import('p-settle').PromiseResult<PermaCacheEntry>[]>}
+   * @returns {Promise<CacheResult[]>}
    */
   static async put(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
-    { onPutUrl, maxRetries = MAX_RETRIES } = {}
+    { onPut, maxRetries = MAX_RETRIES } = {}
   ) {
     areNftStorageLinkUrls(urls)
 
     const headers = PermaCache.headers(token)
-    return await pSettle(
+
+    /** @type {import('p-settle').PromiseResult<CacheResult>[]} */
+    const cacheResults = await pSettle(
       urls.map(async (url) => {
         const apiUrl = new URL(
           `perma-cache/${encodeURIComponent(url)}`,
           endpoint
         )
 
-        return await pRetry(
-          async () => {
-            await rateLimiter()
-            const request = await fetch(apiUrl.toString(), {
-              method: 'POST',
-              headers,
-            })
+        let cacheResult
+        try {
+          cacheResult = await pRetry(
+            async () => {
+              await rateLimiter()
+              const request = await fetch(apiUrl.toString(), {
+                method: 'POST',
+                headers,
+              })
 
-            /** @type {PermaCacheEntry & Error} */
-            const res = await request.json()
-            if (!request.ok) {
-              const e = new Error(res.message)
-              // do not retry if abortable errors - will not succeed
-              if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
-                throw new AbortError(e)
+              /** @type {CacheResult} */
+              const res = await request.json()
+              if (!request.ok) {
+                // @ts-ignore Only exists on Error
+                const e = new Error(res.message)
+                // do not retry if abortable errors - will not succeed
+                if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
+                  throw new AbortError(e)
+                }
+                /* c8 ignore next 2 */
+                throw e
               }
-              /* c8 ignore next 2 */
-              throw e
-            }
 
-            const decodedUrl = decodeURIComponent(res.url)
-            onPutUrl && onPutUrl(url)
+              onPut && onPut(url)
 
-            return {
-              ...res,
-              url: decodedUrl,
+              return {
+                ...res,
+                url, // decoded
+              }
+            },
+            /* c8 ignore next 3 */
+            {
+              retries: maxRetries == null ? MAX_RETRIES : maxRetries,
             }
-          },
-          /* c8 ignore next 3 */
-          {
-            retries: maxRetries == null ? MAX_RETRIES : maxRetries,
+          )
+        } catch (error) {
+          return {
+            // @ts-ignore non error type
+            error: error.message,
+            url,
           }
-        )
+        }
+        return cacheResult
       })
     )
+
+    // @ts-ignore p-settle will always handle error internally
+    return cacheResults.map((cacheResult) => cacheResult.value)
   }
 
   /**
    * @param {Service} service
    * @param {ListOptions} [options]
-   * @returns {AsyncIterable<PermaCacheEntry>}
+   * @returns {AsyncIterable<CacheEntry>}
    */
   static async *list(
     { endpoint, token, rateLimiter = globalRateLimiter },
@@ -203,66 +219,80 @@ export class PermaCache {
    * @param {Service} service
    * @param {string[]} urls
    * @param {DeleteOptions} [options]
-   * @returns {Promise<import('p-settle').PromiseResult<PermaCacheDeletedEntry>[]>}
+   * @returns {Promise<CacheDeleteResult[]>}
    */
   static async delete(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
-    { onDeleteUrl, maxRetries = MAX_RETRIES } = {}
+    { onDelete, maxRetries = MAX_RETRIES } = {}
   ) {
     areNftStorageLinkUrls(urls)
 
     const headers = PermaCache.headers(token)
-    const responses = await pSettle(
+
+    /** @type {import('p-settle').PromiseResult<CacheDeleteResult>[]} */
+    const cacheDeleteResults = await pSettle(
       urls.map(async (url) => {
         const apiUrl = new URL(
           `perma-cache/${encodeURIComponent(url)}`,
           endpoint
         )
 
-        return await pRetry(
-          async () => {
-            await rateLimiter()
-            const request = await fetch(apiUrl.toString(), {
-              method: 'DELETE',
-              headers,
-            })
+        try {
+          return await pRetry(
+            async () => {
+              await rateLimiter()
+              const request = await fetch(apiUrl.toString(), {
+                method: 'DELETE',
+                headers,
+              })
 
-            const res = await request.json()
-            if (!request.ok) {
-              const e = new Error(res.message)
-              // do not retry if abortable errors - will not succeed
-              if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
-                throw new AbortError(e)
+              const res = await request.json()
+              if (!request.ok) {
+                const e = new Error(res.message)
+                // do not retry if abortable errors - will not succeed
+                if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
+                  throw new AbortError(e)
+                }
+                /* c8 ignore next 2 */
+                throw e
               }
-              /* c8 ignore next 2 */
-              throw e
-            }
 
-            onDeleteUrl && onDeleteUrl(url)
+              onDelete && onDelete(url)
 
-            return {
-              url,
-              success: res,
+              return {
+                url,
+              }
+            },
+            /* c8 ignore next 3 */
+            {
+              retries: maxRetries == null ? MAX_RETRIES : maxRetries,
             }
-          },
-          /* c8 ignore next 3 */
-          {
-            retries: maxRetries == null ? MAX_RETRIES : maxRetries,
+          )
+        } catch (error) {
+          return {
+            // @ts-ignore non error type
+            error: error.message,
+            url,
           }
-        )
+        }
       })
     )
 
-    return responses
+    // @ts-ignore p-settle will always handle error internally
+    return cacheDeleteResults.map((cacheResult) => cacheResult.value)
   }
 
   /**
    * @param {Service} service
-   * @return {Promise<PermaCacheStatus>}
+   * @return {Promise<AccountInfo>}
    */
-  static async status({ endpoint, token, rateLimiter = globalRateLimiter }) {
-    const url = new URL('perma-cache/status', endpoint)
+  static async accountInfo({
+    endpoint,
+    token,
+    rateLimiter = globalRateLimiter,
+  }) {
+    const url = new URL('perma-cache/account', endpoint)
     const headers = PermaCache.headers(token)
 
     await rateLimiter()
@@ -287,7 +317,7 @@ export class PermaCache {
    *
    * @param {string[]} urls
    * @param {PutOptions} [options]
-   * @returns {Promise<import('p-settle').PromiseResult<PermaCacheEntry>[]>}
+   * @returns {Promise<CacheResult[]>}
    */
   put(urls, options) {
     return PermaCache.put(this, urls, options)
@@ -305,7 +335,7 @@ export class PermaCache {
    * ```
    * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of
    * @param {ListOptions} [options]
-   * @returns {AsyncIterable<PermaCacheEntry>}
+   * @returns {AsyncIterable<CacheEntry>}
    */
   list(options) {
     return PermaCache.list(this, options)
@@ -314,7 +344,7 @@ export class PermaCache {
   /**
    * @param {string[]} urls
    * @param {DeleteOptions} [options]
-   * @returns {Promise<import('p-settle').PromiseResult<PermaCacheDeletedEntry>[]>}
+   * @returns {Promise<CacheDeleteResult[]>}
    */
   delete(urls, options) {
     return PermaCache.delete(this, urls, options)
@@ -323,8 +353,8 @@ export class PermaCache {
   /**
    * Fetch info on PermaCache for the user.
    */
-  status() {
-    return PermaCache.status(this)
+  accountInfo() {
+    return PermaCache.accountInfo(this)
   }
 }
 

@@ -13,7 +13,7 @@ export interface RateLimiter {
 }
 
 export interface PutOptions {
-  onPutUrl?: (url: string) => void
+  onPut?: (url: string) => void
   maxRetries?: number
 }
 
@@ -23,21 +23,40 @@ export interface ListOptions {
 }
 
 export interface DeleteOptions {
-  onDeleteUrl?: (url: string) => void
+  onDelete?: (url: string) => void
   maxRetries?: number
 }
 
-export interface PermaCacheEntry {
-  url: string,
-  size: number,
-  insertedAt: string,
+export interface CacheEntry {
+  url: string
+  size: number
+  insertedAt: string
 }
 
-export interface PermaCacheDeletedEntry {
-  url: string,
-  success: boolean,
-}
-
-export interface PermaCacheStatus {
+export interface AccountInfo {
   usedStorage: number;
 }
+
+interface CacheSuccess {
+  url: string
+  size: number
+  insertedAt: string
+}
+
+interface CacheFailure {
+  url: string
+  error: string
+}
+
+export type CacheResult = CacheSuccess | CacheFailure
+
+interface CacheDeleteSuccess {
+  url: string
+}
+
+interface CacheDeleteFailure {
+  url: string
+  error: string
+}
+
+export type CacheDeleteResult = CacheDeleteSuccess | CacheDeleteFailure

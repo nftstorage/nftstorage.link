@@ -13,30 +13,30 @@ describe('perma-cache client', () => {
     assert.ok(client instanceof PermaCache)
     assert.strictEqual(typeof client.put, 'function')
     assert.strictEqual(typeof client.list, 'function')
-    assert.strictEqual(typeof client.status, 'function')
+    assert.strictEqual(typeof client.accountInfo, 'function')
     assert.strictEqual(typeof client.delete, 'function')
 
     assert.strictEqual(typeof PermaCache.put, 'function')
     assert.strictEqual(typeof PermaCache.list, 'function')
-    assert.strictEqual(typeof PermaCache.status, 'function')
+    assert.strictEqual(typeof PermaCache.accountInfo, 'function')
     assert.strictEqual(typeof PermaCache.delete, 'function')
   })
 
-  describe('status', () => {
-    it('returns the account status', async () => {
+  describe('accountInfo', () => {
+    it('returns the account accountInfo', async () => {
       const client = new PermaCache({ token, endpoint })
-      const status = await client.status()
+      const accountInfo = await client.accountInfo()
 
-      assert.ok(status)
-      assert.ok(status.usedStorage)
-      assert.strictEqual(status.usedStorage, 1000)
+      assert.ok(accountInfo)
+      assert.ok(accountInfo.usedStorage)
+      assert.strictEqual(accountInfo.usedStorage, 1000)
     })
 
     it('handles error messages', async () => {
       const client = new PermaCache({ token: 'bad', endpoint })
 
       try {
-        await client.status()
+        await client.accountInfo()
         throw new Error('should have thrown')
       } catch (err) {
         assert.strictEqual(err.message, 'Permission denied')
@@ -52,7 +52,7 @@ describe('perma-cache client', () => {
       ]
       const client = new PermaCache({ token, endpoint })
       const permaCacheEntries = await client.put(urls, {
-        onPutUrl: (url) => {
+        onPut: (url) => {
           assert.ok(urls.includes(url))
         },
       })
@@ -61,11 +61,9 @@ describe('perma-cache client', () => {
       assert.strictEqual(permaCacheEntries.length, urls.length)
 
       permaCacheEntries.map((entry) => {
-        assert.strictEqual(entry.isFulfilled, true)
-        assert.strictEqual(entry.isRejected, false)
-        assert.ok(urls.includes(entry.value.url))
-        assert.ok(entry.value.size)
-        assert.ok(entry.value.insertedAt)
+        assert.ok(urls.includes(entry.url))
+        assert.ok(entry.size)
+        assert.ok(entry.insertedAt)
       })
     })
 
@@ -93,21 +91,16 @@ describe('perma-cache client', () => {
       ]
       const client = new PermaCache({ token: 'bad', endpoint })
       const permaCacheEntries = await client.put(urls, {
-        onPutUrl: () => {
+        onPut: () => {
           throw new Error('Should not put any URL in cache')
         },
       })
 
       assert.ok(permaCacheEntries)
       assert.strictEqual(permaCacheEntries.length, urls.length)
+      assert.strictEqual(permaCacheEntries.filter((e) => e.error).length, 2)
       assert.strictEqual(
-        permaCacheEntries.filter((e) => e.isRejected).length,
-        2
-      )
-      assert.strictEqual(
-        permaCacheEntries.filter(
-          (e) => e.reason.message === 'Permission denied'
-        ).length,
+        permaCacheEntries.filter((e) => e.error === 'Permission denied').length,
         2
       )
     })
@@ -121,7 +114,7 @@ describe('perma-cache client', () => {
       ]
       const client = new PermaCache({ token, endpoint })
       const permaCacheDeletedEntries = await client.delete(urls, {
-        onDeleteUrl: (url) => {
+        onDelete: (url) => {
           assert.ok(urls.includes(url))
         },
       })
@@ -130,10 +123,8 @@ describe('perma-cache client', () => {
       assert.strictEqual(permaCacheDeletedEntries.length, urls.length)
 
       permaCacheDeletedEntries.map((entry) => {
-        assert.strictEqual(entry.isFulfilled, true)
-        assert.strictEqual(entry.isRejected, false)
-        assert.ok(urls.includes(entry.value.url))
-        assert.ok(entry.value.success)
+        assert.ok(urls.includes(entry.url))
+        assert.equal(entry.error, undefined)
       })
     })
 
@@ -161,7 +152,7 @@ describe('perma-cache client', () => {
       ]
       const client = new PermaCache({ token: 'bad', endpoint })
       const permaCacheDeletedEntries = await client.delete(urls, {
-        onDeleteUrl: () => {
+        onDelete: () => {
           throw new Error('Should not put any URL in cache')
         },
       })
@@ -169,13 +160,12 @@ describe('perma-cache client', () => {
       assert.ok(permaCacheDeletedEntries)
       assert.strictEqual(permaCacheDeletedEntries.length, urls.length)
       assert.strictEqual(
-        permaCacheDeletedEntries.filter((e) => e.isRejected).length,
+        permaCacheDeletedEntries.filter((e) => e.error).length,
         2
       )
       assert.strictEqual(
-        permaCacheDeletedEntries.filter(
-          (e) => e.reason.message === 'Permission denied'
-        ).length,
+        permaCacheDeletedEntries.filter((e) => e.error === 'Permission denied')
+          .length,
         2
       )
     })

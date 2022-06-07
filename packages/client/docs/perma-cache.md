@@ -14,7 +14,7 @@ You can import and use this client like:
 ```js
 import { PermaCache } from 'nftstorage.link'
 
-const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
 
 const urls = [
   'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link'
@@ -32,7 +32,7 @@ await client.delete(urls)
 > Put multiple URLs into nftstorage.link perma-cache
 
 ```ts
-put(urls: string[]): PromiseResult<PermaCacheEntry>[]>
+put(urls: string[]): Promise<CacheResult[]>
 ```
 
 Example:
@@ -49,22 +49,14 @@ const permaCacheEntries = await client.put([
 console.log(permaCacheEntries)
 // [
 //   {
-//     isFulfilled: true,
-//     isRejected: false,
-//     value: {
-//       url: 'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
-//       size: 1000,
-//       insertedAt: "2022-05-30T11:37:27.878372"
-//     }
+//     url: 'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
+//     size: 1000,
+//     insertedAt: "2022-05-30T11:37:27.
 //   },
 //   {
-//     isFulfilled: true,
-//     isRejected: false,
-//     value: {
-//       url: 'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
+//     url: 'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
 //     size: 2000,
 //     insertedAt: "2022-05-30T11:37:29.878372"
-//     }
 //   }
 // ]
 ``` 
@@ -74,7 +66,7 @@ console.log(permaCacheEntries)
 > Delete multiple URLs into nftstorage.link perma-cache
 
 ```ts
-delete(urls: string[]): PromiseResult<PermaCacheDeletedEntry>[]>
+delete(urls: string[]): Promise<CacheDeleteResult[]>
 ```
 
 Example:
@@ -91,20 +83,10 @@ const permaCacheDeletedEntries = await client.delete([
 console.log(permaCacheDeletedEntries)
 // [
 //   {
-//     isFulfilled: true,
-//     isRejected: false,
-//     value: {
-//       url: 'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
-//       success: true
-//     }
+//     url: 'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
 //   },
 //   {
-//     isFulfilled: true,
-//     isRejected: false,
-//     value: {
-//       url: 'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
-//     success: true
-//     }
+//     url: 'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
 //   }
 // ]
 ``` 
@@ -114,7 +96,7 @@ console.log(permaCacheDeletedEntries)
 > List account nftstorage.link perma-cache URLs
 
 ```ts
-delete(options: ListOptions): AsyncIterable<PermaCacheEntry>
+delete(options: ListOptions): AsyncIterable<CacheEntry>
 ```
 
 ```js
@@ -142,12 +124,12 @@ console.log(permaCacheEntries)
 // ]
 ``` 
 
-### Status
+### Account
 
-> Get perma-cache account status
+> Get perma-cache account info
 
 ```ts
-status(): omise<PermaCacheStatus>
+accountInfo(): Promise<AccountInfo>
 ```
 
 ```js
@@ -155,8 +137,8 @@ import { PermaCache } from 'nftstorage.link'
 
 const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
 
-const status = await client.status()
-console.log(status)
+const accountInfo = await client.accountInfo()
+console.log(accountInfo)
 // {
 //   usedStorage: 3000
 // }
