@@ -29,6 +29,9 @@ router
   .get('/perma-cache', auth['🔒'](permaCacheListGet))
   .post('/perma-cache/:url', auth['🔒'](permaCachePost))
   .get('/perma-cache/account', auth['🔒'](permaCacheAccountGet))
+  .get('/perma-cache/status', (request) => {
+    return Response.redirect(request.url.replace('status', 'account'), 302)
+  })
   .delete('/perma-cache/:url', auth['🔒'](permaCacheDelete))
 
 /**
