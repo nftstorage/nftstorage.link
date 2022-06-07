@@ -115,18 +115,18 @@ paths:
           $ref: '#/components/responses/forbidden'
         '500':
           $ref: '#/components/responses/internalServerError'
-  /perma-cache/status:
+  /perma-cache/account:
     get:
       tags:
         - nftstorage.link
-      operationId: permaCacheStatusGet
+      operationId: permaCacheAccountGet
       responses:
         '200':
           description: OK
           content:
             'application/json':
               schema:
-                $ref: '#/components/schemas/StatusResponse'
+                $ref: '#/components/schemas/AccountResponse'
         '401':
           $ref: '#/components/responses/unauthorized'
         '403':
@@ -147,7 +147,7 @@ components:
           example: 600
         insertedAt:
           $ref: '#/components/schemas/Date'
-    PermaCacheStatus:
+    PermaCacheAccount:
       type: object
       properties:
         usedStorage:
@@ -171,9 +171,9 @@ components:
     PermaCacheDeleteResponse:
       type: boolean
       default: true
-    StatusResponse:
+    AccountResponse:
       type: object
-      $ref: '#/components/schemas/PermaCacheStatus'
+      $ref: '#/components/schemas/PermaCacheAccount'
     ErrorResponse:
       type: object
       properties:

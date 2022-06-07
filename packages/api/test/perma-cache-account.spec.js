@@ -15,19 +15,19 @@ test.beforeEach(async (t) => {
   }
 })
 
-test('Get perma-cache status from user', async (t) => {
+test('Get perma-cache account from user', async (t) => {
   const { mf, user } = t.context
-  const statusResponseEmpty = await mf.dispatchFetch(
-    'https://localhost:8788/perma-cache/status',
+  const accountResponseEmpty = await mf.dispatchFetch(
+    'https://localhost:8788/perma-cache/account',
     {
       method: 'GET',
       headers: { Authorization: `Bearer ${user.token}` },
     }
   )
-  t.is(statusResponseEmpty.status, 200)
+  t.is(accountResponseEmpty.status, 200)
 
-  const statusEmpty = await statusResponseEmpty.json()
-  t.is(statusEmpty.usedStorage, 0)
+  const accountEmpty = await accountResponseEmpty.json()
+  t.is(accountEmpty.usedStorage, 0)
 
   const url =
     'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081'
@@ -38,17 +38,17 @@ test('Get perma-cache status from user', async (t) => {
   t.is(response.status, 200)
   const body = await response.json()
 
-  const statusResponseNotEmpty = await mf.dispatchFetch(
-    'https://localhost:8788/perma-cache/status',
+  const accountResponseNotEmpty = await mf.dispatchFetch(
+    'https://localhost:8788/perma-cache/account',
     {
       method: 'GET',
       headers: { Authorization: `Bearer ${user.token}` },
     }
   )
-  t.is(statusResponseNotEmpty.status, 200)
+  t.is(accountResponseNotEmpty.status, 200)
 
-  const statusNotEmpty = await statusResponseNotEmpty.json()
-  t.is(statusNotEmpty.usedStorage, String(body.size))
+  const accountNotEmpty = await accountResponseNotEmpty.json()
+  t.is(accountNotEmpty.usedStorage, String(body.size))
 })
 
 const getPermaCachePutUrl = (url) =>
