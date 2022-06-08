@@ -22,6 +22,25 @@ test('Blocks access to a CID on the deny list', async (t) => {
   t.is(await res.text(), '')
 })
 
+test('Blocks access to a CID resource on the deny list', async (t) => {
+  /** @type {{ mf: import('miniflare').Miniflare }} */
+  const { mf } = t.context
+  const resourceCid =
+    'bafkreia4d2wzubczuknsuwcrta2psy7rjkso4xxryjep44yvddtp6pe5vu'
+
+  // add the resourceCid to the deny list
+  const denyListKv = await mf.getKVNamespace('DENYLIST')
+  const anchor = await toDenyListAnchor(resourceCid)
+
+  await denyListKv.put(anchor, '{}')
+
+  const res = await mf.dispatchFetch(
+    'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:8787/path'
+  )
+  t.is(res.status, 410)
+  t.is(await res.text(), '')
+})
+
 test('Blocks access to a CID on the deny list with custom status and reason', async (t) => {
   /** @type {{ mf: import('miniflare').Miniflare }} */
   const { mf } = t.context
