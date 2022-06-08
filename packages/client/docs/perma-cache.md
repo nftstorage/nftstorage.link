@@ -2,10 +2,10 @@
 
 > Client for interacting with the perma-cache layer of the NFT.Storage IPFS Edge Gateway.
 
-The `perma-cache` eases the interaction with [nftstorage.link HTTP API](https://nftstorage.link/api-docs) and improves developer experience. Particularly when:
-- you rely on typescript during development
-- you want to perma-cache multiple URLs as a batch, like a NFT drop
-- you want to have the client taking care of rate limiting prevention
+The `perma-cache` eases the interaction with [nftstorage.link HTTP API](https://nftstorage.link/api-docs) and improves developer experience. Particularly when you:
+- rely on typescript during development.
+- want to perma-cache multiple URLs as a batch, like an NFT drop.
+- want to have the client taking care of rate limiting prevention.
 
 ## Usage
 
@@ -21,15 +21,15 @@ const urls = [
 ]
 
 // Perma-cache given URLs
-const permaCacheEntries = await client.put(urls)
+const permaCacheEntries = await cache.put(urls)
 
 // Delete perma-cache URLs
-await client.delete(urls)
+await cache.delete(urls)
 ```
 
 ### Put
 
-> Put multiple URLs into nftstorage.link perma-cache
+> Put URL(s) into the nftstorage.link perma-cache.
 
 ```ts
 put(urls: string[]): Promise<CacheResult[]>
@@ -40,10 +40,11 @@ Example:
 ```js
 import { PermaCache } from 'nftstorage.link'
 
-const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
-const permaCacheEntries = await client.put([
+const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+const permaCacheEntries = await cache.put([
   'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
-  'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path'
+  'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
+  'https://nftstorage.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui'
 ])
 
 console.log(permaCacheEntries)
@@ -51,19 +52,24 @@ console.log(permaCacheEntries)
 //   {
 //     url: 'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
 //     size: 1000,
-//     insertedAt: "2022-05-30T11:37:27.
+//     insertedAt: "2022-05-30T11:37:27.878372".
 //   },
 //   {
 //     url: 'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path',
 //     size: 2000,
 //     insertedAt: "2022-05-30T11:37:29.878372"
+//   },
+//   {
+//     url: 'https://nftstorage.link/ipfs/bafkreiem4twkqzsq2aj4shbycd4yvoj2cx72vezicletlhi7dijjciqpui',
+//     size: 3200,
+//     insertedAt: "2022-05-30T11:37:30.878372"
 //   }
 // ]
 ``` 
 
 ### Delete
 
-> Delete multiple URLs into nftstorage.link perma-cache
+> Delete URL(s) from the nftstorage.link perma-cache.
 
 ```ts
 delete(urls: string[]): Promise<CacheDeleteResult[]>
@@ -74,8 +80,8 @@ Example:
 ```js
 import { PermaCache } from 'nftstorage.link'
 
-const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
-const permaCacheDeletedEntries = await client.delete([
+const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+const permaCacheDeletedEntries = await cache.delete([
   'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link',
   'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.nftstorage.link/path'
 ])
@@ -96,16 +102,16 @@ console.log(permaCacheDeletedEntries)
 > List account nftstorage.link perma-cache URLs
 
 ```ts
-delete(options: ListOptions): AsyncIterable<CacheEntry>
+list(options: ListOptions): AsyncIterable<CacheEntry>
 ```
 
 ```js
 import { PermaCache } from 'nftstorage.link'
 
-const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
 
 const permaCacheEntries = []
-for await (const entry of client.list()) {
+for await (const entry of cache.list()) {
   permaCacheEntries.push(entry)
 }
 
@@ -135,9 +141,9 @@ accountInfo(): Promise<AccountInfo>
 ```js
 import { PermaCache } from 'nftstorage.link'
 
-const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
 
-const accountInfo = await client.accountInfo()
+const accountInfo = await cache.accountInfo()
 console.log(accountInfo)
 // {
 //   usedStorage: 3000

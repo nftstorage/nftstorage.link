@@ -18,7 +18,7 @@ module.exports = ({ headers, params }) => {
     statusCode: 200,
     headers: { 'Content-Type': 'text/json' },
     body: {
-      url: url,
+      url: decodeURIComponent(url),
       size: 1000,
       insertedAt: new Date().toISOString(),
     },

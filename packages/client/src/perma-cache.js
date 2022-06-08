@@ -12,9 +12,9 @@
  *  'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link'
  * ]
  *
- * const client = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
- * const permaCacheEntries = await client.put(urls)
- * await client.delete(urls)
+ * const cache = new PermaCache({ token: 'YOUR_NFT_STORAGE_TOKEN' })
+ * const permaCacheEntries = await cache.put(urls)
+ * await cache.delete(urls)
  * ```
  * @module
  */
@@ -29,12 +29,6 @@ const MAX_RETRIES = 5
 // These match what is enforced server-side
 const RATE_LIMIT_REQUESTS = 100
 const RATE_LIMIT_PERIOD = 60 * 1000
-const ABORTABLE_ERRORS_STATUS = [
-  400, // Invalid URL
-  401, // Not authenticated
-  403, // Not authorized
-  417, // Expectation Failed Error
-]
 
 /**
  * @typedef { import('./lib/interface.js').RateLimiter } RateLimiter
@@ -59,7 +53,7 @@ export class PermaCache {
    * @example
    * ```js
    * import { PermaCache } from 'nftstorage.link'
-   * const client = new PermaCache({ token: API_TOKEN })
+   * const cache = new PermaCache({ token: API_TOKEN })
    * ```
    *
    * @param {{token: string, endpoint?:URL, rateLimiter?: RateLimiter}} options
@@ -109,9 +103,9 @@ export class PermaCache {
   static async put(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
-    { onPut, maxRetries = MAX_RETRIES } = {}
+    { onPut, maxRetries } = {}
   ) {
-    areNftStorageLinkUrls(urls)
+    urls.forEach(validateUrl)
 
     const headers = PermaCache.headers(token)
 
@@ -123,54 +117,42 @@ export class PermaCache {
           endpoint
         )
 
-        let cacheResult
-        try {
-          cacheResult = await pRetry(
-            async () => {
-              await rateLimiter()
-              const request = await fetch(apiUrl.toString(), {
-                method: 'POST',
-                headers,
-              })
+        return await pRetry(
+          async () => {
+            await rateLimiter()
+            const response = await fetch(apiUrl.toString(), {
+              method: 'POST',
+              headers,
+            })
 
-              /** @type {CacheResult} */
-              const res = await request.json()
-              if (!request.ok) {
-                // @ts-ignore Only exists on Error
-                const e = new Error(res.message)
-                // do not retry if abortable errors - will not succeed
-                if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
-                  throw new AbortError(e)
-                }
-                /* c8 ignore next 2 */
-                throw e
+            /** @type {CacheResult} */
+            const result = await response.json()
+            if (!response.ok) {
+              // @ts-ignore Only exists on Error
+              const e = new Error(result.message)
+              // do not retry if fatal errors - will not succeed
+              if (response.status >= 400 && response.status < 500) {
+                throw new AbortError(e)
               }
-
-              onPut && onPut(url)
-
-              return {
-                ...res,
-                url, // decoded
-              }
-            },
-            /* c8 ignore next 3 */
-            {
-              retries: maxRetries == null ? MAX_RETRIES : maxRetries,
+              /* c8 ignore next 2 */
+              throw e
             }
-          )
-        } catch (error) {
-          return {
-            // @ts-ignore non error type
-            error: error.message,
-            url,
+            onPut && onPut(url)
+
+            return result
+          },
+          /* c8 ignore next 3 */
+          {
+            retries: maxRetries == null ? MAX_RETRIES : maxRetries,
           }
-        }
-        return cacheResult
+        )
       })
     )
 
-    // @ts-ignore p-settle will always handle error internally
-    return cacheResults.map((cacheResult) => cacheResult.value)
+    return cacheResults.map((r, i) => {
+      // @ts-ignore reason and value might not exist, but one of them always exists
+      return r.reason ? { url: urls[i], error: r.reason.message } : r.value
+    })
   }
 
   /**
@@ -188,17 +170,17 @@ export class PermaCache {
     do {
       await rateLimiter()
 
-      const request = await fetch(nextPageUrl.toString(), {
+      const response = await fetch(nextPageUrl.toString(), {
         method: 'GET',
         headers,
       })
-      const result = await request.json()
-      if (!request.ok) {
+      const result = await response.json()
+      if (!response.ok) {
         throw new Error(result.message)
       }
 
       // Go over next links until not provided by API anymore
-      const link = request.headers.get('link')
+      const link = response.headers.get('link')
       if (link) {
         nextPageUrl = new URL(
           link.replace('<', '').replace('>; rel="next"', ''),
@@ -224,9 +206,9 @@ export class PermaCache {
   static async delete(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
-    { onDelete, maxRetries = MAX_RETRIES } = {}
+    { onDelete, maxRetries } = {}
   ) {
-    areNftStorageLinkUrls(urls)
+    urls.forEach(validateUrl)
 
     const headers = PermaCache.headers(token)
 
@@ -238,49 +220,43 @@ export class PermaCache {
           endpoint
         )
 
-        try {
-          return await pRetry(
-            async () => {
-              await rateLimiter()
-              const request = await fetch(apiUrl.toString(), {
-                method: 'DELETE',
-                headers,
-              })
+        return await pRetry(
+          async () => {
+            await rateLimiter()
+            const response = await fetch(apiUrl.toString(), {
+              method: 'DELETE',
+              headers,
+            })
 
-              const res = await request.json()
-              if (!request.ok) {
-                const e = new Error(res.message)
-                // do not retry if abortable errors - will not succeed
-                if (ABORTABLE_ERRORS_STATUS.includes(request.status)) {
-                  throw new AbortError(e)
-                }
-                /* c8 ignore next 2 */
-                throw e
+            const result = await response.json()
+            if (!response.ok) {
+              const e = new Error(result.message)
+              // do not retry if fatal errors - will not succeed
+              if (response.status >= 400 && response.status < 500) {
+                throw new AbortError(e)
               }
-
-              onDelete && onDelete(url)
-
-              return {
-                url,
-              }
-            },
-            /* c8 ignore next 3 */
-            {
-              retries: maxRetries == null ? MAX_RETRIES : maxRetries,
+              /* c8 ignore next 2 */
+              throw e
             }
-          )
-        } catch (error) {
-          return {
-            // @ts-ignore non error type
-            error: error.message,
-            url,
+
+            onDelete && onDelete(url)
+
+            return {
+              url,
+            }
+          },
+          /* c8 ignore next 3 */
+          {
+            retries: maxRetries == null ? MAX_RETRIES : maxRetries,
           }
-        }
+        )
       })
     )
 
-    // @ts-ignore p-settle will always handle error internally
-    return cacheDeleteResults.map((cacheResult) => cacheResult.value)
+    return cacheDeleteResults.map((r, i) => {
+      // @ts-ignore reason and value might not exist, but one of them always exists
+      return r.reason ? { url: urls[i], error: r.reason.message } : r.value
+    })
   }
 
   /**
@@ -296,16 +272,16 @@ export class PermaCache {
     const headers = PermaCache.headers(token)
 
     await rateLimiter()
-    const request = await fetch(url.toString(), {
+    const response = await fetch(url.toString(), {
       method: 'GET',
       headers,
     })
-    const res = await request.json()
-    if (!request.ok) {
-      throw new Error(res.message)
+    const result = await response.json()
+    if (!response.ok) {
+      throw new Error(result.message)
     }
 
-    return res
+    return result
   }
 
   // Just a sugar so you don't have to pass around endpoint and token around.
@@ -377,20 +353,19 @@ export function createRateLimiter() {
 const globalRateLimiter = createRateLimiter()
 
 /**
- * @param {string[]} urls
+ * @param {string} urlString
  */
-function areNftStorageLinkUrls(urls) {
-  urls.forEach((urlString) => {
-    const url = new URL(urlString)
-
-    if (
-      !url.hostname.includes('.ipfs.nftstorage.link') &&
-      !(
-        url.hostname.includes('nftstorage.link') &&
-        url.pathname.startsWith('/ipfs')
-      )
-    ) {
-      throw new Error('One or more urls are not nftstorage.link IPFS URLs')
-    }
-  })
+function validateUrl(urlString) {
+  const url = new URL(urlString)
+  if (
+    !url.hostname.includes('.ipfs.nftstorage.link') &&
+    !(
+      url.hostname.includes('nftstorage.link') &&
+      url.pathname.startsWith('/ipfs')
+    )
+  ) {
+    throw new Error(
+      `Invalid URL (not an nftstorage.link IPFS URL): ${urlString}`
+    )
+  }
 }

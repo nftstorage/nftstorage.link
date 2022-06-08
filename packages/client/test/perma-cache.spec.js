@@ -79,7 +79,7 @@ describe('perma-cache client', () => {
       } catch (err) {
         assert.strictEqual(
           err.message,
-          'One or more urls are not nftstorage.link IPFS URLs'
+          `Invalid URL (not an nftstorage.link IPFS URL): ${urls[0]}`
         )
       }
     })
@@ -140,7 +140,7 @@ describe('perma-cache client', () => {
       } catch (err) {
         assert.strictEqual(
           err.message,
-          'One or more urls are not nftstorage.link IPFS URLs'
+          `Invalid URL (not an nftstorage.link IPFS URL): ${urls[0]}`
         )
       }
     })
