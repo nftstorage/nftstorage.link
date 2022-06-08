@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.2...edge-gateway-v1.8.3) (2022-06-08)
+
+
+### Bug Fixes
+
+* check resource cid is in denylist ([#138](https://github.com/nftstorage/nftstorage.link/issues/138)) ([a85d8e9](https://github.com/nftstorage/nftstorage.link/commit/a85d8e9c86fd111e2cad3caec46cc773cef3ba54))
+
 ### [1.8.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.1...edge-gateway-v1.8.2) (2022-06-01)
 
 
