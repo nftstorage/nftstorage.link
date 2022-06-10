@@ -167,7 +167,8 @@ export class PermaCache {
     const headers = PermaCache.headers(token)
     let search = new URLSearchParams({ sort, order })
     let nextPageUrl = new URL(`perma-cache?${search}`, endpoint)
-    do {
+
+    while (true) {
       await rateLimiter()
 
       const response = await fetch(nextPageUrl.toString(), {
@@ -179,22 +180,20 @@ export class PermaCache {
         throw new Error(result.message)
       }
 
-      // Go over next links until not provided by API anymore
-      const link = response.headers.get('link')
-      if (link) {
-        nextPageUrl = new URL(
-          link.replace('<', '').replace('>; rel="next"', ''),
-          endpoint
-        )
-      } else {
-        // @ts-ignore typescript complains about URL type cannot be undefined
-        nextPageUrl = undefined
-      }
-
       for (const entry of result) {
         yield entry
       }
-    } while (nextPageUrl)
+
+      // Go over next links until not provided by API anymore
+      const link = response.headers.get('link')
+      if (!link) {
+        break
+      }
+      nextPageUrl = new URL(
+        link.replace('<', '').replace('>; rel="next"', ''),
+        endpoint
+      )
+    }
   }
 
   /**
