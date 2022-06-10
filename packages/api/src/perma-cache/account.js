@@ -7,12 +7,12 @@ import { JSONResponse } from '../utils/json-response.js'
  */
 
 /**
- * Handle perma-cache status get request
+ * Handle perma-cache account get request
  *
  * @param {Request} request
  * @param {Env} env
  */
-export async function permaCacheStatusGet(request, env) {
+export async function permaCacheAccountGet(request, env) {
   const usedStorage = await env.db.getUsedPermaCacheStorage(
     request.auth.user.id
   )

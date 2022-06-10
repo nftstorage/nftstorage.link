@@ -6,8 +6,10 @@
   "scripts": {
     "test": "run-s test:*",
     "test:api": "pnpm --filter api test",
+    "test:client": "pnpm --filter nftstorage.link test",
     "test:website": "pnpm --filter website test",
     "test:edge-gateway": "pnpm --filter edge-gateway test",
+    "build:client": "pnpm --filter nftstorage.link build",
     "build:website": "pnpm --filter website build",
     "format": "prettier --write .",
     "format:check": "prettier --check .",

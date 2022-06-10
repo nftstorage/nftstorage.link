@@ -94,7 +94,7 @@ $ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.lin
   {
     "url": "http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.nftstorage.link/"
     "size": 28
-    "inserted_at" "2022-05-18T11:37:27.878372"
+    "inserted_at": "2022-05-18T11:37:27.878372"
   }
 ]
 ```

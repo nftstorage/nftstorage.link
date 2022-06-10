@@ -47,14 +47,10 @@ jobs:
           node-version: 16
           cache: 'pnpm'
       - run: pnpm install
-      - name: Test (ES)
-        run: yarn --cwd packages/client test:es
-      - name: Test (Web)
-        run: yarn --cwd packages/client test:web
-      - name: Test (CJS)
-        run: yarn --cwd packages/client test:cjs
+      - name: Test (ES, Web, CJS, Bundlesize)
+        run: pnpm --filter nftstorage.link test
       - name: Coverage
-        run: yarn --cwd packages/client coverage
+        run: pnpm --filter nftstorage.link coverage
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     name: Release

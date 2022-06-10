@@ -6,7 +6,7 @@ import { withAuth } from './auth.js'
 import {
   permaCachePost,
   permaCacheListGet,
-  permaCacheStatusGet,
+  permaCacheAccountGet,
   permaCacheDelete,
 } from './perma-cache/index.js'
 import { metricsGet } from './metrics.js'
@@ -28,7 +28,10 @@ router
   .get('/version', withCorsHeaders(versionGet))
   .get('/perma-cache', auth['🔒'](permaCacheListGet))
   .post('/perma-cache/:url', auth['🔒'](permaCachePost))
-  .get('/perma-cache/status', auth['🔒'](permaCacheStatusGet))
+  .get('/perma-cache/account', auth['🔒'](permaCacheAccountGet))
+  .get('/perma-cache/status', (request) => {
+    return Response.redirect(request.url.replace('status', 'account'), 302)
+  })
   .delete('/perma-cache/:url', auth['🔒'](permaCacheDelete))
 
 /**
