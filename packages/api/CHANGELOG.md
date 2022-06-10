@@ -1,5 +1,21 @@
 # Changelog
 
+## [2.0.0](https://github.com/nftstorage/nftstorage.link/compare/api-v1.1.1...api-v2.0.0) (2022-06-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* GET /perma-cache/status renamed to /perma-cache/account
+
+### Features
+
+* client perma cache ([#127](https://github.com/nftstorage/nftstorage.link/issues/127)) ([f426b08](https://github.com/nftstorage/nftstorage.link/commit/f426b08ca5232cb0d4b18836bd2afaf4326beedf))
+
+
+### Bug Fixes
+
+* add new user tag to type from nft.storage ([#142](https://github.com/nftstorage/nftstorage.link/issues/142)) ([fbd8b85](https://github.com/nftstorage/nftstorage.link/commit/fbd8b8592a60dba0bee2569c5d763a38932bc9b5))
+
 ### [1.1.1](https://github.com/nftstorage/nftstorage.link/compare/api-v1.1.0...api-v1.1.1) (2022-06-01)
 
 
