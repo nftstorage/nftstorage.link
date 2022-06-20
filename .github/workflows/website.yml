@@ -160,7 +160,7 @@ jobs:
           NEXT_PUBLIC_ENV: production
         run: pnpm build:website
         if: ${{ steps.tag-release.outputs.releases_created }}
-      - run: pnpm exec wrangler pages publish --project-name nftstorage-link --branch master ./packages/website/out
+      - run: pnpm exec wrangler pages publish --project-name nftstorage-link --branch main ./packages/website/out
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT }}
