@@ -99,7 +99,7 @@ export async function gatewayGet(request, env, ctx) {
 export async function gatewayIpfs(request, env, ctx, options = {}) {
   const startTs = Date.now()
   const reqUrl = new URL(request.url)
-  const cid = getCidFromSubdomainUrl(reqUrl)
+  const cid = await getCidFromSubdomainUrl(reqUrl)
   const pathname = reqUrl.pathname
 
   // Validation layer - root CID
