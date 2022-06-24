@@ -1,4 +1,4 @@
-import fetch from '@web-std/fetch'
+import fetch, { Headers } from '@web-std/fetch'
 import path from 'path'
 import toml from 'toml'
 import { CID } from 'multiformats'
@@ -67,7 +67,13 @@ async function getWranglerToml(url) {
 }
 
 async function getDenyList(url) {
-  const res = await fetch(url)
+  const headers = new Headers()
+  headers.append('cache-control', 'no-cache')
+  headers.append('pragma', 'no-cache')
+
+  const res = await fetch(url, {
+    headers,
+  })
   if (!res.ok) {
     throw new Error(`unexpected status fetching denylist.json: ${res.status}`)
   }
