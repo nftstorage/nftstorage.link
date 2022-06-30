@@ -18,6 +18,7 @@ import { DBClient } from './utils/db-client.js'
  * @property {KVNamespace} PERMACACHE
  * @property {KVNamespace} PERMACACHE_HISTORY
  * @property {R2Bucket} SUPERHOT
+ * @property {CFService} GATEWAY
  *
  * @typedef {Object} EnvTransformed
  * @property {string} VERSION
@@ -56,13 +57,6 @@ export function envAll(request, env, ctx) {
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')
-
-  /**
-   * Add gateway environment
-   * will be removed once workers bindings are in place.
-   */
-  // @ts-ignore types not complete - Special inputs for Env
-  env.ipfsGateways = JSON.parse(env.IPFS_GATEWAYS)
 }
 
 /**
@@ -99,6 +93,8 @@ function getSentry(request, env, ctx) {
 
 /**
  * From: https://github.com/cloudflare/workers-types
+ *
+ * @typedef {{ fetch: fetch }} CFService
  *
  * @typedef {Object} KVNamespacePutOptions
  * @property {any} [metadata]

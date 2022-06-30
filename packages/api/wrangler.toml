@@ -21,11 +21,16 @@ NFT_STORAGE_API = "https://api.nft.storage"
 DEBUG = "false"
 ENV = "production"
 GATEWAY_DOMAIN = "nftstorage.link"
-IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://nft-storage.mypinata.cloud/\"]"
 
 [[env.production.r2_buckets]]
 bucket_name = "super-hot"
 binding = "SUPERHOT"
+
+[[env.production.bindings]]
+name = "GATEWAY"
+type = "service"
+service = "gateway-nft-storage-production"
+environment = "production"
 
 # Staging!
 [env.staging]
@@ -42,11 +47,16 @@ NFT_STORAGE_API = "https://api-staging.nft.storage"
 DEBUG = "true"
 ENV = "staging"
 GATEWAY_DOMAIN = "nftstorage.link"
-IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://nft-storage.mypinata.cloud/\"]"
 
 [[env.staging.r2_buckets]]
 bucket_name = "super-hot-staging"
 binding = "SUPERHOT"
+
+[[env.staging.bindings]]
+name = "GATEWAY"
+type = "service"
+service = "gateway-nft-storage-staging"
+environment = "production"
 
 # Test!
 [env.test]
@@ -56,7 +66,6 @@ workers_dev = true
 DEBUG = "true"
 ENV = "test"
 GATEWAY_DOMAIN = "localhost:9081"
-IPFS_GATEWAYS = "[\"http://127.0.0.1:9081\"]"
 
 # Dev!
 [env.vsantos]

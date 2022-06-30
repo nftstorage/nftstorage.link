@@ -25,8 +25,18 @@ export function getMiniflare() {
     buildCommand: undefined,
     wranglerConfigEnv: 'test',
     modules: true,
+    mounts: {
+      gateway: {
+        scriptPath: './test/scripts/gateway.js',
+        modules: true,
+      },
+    },
+    serviceBindings: {
+      GATEWAY: 'gateway',
+    },
     bindings: {
       ...globals,
+      // Cloudflare R2
       SUPERHOT: createR2Bucket(),
     },
   })
