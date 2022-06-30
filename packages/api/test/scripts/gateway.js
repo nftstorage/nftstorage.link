@@ -22,7 +22,6 @@ export default {
  * @param {URL} url
  */
 function getCidFromSubdomainUrl(url) {
-  // Replace "ipfs-staging" by "ipfs" if needed
   const splitHost = url.hostname.split('.ipfs.')
 
   if (!splitHost.length) {

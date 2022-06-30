@@ -26,7 +26,7 @@ GATEWAY_DOMAIN = "nftstorage.link"
 bucket_name = "super-hot"
 binding = "SUPERHOT"
 
-[[env.production.unsafe.bindings]]
+[[env.production.bindings]]
 name = "GATEWAY"
 type = "service"
 service = "gateway-nft-storage-production"
@@ -52,7 +52,7 @@ GATEWAY_DOMAIN = "nftstorage.link"
 bucket_name = "super-hot-staging"
 binding = "SUPERHOT"
 
-[[env.staging.unsafe.bindings]]
+[[env.staging.bindings]]
 name = "GATEWAY"
 type = "service"
 service = "gateway-nft-storage-staging"
