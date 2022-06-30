@@ -1,7 +1,6 @@
 /* eslint-env serviceworker, browser */
 
-// TODO: Move to separate file
-import { getSourceUrl, getNormalizedUrl } from './post.js'
+import { getSourceUrl, getNormalizedUrl } from '../utils/url.js'
 import { JSONResponse } from '../utils/json-response.js'
 /**
  * @typedef {import('../env').Env} Env

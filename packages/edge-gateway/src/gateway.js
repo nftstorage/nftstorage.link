@@ -267,12 +267,13 @@ async function settleGatewayRequests(
 async function cdnResolution(request, env, cache) {
   // Should skip cache if instructed by headers
   if ((request.headers.get('Cache-Control') || '').includes('no-cache')) {
+    console.log('short circuit')
     return undefined
   }
 
   try {
     const res = await pAny(
-      [cache.match(request.url), env.SUPERHOT.get(request.url)],
+      [cache.match(request.url), getFromPermaCache(request, env)],
       {
         filter: (res) => !!res,
       }
@@ -284,6 +285,30 @@ async function cdnResolution(request, env, cache) {
     }
     throw err
   }
+}
+
+/**
+ * Get from Perma Cache route.
+ *
+ * @param {Request} request
+ * @param {Env} env
+ * @param {Cache} cache
+ * @return {Promise<Response|undefined>}
+ */
+async function getFromPermaCache(request, env) {
+  const req = await env.API.fetch(
+    `${env.EDGE_GATEWAY_API_URL}/perma-cache/${encodeURIComponent(
+      request.url
+    )}`,
+    {
+      headers: request.headers,
+    }
+  )
+  if (req.ok) {
+    return req
+  }
+
+  return undefined
 }
 
 /**

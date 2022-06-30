@@ -1,5 +1,4 @@
 import test from 'ava'
-import pMap from 'p-map'
 
 import { getMiniflare } from './scripts/utils.js'
 import { createTestUser } from './scripts/helpers.js'
@@ -17,121 +16,45 @@ test.beforeEach(async (t) => {
   }
 })
 
-// PUT /perma-cache
-test('Gets empty list when there were no perma-cached objects previously added', async (t) => {
-  const { mf, user } = t.context
-  const response = await mf.dispatchFetch(
-    'https://localhost:8788/perma-cache',
-    {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${user.token}` },
-    }
-  )
-  t.is(response.status, 200)
-
-  const entries = await response.json()
-  t.is(entries.length, 0)
-})
-
-test('Gets list when there were perma-cached objects previously added', async (t) => {
+test('Gets content from perma cache by URL', async (t) => {
   const { mf, user } = t.context
 
-  // Perma cache URLs
-  const urls = [
-    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true',
-    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
-    'http://localhost:9081/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path',
-  ]
-  await pMap(
-    urls,
-    async (url) => {
-      const putResponse = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      t.is(putResponse.status, 200)
-    },
-    { concurrency: 1 }
-  )
+  const url =
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+  const gatewayTxtResponse = 'Hello nft.storage! 😎'
 
-  // Get URLs
-  const listResponse = await mf.dispatchFetch(
-    'https://localhost:8788/perma-cache',
-    {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${user.token}` },
-    }
-  )
-  t.is(listResponse.status, 200)
-
-  const entries = await listResponse.json()
-  t.is(entries.length, urls.length)
-
-  // Validate content
-  validateList(t, urls, entries)
-})
-
-test('Can paginate list', async (t) => {
-  const { mf, user } = t.context
-
-  // Perma-cache URLs
-  const urls = [
-    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9081?download=true',
-    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
-    'http://localhost:9081/ipfs/bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq/path',
-  ]
-  await pMap(
-    urls,
-    async (url) => {
-      const putResponse = await mf.dispatchFetch(getPermaCachePutUrl(url), {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
-      t.is(putResponse.status, 200)
-    },
-    { concurrency: 1 }
-  )
-
-  const pages = []
-  const size = 2
-
-  let nextPageLink = `https://localhost:8788/perma-cache?size=${size}`
-  do {
-    const listResponse = await mf.dispatchFetch(nextPageLink, {
-      method: 'GET',
-      headers: { Authorization: `Bearer ${user.token}` },
-    })
-    t.is(listResponse.status, 200)
-
-    const entries = await listResponse.json()
-    pages.push(entries)
-
-    const link = listResponse.headers.get('link')
-    if (link) {
-      nextPageLink = `https://localhost:8788${link
-        .replace('<', '')
-        .replace('>; rel="next"', '')}`
-    } else {
-      nextPageLink = undefined
-    }
-  } while (nextPageLink)
-
-  t.is(pages.length, Math.round(urls.length / size))
-
-  const allPages = pages.flat()
-  t.is(allPages.length, urls.length)
-
-  // Validate content
-  validateList(t, urls, allPages)
-})
-
-const validateList = (t, urls, entries) => {
-  urls.forEach((url) => {
-    const { sourceUrl } = getParsedUrl(url)
-
-    const target = entries.find((e) => sourceUrl === e.url)
-    t.is(sourceUrl, target.url)
-    t.truthy(target.insertedAt)
-    t.truthy(target.size)
+  // Post URL content to perma cache
+  const responsePost = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${user.token}` },
   })
-}
+  t.is(responsePost.status, 200)
+
+  // GET URL content from perma cache
+  const { normalizedUrl } = getParsedUrl(url)
+
+  const responseGet = await mf.dispatchFetch(
+    getPermaCachePutUrl(normalizedUrl),
+    {
+      method: 'GET',
+    }
+  )
+  t.is(responseGet.status, 200)
+  t.deepEqual(await responseGet.text(), gatewayTxtResponse)
+})
+
+test('Gets 404 response from perma cache by URL when url not perma cached', async (t) => {
+  const { mf } = t.context
+  const url =
+    'http://localhost:9081/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+
+  // GET URL content from perma cache
+  const { normalizedUrl } = getParsedUrl(url)
+  const responseGet = await mf.dispatchFetch(
+    getPermaCachePutUrl(normalizedUrl),
+    {
+      method: 'GET',
+    }
+  )
+  t.is(responseGet.status, 404)
+})
