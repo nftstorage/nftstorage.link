@@ -99,12 +99,12 @@ $ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.lin
 ]
 ```
 
-### 🔒 `GET /perma-cache/status`
+### 🔒 `GET /perma-cache/account`
 
 > Get perma-cache account status.
 
 ```console
-$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/status -s | jq
+$ curl -X GET -H 'Authorization: Bearer YOUR_API_KEY' https://api.nftstorage.link/perma-cache/account -s | jq
 {
   "usedStorage": "8036759278"
 }
