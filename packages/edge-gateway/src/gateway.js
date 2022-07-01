@@ -353,15 +353,32 @@ async function gatewayFetch(
  * @param {Request} request
  */
 function getHeaders(request) {
-  const existingProxies = request.headers.get('X-Forwarded-For')
-    ? `, ${request.headers.get('X-Forwarded-For')}`
+  // keep headers
+  const headers = cloneHeaders(request.headers)
+  const existingProxies = headers.get('X-Forwarded-For')
+    ? `, ${headers.get('X-Forwarded-For')}`
     : ''
-  return {
-    'X-Forwarded-For': `${request.headers.get(
-      'cf-connecting-ip'
-    )}${existingProxies}`,
-    'X-Forwarded-Host': request.headers.get('host'),
+
+  headers.set(
+    'X-Forwarded-For',
+    `${headers.get('cf-connecting-ip')}${existingProxies}`
+  )
+  headers.set('X-Forwarded-Host', headers.get('host') || '')
+
+  return headers
+}
+
+/**
+ * Clone headers to mutate them.
+ *
+ * @param {Headers} reqHeaders
+ */
+function cloneHeaders(reqHeaders) {
+  const headers = new Headers()
+  for (var kv of reqHeaders.entries()) {
+    headers.append(kv[0], kv[1])
   }
+  return headers
 }
 
 /**
