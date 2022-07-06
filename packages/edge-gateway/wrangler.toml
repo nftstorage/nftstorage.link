@@ -67,7 +67,7 @@ kv_namespaces = [{ binding = "DENYLIST", id = "f4eb0eca32e14e28b643604a82e00cb3"
 [env.staging.vars]
 IPFS_GATEWAYS = "[\"https://ipfs.io\", \"https://cf.nftstorage.link\", \"https://pinata.nftstorage.link\"]"
 GATEWAY_HOSTNAME = 'ipfs-staging.nftstorage.link'
-EDGE_GATEWAY_API_URL = 'https://api.nftstorage.link'
+EDGE_GATEWAY_API_URL = 'https://api-staging.nftstorage.link'
 DATABASE_URL = "https://nft-storage-pgrest-staging.herokuapp.com"
 DEBUG = "true"
 ENV = "staging"
