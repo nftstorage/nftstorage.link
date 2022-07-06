@@ -272,7 +272,7 @@ async function cdnResolution(request, env, cache) {
 
   try {
     const res = await pAny(
-      [cache.match(request.url), env.SUPERHOT.get(request.url)],
+      [cache.match(request.url), getFromPermaCache(request, env)],
       {
         filter: (res) => !!res,
       }
@@ -284,6 +284,30 @@ async function cdnResolution(request, env, cache) {
     }
     throw err
   }
+}
+
+/**
+ * Get from Perma Cache route.
+ *
+ * @param {Request} request
+ * @param {Env} env
+ * @return {Promise<Response|undefined>}
+ */
+async function getFromPermaCache(request, env) {
+  const req = await env.API.fetch(
+    new URL(
+      `/perma-cache/${encodeURIComponent(request.url)}`,
+      env.EDGE_GATEWAY_API_URL
+    ).toString(),
+    {
+      headers: request.headers,
+    }
+  )
+  if (req.ok) {
+    return req
+  }
+
+  return undefined
 }
 
 /**

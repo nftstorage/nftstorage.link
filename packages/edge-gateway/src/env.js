@@ -7,6 +7,7 @@ import { Logging } from './logs.js'
  * @typedef {Object} EnvInput
  * @property {string} IPFS_GATEWAYS
  * @property {string} GATEWAY_HOSTNAME
+ * @property {string} EDGE_GATEWAY_API_URL
  * @property {string} VERSION
  * @property {string} SENTRY_RELEASE
  * @property {string} COMMITHASH
@@ -21,7 +22,7 @@ import { Logging } from './logs.js'
  * @property {Object} CIDSTRACKER
  * @property {Object} GATEWAYREDIRECTCOUNTER
  * @property {KVNamespace} DENYLIST
- * @property {R2Bucket} SUPERHOT
+ * @property {CFService} API
  *
  * @typedef {Object} EnvTransformed
  * @property {string} IPFS_GATEWAY_HOSTNAME
@@ -99,6 +100,8 @@ function getSentry(request, env, ctx) {
 /**
  * From: https://github.com/cloudflare/workers-types
  *
+ * @typedef {{ fetch: fetch }} CFService
+ *
  * @typedef {{
  *  toString(): string
  *  equals(other: DurableObjectId): boolean
@@ -119,19 +122,4 @@ function getSentry(request, env, ctx) {
  * }} DurableObjectStub
  *
  * @typedef {{ get: (key: string) => Promise<string | null> }} KVNamespace
- *
- * @typedef {Object} R2PutOptions
- * @property {Headers} [httpMetadata]
- * @property {Record<string, string>} [customMetadata]
- *
- * @typedef {Object} R2Object
- * @property {Date} uploaded
- * @property {Headers} [httpMetadata]
- * @property {Record<string, string>} [customMetadata]
- *
- * @typedef {Object} R2Bucket
- * @property {(key: string) => Promise<R2Object | null>} head
- * @property {(key: string) => Promise<Response & R2Object | null>} get
- * @property {(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null, options?: R2PutOptions) => Promise<R2Object>} put
- * @property {(key: string) => Promise<void>} delete
  */

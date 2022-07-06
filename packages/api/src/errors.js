@@ -89,6 +89,19 @@ export class TokenNotFoundError extends HTTPError {
 }
 TokenNotFoundError.CODE = 'ERROR_TOKEN_NOT_FOUND'
 
+export class UrlNotFoundError extends Error {
+  /**
+   * @param {string} message
+   */
+  constructor(message = 'URL Not Found') {
+    super(message)
+    this.name = 'UrlNotFoundError'
+    this.status = 404
+    this.code = UrlNotFoundError.CODE
+  }
+}
+UrlNotFoundError.CODE = 'ERROR_URL_NOT_FOUND'
+
 export class UnrecognisedTokenError extends HTTPError {
   constructor(msg = 'Could not parse provided API token') {
     super(msg, 401)

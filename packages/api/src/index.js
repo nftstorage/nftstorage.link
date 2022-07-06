@@ -5,6 +5,7 @@ import { Router } from 'itty-router'
 import { withAuth } from './auth.js'
 import {
   permaCachePost,
+  permaCacheGet,
   permaCacheListGet,
   permaCacheAccountGet,
   permaCacheDelete,
@@ -32,6 +33,7 @@ router
   .get('/perma-cache/status', (request) => {
     return Response.redirect(request.url.replace('status', 'account'), 302)
   })
+  .get('/perma-cache/:url', permaCacheGet)
   .delete('/perma-cache/:url', auth['🔒'](permaCacheDelete))
 
 /**
