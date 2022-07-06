@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.9.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.3...edge-gateway-v1.9.0) (2022-07-06)
+
+
+### Features
+
+* api get from bucket and worker binding gateway read from gateway api ([#140](https://github.com/nftstorage/nftstorage.link/issues/140)) ([7a83045](https://github.com/nftstorage/nftstorage.link/commit/7a8304596ee97504ccc876a54c13122da86853f8))
+
+
+### Bug Fixes
+
+* augment gateway request headers with all headers ([adc41a5](https://github.com/nftstorage/nftstorage.link/commit/adc41a507f5d178b84055f46d582b637731dedd6))
+* edge gateway denylist sync no cache request header ([33844e8](https://github.com/nftstorage/nftstorage.link/commit/33844e898526dad35fbb26ac7fa47cb9ab30d204))
+
 ## [1.8.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.8.2...edge-gateway-v1.8.3) (2022-06-08)
 
 
