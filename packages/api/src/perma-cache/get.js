@@ -19,9 +19,13 @@ export async function permaCacheGet(request, env) {
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
 
-  const r2Object = await env.SUPERHOT.get(r2Key)
-  if (r2Object) {
-    return new Response(r2Object.body)
+  try {
+    const r2Object = await env.SUPERHOT.get(r2Key)
+    if (r2Object) {
+      return new Response(r2Object.body)
+    }
+  } catch (_) {
+    throw new UrlNotFoundError()
   }
 
   throw new UrlNotFoundError()
