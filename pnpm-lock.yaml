@@ -34,6 +34,7 @@ importers:
       esbuild: ^0.14.38
       execa: ^5.1.1
       git-rev-sync: ^3.0.1
+      http-range-parse: ^1.0.0
       itty-router: ^2.4.5
       miniflare: ^2.5.0
       multiformats: ^9.6.4
@@ -50,6 +51,7 @@ importers:
       uint8arrays: ^3.0.0
     dependencies:
       '@supabase/postgrest-js': 0.37.2
+      http-range-parse: 1.0.0
       itty-router: 2.6.1
       multiformats: 9.6.4
       nanoid: 3.3.3
@@ -11199,6 +11201,13 @@ packages:
       statuses: 2.0.1
       toidentifier: 1.0.1
     dev: true
+
+  /http-range-parse/1.0.0:
+    resolution:
+      {
+        integrity: sha512-8xfObVjVGz3VGdiMbbsxoMhxgZrcLOagvzf5rcTfwU2OmmyWJib6Y9rtyjjIFFJ8J/UUEaik4U6AmvnC70YLiw==,
+      }
+    dev: false
 
   /http-signature/1.2.0:
     resolution: { integrity: sha1-muzZJRFHcvPZW2WmCruPfBj7rOE= }

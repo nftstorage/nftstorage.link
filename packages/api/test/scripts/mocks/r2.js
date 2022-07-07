@@ -32,19 +32,25 @@ export function createR2Bucket() {
         size: data.length,
       })
     },
-    get: async (key) => {
+    get: async (key, options = {}) => {
       const value = bucket.get(key)
       if (!value) {
         return undefined
       }
 
-      const response = new Response(value.body, { status: 200 })
+      let body = value.body
+      if (options.range) {
+        body = value.body.slice(options.range.offset, options.range.length)
+      }
+
+      const response = new Response(body, { status: 200 })
 
       return Promise.resolve(
         Object.assign(response, {
           httpMetadata: value.httpMetadata || {},
           customMetadata: value.customMetadata || {},
           size: value.body.length,
+          writeHttpMetadata: () => {},
         })
       )
     },

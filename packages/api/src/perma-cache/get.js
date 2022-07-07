@@ -1,11 +1,14 @@
 /* eslint-env serviceworker, browser */
 /* global Response */
 
+import parseRange from 'http-range-parse'
+
 import { getSourceUrl, getNormalizedUrl } from '../utils/url.js'
-import { UrlNotFoundError } from '../errors.js'
+import { UrlNotFoundError, InvalidRangeError } from '../errors.js'
 
 /**
  * @typedef {import('../env').Env} Env
+ * @typedef {import('../env').R2Range} R2Range
  */
 
 /**
@@ -19,14 +22,66 @@ export async function permaCacheGet(request, env) {
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
 
+  const range = toR2Range(request.headers.get('range'))
+
+  // Get R2 response
+  let r2Object
   try {
-    const r2Object = await env.SUPERHOT.get(r2Key)
-    if (r2Object) {
-      return new Response(r2Object.body)
+    r2Object = await env.SUPERHOT.get(r2Key, {
+      range,
+    })
+
+    if (!r2Object || !r2Object.body) {
+      throw new Error()
     }
   } catch (_) {
     throw new UrlNotFoundError()
   }
 
-  throw new UrlNotFoundError()
+  const headers = new Headers()
+  headers.set('etag', r2Object.httpEtag)
+  r2Object.writeHttpMetadata(headers)
+
+  if (range) {
+    headers.set('status', '206')
+    let first, last
+    if (range.suffix != null) {
+      first = r2Object.size - range.suffix
+      last = r2Object.size - 1
+    } else {
+      first = range.offset || 0
+      last = range.length != null ? first + range.length - 1 : r2Object.size - 1
+    }
+    headers.set('content-range', `bytes ${first}-${last}/${r2Object.size}`)
+    headers.set('content-length', `${last - first + 1}`)
+  } else {
+    headers.set('status', '200')
+    headers.set('content-length', `${r2Object.size}`)
+  }
+
+  return new Response(r2Object.body, {
+    status: range ? 206 : 200,
+  })
+}
+
+/**
+ * Convert a HTTP Range header to an R2 range object.
+ *
+ * @param {string|null} encoded
+ * @returns {R2Range|undefined}
+ */
+function toR2Range(encoded) {
+  if (encoded === null) {
+    return
+  }
+
+  const result = parseRange(encoded)
+  if (result.ranges)
+    throw new InvalidRangeError('Multiple ranges not supported')
+  const { unit, first, last, suffix } = result
+  if (unit !== 'bytes')
+    throw new InvalidRangeError(`Unsupported range unit: ${unit}`)
+  return suffix != null
+    ? { suffix }
+    : { offset: first, length: last != null ? last - first + 1 : undefined }
 }

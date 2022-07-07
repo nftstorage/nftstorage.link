@@ -45,6 +45,20 @@ export class TimeoutError extends Error {
 }
 TimeoutError.CODE = 'ERROR_TIMEOUT'
 
+export class InvalidRangeError extends Error {
+  /**
+   * @param {string} message
+   */
+  constructor(message = 'invalid Range') {
+    const status = 400
+    super(message)
+    this.name = 'InvalidRangeError'
+    this.status = status
+    this.code = InvalidRangeError.CODE
+  }
+}
+InvalidRangeError.CODE = 'ERROR_INVALID_RANGE'
+
 export class HTTPError extends Error {
   /**
    *

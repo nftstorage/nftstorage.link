@@ -126,9 +126,16 @@ function getSentry(request, env, ctx) {
  * @property {Headers} [httpMetadata]
  * @property {Record<string, string>} [customMetadata]
  *
+ * @typedef {{ offset: number, length?: number } | { offset?: number, length: number } | { suffix: number }} R2Range
+ *
+ * @typedef {Object} R2GetOptions
+ * @property {R2Range} [range]
+ *
  * @typedef {Object} R2Object
  * @property {Date} uploaded
  * @property {number} size
+ * @property {string} httpEtag
+ * @property {(headers: Headers) => void} writeHttpMetadata
  * @property {Headers} [httpMetadata]
  * @property {Record<string, string>} [customMetadata]
  *
@@ -144,7 +151,7 @@ function getSentry(request, env, ctx) {
  *
  * @typedef {Object} R2Bucket
  * @property {(key: string) => Promise<R2Object | null>} head
- * @property {(key: string) => Promise<R2ObjectBody | null>} get
+ * @property {(key: string, options?: R2GetOptions) => Promise<Response & R2Object | null>} get
  * @property {(key: string, value: ReadableStream | ArrayBuffer | ArrayBufferView | string | null, options?: R2PutOptions) => Promise<R2Object>} put
  * @property {(key: string) => Promise<void>} delete
  */
