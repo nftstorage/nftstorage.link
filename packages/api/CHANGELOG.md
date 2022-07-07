@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/nftstorage/nftstorage.link/compare/api-v2.1.0...api-v2.1.1) (2022-07-07)
+
+
+### Bug Fixes
+
+* wrap r2 get call with try catch ([784bfbd](https://github.com/nftstorage/nftstorage.link/commit/784bfbd63728aa2f07f52a633d3f1cacdcc94382))
+
 ## [2.1.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.0.0...api-v2.1.0) (2022-07-06)
 
 
