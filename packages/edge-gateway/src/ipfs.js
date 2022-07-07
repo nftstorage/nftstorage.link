@@ -27,5 +27,14 @@ export async function ipfsGet(request, env) {
     `https://${nCid}.${env.IPFS_GATEWAY_HOSTNAME}${redirectPath}${redirectQueryString}`
   )
 
-  return Response.redirect(url, 302)
+  const headers = new Headers(request.headers)
+  headers.set('Referrer-Policy', 'unsafe-url')
+  headers.set('Location', url.toString())
+  headers.set('Referer', request.headers.get('Referer'))
+
+  return new Response(undefined, {
+    status: 302,
+    statusText: 'Found',
+    headers,
+  })
 }
