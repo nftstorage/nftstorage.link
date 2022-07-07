@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.0.0...api-v2.1.0) (2022-07-06)
+
+
+### Features
+
+* api get from bucket and worker binding gateway read from gateway api ([#140](https://github.com/nftstorage/nftstorage.link/issues/140)) ([7a83045](https://github.com/nftstorage/nftstorage.link/commit/7a8304596ee97504ccc876a54c13122da86853f8))
+* use worker bindings interacting from api to gateway ([#136](https://github.com/nftstorage/nftstorage.link/issues/136)) ([80de324](https://github.com/nftstorage/nftstorage.link/commit/80de3240162abc5ca51c1acb8dd3b7a312c25867))
+
 ## [2.0.0](https://github.com/nftstorage/nftstorage.link/compare/api-v1.1.1...api-v2.0.0) (2022-06-10)
 
 
