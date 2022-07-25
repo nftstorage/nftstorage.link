@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@supabase/postgrest-js": "^0.37.2",
+    "http-range-parse": "^1.0.0",
     "itty-router": "^2.4.5",
     "multiformats": "^9.6.4",
     "nanoid": "^3.1.30",

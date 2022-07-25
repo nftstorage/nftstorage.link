@@ -159,9 +159,9 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
           winnerGwResponse.response.headers.get('content-length')
         )
 
-        // Cache request URL in Cloudflare CDN if smaller than CF_CACHE_MAX_OBJECT_SIZE
+        // Cache request in Cloudflare CDN if smaller than CF_CACHE_MAX_OBJECT_SIZE
         if (contentLengthMb <= CF_CACHE_MAX_OBJECT_SIZE) {
-          await cache.put(request.url, winnerGwResponse.response.clone())
+          await cache.put(request, winnerGwResponse.response.clone())
         }
       })()
     )
@@ -272,7 +272,11 @@ async function cdnResolution(request, env, cache) {
 
   try {
     const res = await pAny(
-      [cache.match(request.url), getFromPermaCache(request, env)],
+      [
+        cache.match(request), // Request from cache API
+        cache.match(request.url), // Request URL from cache API - To be deprecated
+        getFromPermaCache(request, env),
+      ],
       {
         filter: (res) => !!res,
       }
