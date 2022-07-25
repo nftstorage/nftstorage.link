@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.1.1...api-v2.2.0) (2022-07-25)
+
+
+### Features
+
+* add range header support ([#141](https://github.com/nftstorage/nftstorage.link/issues/141)) ([1336d21](https://github.com/nftstorage/nftstorage.link/commit/1336d21f324a374c64d4324304cfb25582c68a54))
+
 ## [2.1.1](https://github.com/nftstorage/nftstorage.link/compare/api-v2.1.0...api-v2.1.1) (2022-07-07)
 
 
