@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.0...edge-gateway-v1.11.1) (2022-07-28)
+
+
+### Bug Fixes
+
+* cache match by request only ([#159](https://github.com/nftstorage/nftstorage.link/issues/159)) ([89ed8af](https://github.com/nftstorage/nftstorage.link/commit/89ed8afc6204b3f52bc5cffafee0e05fe14fbf1a))
+
 ## [1.11.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.10.0...edge-gateway-v1.11.0) (2022-07-28)
 
 
