@@ -274,7 +274,6 @@ async function cdnResolution(request, env, cache) {
     const res = await pAny(
       [
         cache.match(request), // Request from cache API
-        cache.match(request.url), // Request URL from cache API - To be deprecated
         getFromPermaCache(request, env),
       ],
       {
