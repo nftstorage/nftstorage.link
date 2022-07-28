@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.10.0...edge-gateway-v1.11.0) (2022-07-28)
+
+
+### Features
+
+* support base cid encodings ([#148](https://github.com/nftstorage/nftstorage.link/issues/148)) ([31ed705](https://github.com/nftstorage/nftstorage.link/commit/31ed70597abe88463569396b1b58b318c410ba80))
+
 ## [1.10.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.9.0...edge-gateway-v1.10.0) (2022-07-25)
 
 
