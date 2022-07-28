@@ -19,6 +19,7 @@
     "mock:cf-ipfs.com": "smoke -p 9083 test/mocks/cf-ipfs.com"
   },
   "dependencies": {
+    "ipfs-core-utils": "^0.15.0",
     "itty-router": "^2.4.5",
     "multiformats": "^9.6.4",
     "nanoid": "^3.1.30",
