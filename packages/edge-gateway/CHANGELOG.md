@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.1...edge-gateway-v1.11.2) (2022-07-29)
+
+
+### Bug Fixes
+
+* sentry stack traces ([#161](https://github.com/nftstorage/nftstorage.link/issues/161)) ([b7e918e](https://github.com/nftstorage/nftstorage.link/commit/b7e918ea423483b2b0e98e64fc8642c1c4a7a64b))
+
 ## [1.11.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.0...edge-gateway-v1.11.1) (2022-07-28)
 
 
