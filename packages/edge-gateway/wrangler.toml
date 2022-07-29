@@ -2,6 +2,7 @@
 name = "gateway-nft-storage"
 main = "./dist/worker.mjs"
 compatibility_date = "2022-05-11"
+no_bundle = true
 
 [build]
 command = "npm run build"
