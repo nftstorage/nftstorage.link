@@ -34,7 +34,7 @@
     "prettier": "2.5.1",
     "rimraf": "^3.0.2",
     "simple-git-hooks": "^2.7.0",
-    "wrangler": "^2.0.15"
+    "wrangler": "^2.0.23"
   },
   "resolutions": {
     "prettier": "2.5.1"
