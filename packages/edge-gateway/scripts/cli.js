@@ -8,7 +8,6 @@ import git from 'git-rev-sync'
 import Sentry from '@sentry/cli'
 
 import { ipfsCmd } from './ipfs.js'
-import { denylistSyncCmd, denylistAddCmd } from './denylist.js'
 import { heartbeatCmd } from './heartbeat.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -32,17 +31,6 @@ prog
   .option('--token', 'Opsgenie Token')
   .option('--name', 'Heartbeat Name')
   .action(heartbeatCmd)
-  .command('denylist sync')
-  .describe('Sync the gateway deny list with various sources.')
-  .option('--env', 'Wrangler environment to use.', process.env.ENV)
-  .action(denylistSyncCmd)
-  .command('denylist add <cid>')
-  .describe(
-    'Add a CID (or CID + path) to the local deny list. Note: we currently DO NOT support denying by CID + path in the API.'
-  )
-  .option('--status', 'HTTP status to send in response.')
-  .option('--reason', 'Reason for deny. Note: may be communicated in response')
-  .action(denylistAddCmd)
 
 async function buildCmd(opts) {
   const sentryRelease = `nft-gateway@${pkg.version}-${opts.env}+${git.short(
