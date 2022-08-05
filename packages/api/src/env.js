@@ -8,7 +8,7 @@ import { DBClient } from './utils/db-client.js'
 /**
  * @typedef {Object} EnvInput
  * @property {string} ENV
- * @property {string} GATEWAY_DOMAIN
+ * @property {string[]} GATEWAY_DOMAINS
  * @property {string} NFT_STORAGE_API
  * @property {string} DATABASE_URL
  * @property {string} DATABASE_TOKEN

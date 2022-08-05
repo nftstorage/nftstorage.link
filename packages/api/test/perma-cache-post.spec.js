@@ -31,7 +31,7 @@ test('Fails when invalid url is provided', async (t) => {
   t.is(body, 'invalid URL provided: test.png: Invalid URL')
 })
 
-test('Fails when non nftstorage.link url is provided', async (t) => {
+test('Fails when non nftstorage.link or w3s.link url is provided', async (t) => {
   const { mf, user } = t.context
 
   const response = await mf.dispatchFetch(
@@ -46,7 +46,7 @@ test('Fails when non nftstorage.link url is provided', async (t) => {
   const body = await response.json()
   t.is(
     body,
-    'invalid URL provided: https://example.com/test.png: not nftstorage.link URL'
+    'invalid URL provided: https://example.com/test.png: not nftstorage.link or w3s.link URL'
   )
 })
 

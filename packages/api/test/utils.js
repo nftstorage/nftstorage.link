@@ -17,7 +17,7 @@ export function getParsedUrl(url) {
     const queryParams = queryParamsString.length ? `?${queryParamsString}` : ''
 
     normalizedUrl = new URL(
-      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAIN}${path}${queryParams}`
+      `${normalizedUrl.protocol}//${cid}.ipfs.${globals.GATEWAY_DOMAINS[0]}${path}${queryParams}`
     )
   }
 
