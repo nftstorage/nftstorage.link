@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.2...edge-gateway-v1.11.3) (2022-08-05)
+
+
+### Bug Fixes
+
+* remove denylist cli ([#163](https://github.com/nftstorage/nftstorage.link/issues/163)) ([618e8c9](https://github.com/nftstorage/nftstorage.link/commit/618e8c995bc1d3c60267d3695023bd4188182a4d))
+
 ## [1.11.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.1...edge-gateway-v1.11.2) (2022-07-29)
 
 
