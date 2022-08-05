@@ -34,7 +34,7 @@ export function getSourceUrl(request, env) {
       .length
   ) {
     throw new InvalidUrlError(
-      `invalid URL provided: ${urlString}: not nftstorage.link or w3s.link URL`
+      `invalid URL provided: ${urlString}: not ${env.GATEWAY_DOMAINS.join(' or ')} URL`
     )
   }
 
