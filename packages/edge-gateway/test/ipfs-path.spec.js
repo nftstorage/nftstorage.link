@@ -1,7 +1,5 @@
-import test from 'ava'
 import { createErrorHtmlContent } from '../src/errors.js'
-
-import { getMiniflare } from './utils.js'
+import { test, getMiniflare } from './utils/setup.js'
 
 test.beforeEach((t) => {
   // Create a new Miniflare environment for each test

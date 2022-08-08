@@ -1,3 +1,5 @@
+/* eslint-env serviceworker, browser */
+
 /**
  * @param {Error & {status?: number;code?: string; contentType?: string;}} err
  * @param {import('./env').Env} env

@@ -1,10 +1,4 @@
-import test from 'ava'
-
-import { base32 } from 'multiformats/bases/base32'
-import { base16 } from 'multiformats/bases/base16'
-
-import { createErrorHtmlContent } from '../src/errors.js'
-import { getMiniflare } from './utils.js'
+import { test, getMiniflare } from './utils/setup.js'
 
 test.beforeEach((t) => {
   // Create a new Miniflare environment for each test
@@ -13,51 +7,12 @@ test.beforeEach((t) => {
   }
 })
 
-test('Fails when invalid cid is provided', async (t) => {
-  const { mf } = t.context
-
-  const invalidCid = 'bafy'
-  const response = await mf.dispatchFetch(
-    `https://${invalidCid}.ipfs.localhost:8787`
-  )
-  t.is(response.status, 400)
-
-  const textResponse = await response.text()
-  t.is(
-    textResponse,
-    createErrorHtmlContent(400, 'invalid CID: bafy: Unexpected end of data')
-  )
-})
-
-test('Gets content', async (t) => {
+test('Gets content from binding', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
     'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:8787'
   )
   await response.waitUntil()
-  t.is(await response.text(), 'Hello nft.storage! 😎')
-})
-
-test('Gets content with path', async (t) => {
-  const { mf } = t.context
-
-  const response = await mf.dispatchFetch(
-    'https://bafybeih74zqc6kamjpruyra4e4pblnwdpickrvk4hvturisbtveghflovq.ipfs.localhost:8787/path'
-  )
-  t.is(await response.text(), 'Hello gateway.nft.storage resource!')
-})
-
-test('Gets content with other base encodings', async (t) => {
-  const { mf } = t.context
-
-  const cidStr = 'bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
-  const decodedB32 = base32.decode(cidStr)
-  const encodedB16 = base16.encode(decodedB32)
-
-  const response = await mf.dispatchFetch(
-    `https://${encodedB16.toString()}.ipfs.localhost:8787`
-  )
-  await response.waitUntil()
-  t.is(await response.text(), 'Hello nft.storage! 😎')
+  t.is(await response.text(), 'Hello nftstorage.link! 😎')
 })

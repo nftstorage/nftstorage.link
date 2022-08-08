@@ -1,4 +1,4 @@
-import { JSONResponse } from './utils/json-response.js'
+import { JSONResponse } from '@web3-storage/worker-utils/response'
 
 /**
  * Get Gateway API version information.

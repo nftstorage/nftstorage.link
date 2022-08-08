@@ -1,4 +1,4 @@
-# IPFS edge gateway
+# edge gateway link for nft.storage - nftstorage.link
 
 > The IPFS edge gateway for nft.storage is not "another gateway", but a caching layer for NFTs that sits on top of existing IPFS public gateways.
 
@@ -7,59 +7,38 @@
 One time set up of your cloudflare worker subdomain for dev:
 
 - `pnpm install` - Install the project dependencies from the monorepo root directory.
-- Sign up to Cloudflare and log in with your default browser.
-- `npm i @cloudflare/wrangler -g` - Install the Cloudflare wrangler CLI
-- `wrangler login` - Authenticate your wrangler cli; it'll open your browser.
-- Copy your cloudflare account id from `wrangler whoami`
-- Update `wrangler.toml` with a new `env`. Set your env name to be the value of `whoami` on your system you can use `pnpm start` to run the worker in dev mode for you.
+- `pnpm dev` - Run the worker in dev mode.
 
-  [**wrangler.toml**](./wrangler.toml)
-
-  ```toml
-  [env.bobbytables]
-  workers_dev = true
-  account_id = "<what does the `wrangler whoami` say>"
-  ```
+## Environment setup
 
 - Add secrets
 
   ```sh
-    wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry (not required for dev)
-    wrangler secret put LOGTAIL_TOKEN --env $(whoami) # Get from Logtail
+    wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry
+    wrangler secret put LOKI_URL --env $(whoami) # Get from Loki
+    wrangler secret put LOKI_TOKEN --env $(whoami) # Get from Loki
   ```
-
-- Add KV namespaces
-
-  ```sh
-  wrangler kv:namespace create DENYLIST --preview --env USER
-  # Outputs something like: `{ binding = "DENYLIST", preview_id = "7e441603d1bc4d5a87f6cecb959018e4" }`
-  # but you need to put `{ binding = "DENYLIST", preview_id = "7e441603d1bc4d5a87f6cecb959018e4", id = "7e441603d1bc4d5a87f6cecb959018e4" }` inside the `kv_namespaces`.
-  # for production: wrangler kv:namespace create DENYLIST --env production
-  ```
-
-- `pnpm run publish` - Publish the worker under your env. An alias for `wrangler publish --env $(whoami)`
-- `pnpm start` - Run the worker in dev mode. An alias for `wrangler dev --env $(whoami)`
-
-You only need to `pnpm start` for subsequent runs. PR your env config to the `wrangler.toml` to celebrate 🎉
 
 ## High level architecture
 
 `nftstorage.link` is serverless code running across the globe to provide exceptional performance, reliability, and scale. It is powered by Cloudflare workers running as close as possible to end users.
 
-Thanks to IPFS immutable nature, a CDN cache is an excellent fit for content retrieval as a given request URL will always return the same response. Accordingly, as a first IPFS resolution layer, `nftstorage.link` leverages Cloudflare [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) to look up for content previously cached in Cloudflare CDN (based on geolocation of the end user).
+Thanks to IPFS immutable nature, a CDN cache is an excellent fit for content retrieval as a given request URL will always return the same response. Accordingly, as a first IPFS resolution layer, `nftstorage.link` leverages Cloudflare [Cache Zone API](https://developers.cloudflare.com/workers/runtime-apis/cache) to look up for content previously cached in Cloudflare CDN (based on geolocation of the end user), as well as our SuperHot premium feature with perma-cache.
+
+If the content is not in the first caching layers, we will trigger a dotstorage resolution where other dotstorage products cache is checked.
 
 In the event of content not being already cached, a race with multiple IPFS gateways is performed. As soon as one gateway successfully responds, its response is forwarded to the user and added to Cloudflare Cache.
 
-![High level Architecture](./nftstorage.link-edge-gateway-high-level.jpg)
+![Public Race](./edge-gateway-public-race.png)
 
 Zooming in on the actual edge gateway:
 
-![Edge gateway](./nftstorage.link-edge-gateway.jpg)
+![Edge gateway](./edge-gateway.png)
 
 Notes:
 
 - Cloudflare Cache is [limited](https://developers.cloudflare.com/workers/platform/limits/#cache-api-limits) to 512 MB size objects.
-- Using a CDN Cache also enables us to implement intelligent caching strategies to warm the cache for content with high likelihood of being requested soon.
+- SUperHot perma-cache is shared with w3s.link
 
 ## Usage
 
@@ -89,10 +68,4 @@ nft.storage Gateway is currently rate limited at 200 requests per minute to a gi
 
 We rely on [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist together wtth our own denylist to prevent serving malicious content to the nftstorage.link users.
 
-When new malicious content is discovered, it should be reported to [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist given it is shared among multiple gateways. When the reported CIDs are added into badbits, we just need to force our [denylist sync workflow](https://github.com/nftstorage/nftstorage.link/actions/workflows/cron-denylist.yml) to run manually.
-
-As a workaround, or to block content only relevant for nftstorage.link we can simply use our denylist as described in our [CLI documentation](./scripts/README.md).
-
-## Persistence
-
-Several metrics per gateway are persisted to track the performance of each public gateway over time. Moreover, the list of gateways that have previously fetched successfully a given CID are also persisted.
+When new malicious content is discovered, it should be reported to [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist given it is shared among multiple gateways.
