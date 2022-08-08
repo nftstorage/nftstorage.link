@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.3.1](https://github.com/nftstorage/nftstorage.link/compare/api-v2.3.0...api-v2.3.1) (2022-08-08)
+
+
+### Bug Fixes
+
+* add no bundle for sentry stack traces ([923b50d](https://github.com/nftstorage/nftstorage.link/commit/923b50d5ea18786c8624a5021a6c2812a7aeda0e))
+* env var gateway domains ([0349690](https://github.com/nftstorage/nftstorage.link/commit/03496903feb35e59422f75e55211c9431b2186be))
+
 ## [2.3.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.2.0...api-v2.3.0) (2022-08-08)
 
 
