@@ -8,7 +8,7 @@ import { DBClient } from './utils/db-client.js'
 /**
  * @typedef {Object} EnvInput
  * @property {string} ENV
- * @property {string[]} GATEWAY_DOMAINS
+ * @property {string} GATEWAY_DOMAINS
  * @property {string} NFT_STORAGE_API
  * @property {string} DATABASE_URL
  * @property {string} DATABASE_TOKEN
@@ -27,6 +27,7 @@ import { DBClient } from './utils/db-client.js'
  * @property {string} DEBUG
  * @property {string} SENTRY_RELEASE
  * @property {number} REQUEST_TIMEOUT
+ * @property {string[]} gatewayDomains
  * @property {DBClient} db
  * @property {Toucan} [sentry]
  * @property {Logging} [log]
@@ -54,6 +55,7 @@ export function envAll(request, env, ctx) {
     token: env.DATABASE_TOKEN,
   })
   env.NFT_STORAGE_API = env.NFT_STORAGE_API
+  env.gatewayDomains = JSON.parse(env.GATEWAY_DOMAINS)
 
   env.log = new Logging(request, env, ctx)
   env.log.time('request')

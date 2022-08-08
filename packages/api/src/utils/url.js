@@ -30,11 +30,13 @@ export function getSourceUrl(request, env) {
     )
   }
   if (
-    !env.GATEWAY_DOMAINS.filter((gwDomain) => urlString.includes(gwDomain))
+    !env.gatewayDomains.filter((gwDomain) => urlString.includes(gwDomain))
       .length
   ) {
     throw new InvalidUrlError(
-      `invalid URL provided: ${urlString}: not ${env.GATEWAY_DOMAINS.join(' or ')} URL`
+      `invalid URL provided: ${urlString}: not ${env.gatewayDomains.join(
+        ' or '
+      )} URL`
     )
   }
 
@@ -63,7 +65,7 @@ export function getNormalizedUrl(candidateUrl, env) {
 
     // Always set normalized url as first URL in supported gateway domains (w3s.link)
     return new URL(
-      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAINS[0]}${path}${queryParams}`
+      `${candidateUrl.protocol}//${cid}.ipfs.${env.gatewayDomains[0]}${path}${queryParams}`
     )
   }
 
