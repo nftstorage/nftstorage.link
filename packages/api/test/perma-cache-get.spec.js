@@ -88,3 +88,27 @@ test('Gets 404 response from perma cache by URL when url not perma cached', asyn
   )
   t.is(responseGet.status, 404)
 })
+
+test('Gets 400 response from perma cache by URL when url not valid', async (t) => {
+  const { mf } = t.context
+  const url =
+    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9083/'
+
+  // GET URL content from perma cache
+  const responseGet = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'GET',
+  })
+  t.is(responseGet.status, 400)
+})
+
+test('Gets 404 response from perma cache by URL when url from secondary supported gateway not perma cached', async (t) => {
+  const { mf } = t.context
+  const url =
+    'http://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:9082/'
+
+  // GET URL content from perma cache
+  const responseGet = await mf.dispatchFetch(getPermaCachePutUrl(url), {
+    method: 'GET',
+  })
+  t.is(responseGet.status, 404)
+})

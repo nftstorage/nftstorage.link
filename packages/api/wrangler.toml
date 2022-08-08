@@ -20,7 +20,7 @@ DATABASE_URL = "https://nft-link-prod.herokuapp.com"
 NFT_STORAGE_API = "https://api.nft.storage"
 DEBUG = "false"
 ENV = "production"
-GATEWAY_DOMAIN = "nftstorage.link"
+GATEWAY_DOMAINS = "[\"w3s.link\", \"nftstorage.link\"]"
 
 [[env.production.r2_buckets]]
 bucket_name = "super-hot"
@@ -46,7 +46,7 @@ DATABASE_URL = "https://nft-link-staging.herokuapp.com"
 NFT_STORAGE_API = "https://api-staging.nft.storage"
 DEBUG = "true"
 ENV = "staging"
-GATEWAY_DOMAIN = "nftstorage.link"
+GATEWAY_DOMAINS = "[\"w3s.link\", \"nftstorage.link\"]"
 
 [[env.staging.r2_buckets]]
 bucket_name = "super-hot-staging"
@@ -65,7 +65,7 @@ workers_dev = true
 [env.test.vars]
 DEBUG = "true"
 ENV = "test"
-GATEWAY_DOMAIN = "localhost:9081"
+GATEWAY_DOMAINS = "[\"localhost:9081\", \"localhost:9082\"]"
 
 # Dev!
 [env.vsantos]
@@ -75,4 +75,4 @@ account_id = "7ec0b7cf2ec201b2580374e53ba5f37b"
 [env.vsantos.vars]
 DEBUG = "true"
 ENV = "test"
-GATEWAY_DOMAIN = "nftstorage.link"
+GATEWAY_DOMAINS = "[\"w3s.link\", \"nftstorage.link\"]"

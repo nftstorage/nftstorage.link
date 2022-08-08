@@ -4,6 +4,10 @@ import { InvalidUrlError } from '../errors.js'
 import { normalizeCid } from './cid.js'
 
 /**
+ * @typedef {import('../env').Env} Env
+ */
+
+/**
  * Parses provided URL and verifes if is a valid nftstorage.link URL
  *
  * @param {Request} request
@@ -25,9 +29,12 @@ export function getSourceUrl(request, env) {
       `invalid URL provided: ${request.params.url}: maximum allowed length or URL is ${MAX_ALLOWED_URL_LENGTH}`
     )
   }
-  if (!urlString.includes(env.GATEWAY_DOMAIN)) {
+  if (
+    !env.GATEWAY_DOMAINS.filter((gwDomain) => urlString.includes(gwDomain))
+      .length
+  ) {
     throw new InvalidUrlError(
-      `invalid URL provided: ${urlString}: not nftstorage.link URL`
+      `invalid URL provided: ${urlString}: not ${env.GATEWAY_DOMAINS.join(' or ')} URL`
     )
   }
 
@@ -54,8 +61,9 @@ export function getNormalizedUrl(candidateUrl, env) {
       ? `?${queryParamsCandidate}`
       : ''
 
+    // Always set normalized url as first URL in supported gateway domains (w3s.link)
     return new URL(
-      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAIN}${path}${queryParams}`
+      `${candidateUrl.protocol}//${cid}.ipfs.${env.GATEWAY_DOMAINS[0]}${path}${queryParams}`
     )
   }
 
