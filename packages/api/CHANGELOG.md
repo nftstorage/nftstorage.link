@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.2.0...api-v2.3.0) (2022-08-08)
+
+
+### Features
+
+* superhot support for w3s.link read ([#165](https://github.com/nftstorage/nftstorage.link/issues/165)) ([533e7e1](https://github.com/nftstorage/nftstorage.link/commit/533e7e1e1826534c84c11c2a3d98cd180d1c30d9))
+
 ## [2.2.0](https://github.com/nftstorage/nftstorage.link/compare/api-v2.1.1...api-v2.2.0) (2022-07-25)
 
 
