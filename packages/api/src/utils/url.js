@@ -77,7 +77,17 @@ export function getNormalizedUrl(candidateUrl, env) {
     )
   }
 
-  return candidateUrl
+  const candidateUrlDomain = env.gatewayDomains.find((gwDomain) =>
+    candidateUrl.host.endsWith(gwDomain)
+  )
+  if (!candidateUrlDomain) {
+    throw new InvalidUrlError(`invalid URL provided: ${candidateUrl}`)
+  }
+
+  return new URL(
+    // Always set normalized url as first URL in supported gateway domains (w3s.link)
+    candidateUrl.toString().replace(candidateUrlDomain, env.gatewayDomains[0])
+  )
 }
 
 /**
