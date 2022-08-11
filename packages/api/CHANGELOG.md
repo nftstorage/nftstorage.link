@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.2](https://github.com/nftstorage/nftstorage.link/compare/api-v2.3.1...api-v2.3.2) (2022-08-11)
+
+
+### Bug Fixes
+
+* handle invalid range ([#169](https://github.com/nftstorage/nftstorage.link/issues/169)) ([89adb79](https://github.com/nftstorage/nftstorage.link/commit/89adb792fcb668dfc0e5175bccee579d04e59656))
+
 ## [2.3.1](https://github.com/nftstorage/nftstorage.link/compare/api-v2.3.0...api-v2.3.1) (2022-08-08)
 
 
