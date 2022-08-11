@@ -22,11 +22,16 @@ export async function permaCacheGet(request, env) {
   const normalizedUrl = getNormalizedUrl(sourceUrl, env)
   const r2Key = normalizedUrl.toString()
 
-  const range = toR2Range(request.headers.get('range'))
+  let r2Object, range
 
-  // Get R2 response
-  let r2Object
   try {
+    range = toR2Range(request.headers.get('range'))
+  } catch (error) {
+    throw new InvalidRangeError(error.message)
+  }
+
+  try {
+    // Get R2 response
     r2Object = await env.SUPERHOT.get(r2Key, {
       range,
     })
@@ -40,7 +45,9 @@ export async function permaCacheGet(request, env) {
 
   const headers = new Headers()
   headers.set('etag', r2Object.httpEtag)
-  r2Object.writeHttpMetadata(headers)
+  try {
+    r2Object.writeHttpMetadata(headers)
+  } catch (_) {}
 
   if (range) {
     headers.set('status', '206')

@@ -1,7 +1,7 @@
 # nftstorage.link api wrangler config.
 name = "nftstorage-link-api"
 main = "./dist/worker.mjs"
-compatibility_date = "2022-05-11"
+compatibility_date = "2022-07-01"
 no_bundle = true
 
 [build]
