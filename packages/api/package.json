@@ -1,6 +1,6 @@
 {
   "name": "api",
-  "version": "2.3.2",
+  "version": "1.0.0",
   "description": "API for nftstorage.link IPFS edge gateway",
   "private": true,
   "type": "module",
