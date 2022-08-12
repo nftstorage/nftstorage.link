@@ -117,7 +117,7 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
     const responseTime = Date.now() - startTs
 
     options.onCdnResolution && options.onCdnResolution(res, responseTime)
-    return res
+    return getTransformedResponseWithCustomHeaders(res)
   } else if (
     (request.headers.get('Cache-Control') || '').includes('only-if-cached')
   ) {
@@ -152,28 +152,22 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
 
     options.onRaceResolution &&
       options.onRaceResolution(winnerGwResponse, gatewayReqs, cid)
-
-    // Add response header
-    const raceResponse = getTransformedResponseWithCustomHeaders(
-      winnerGwResponse.response
-    )
-
     // Cache response
     ctx.waitUntil(
       (async () => {
         const contentLengthMb = Number(
-          raceResponse.headers.get('content-length')
+          winnerGwResponse.response.headers.get('content-length')
         )
 
         // Cache request in Cloudflare CDN if smaller than CF_CACHE_MAX_OBJECT_SIZE
         if (contentLengthMb <= CF_CACHE_MAX_OBJECT_SIZE) {
-          await cache.put(request, raceResponse.clone())
+          await cache.put(request, winnerGwResponse.response.clone())
         }
       })()
     )
 
     // forward winner gateway response
-    return raceResponse
+    return getTransformedResponseWithCustomHeaders(winnerGwResponse.response)
   } catch (err) {
     const responses = await pSettle(gatewayReqs)
 
@@ -539,9 +533,7 @@ function getDurableRequestUrl(request, route, data) {
  * @param {Response} response
  */
 function getTransformedResponseWithCustomHeaders(response) {
-  const clonedResponse = new Response(response.body, {
-    headers: response.headers,
-  })
+  const clonedResponse = new Response(response.body, response)
 
   clonedResponse.headers.set(
     'content-security-policy',
