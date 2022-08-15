@@ -117,7 +117,7 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
     const responseTime = Date.now() - startTs
 
     options.onCdnResolution && options.onCdnResolution(res, responseTime)
-    return res
+    return getTransformedResponseWithCustomHeaders(res)
   } else if (
     (request.headers.get('Cache-Control') || '').includes('only-if-cached')
   ) {
@@ -167,7 +167,7 @@ export async function gatewayIpfs(request, env, ctx, options = {}) {
     )
 
     // forward winner gateway response
-    return winnerGwResponse.response
+    return getTransformedResponseWithCustomHeaders(winnerGwResponse.response)
   } catch (err) {
     const responses = await pSettle(gatewayReqs)
 
@@ -524,4 +524,21 @@ function getDurableRequestUrl(request, route, data) {
     method: 'PUT',
     body: data && JSON.stringify(data),
   })
+}
+
+/**
+ * Transforms race response with custom headers.
+ * Content-Security-Policy header specified to only allow requests within same origin.
+ *
+ * @param {Response} response
+ */
+function getTransformedResponseWithCustomHeaders(response) {
+  const clonedResponse = new Response(response.body, response)
+
+  clonedResponse.headers.set(
+    'content-security-policy',
+    "default-src 'self' 'unsafe-inline' blob: data: ; form-action 'self' ; navigate-to 'self' "
+  )
+
+  return clonedResponse
 }
