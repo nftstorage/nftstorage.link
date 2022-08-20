@@ -29,7 +29,8 @@ test('should resolve a cid v0 with IPFS canonical resolution', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
-    'https://localhost:8787/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR'
+    'https://localhost:8787/ipfs/QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR',
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -37,13 +38,16 @@ test('should resolve a cid v0 with IPFS canonical resolution', async (t) => {
     response.headers.get('location'),
     'https://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi.ipfs.localhost:8787/'
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
 
 test('should resolve a cid v1 with IPFS canonical resolution', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
-    'https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+    'https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -51,13 +55,16 @@ test('should resolve a cid v1 with IPFS canonical resolution', async (t) => {
     response.headers.get('location'),
     'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:8787/'
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
 
 test('should resolve a cid and path with IPFS canonical resolution', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
-    'https://localhost:8787/ipfs/bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu/path/file.txt'
+    'https://localhost:8787/ipfs/bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu/path/file.txt',
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -65,13 +72,16 @@ test('should resolve a cid and path with IPFS canonical resolution', async (t) =
     response.headers.get('location'),
     'https://bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu.ipfs.localhost:8787/path/file.txt'
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
 
 test('should resolve a cid and path with IPFS canonical resolution when subdomain also used', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
-    'https://bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu.ipfs.localhost:8787/ipfs/bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu/path/file.txt'
+    'https://bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu.ipfs.localhost:8787/ipfs/bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu/path/file.txt',
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -79,6 +89,8 @@ test('should resolve a cid and path with IPFS canonical resolution when subdomai
     response.headers.get('location'),
     'https://bafybeifvsmjgbhck72pabliifeo35cew5yhxujfqjxg4g32vr3yv24h6zu.ipfs.localhost:8787/path/file.txt'
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
 
 test('should resolve a cid IPFS canonical resolution keeping query parameters', async (t) => {
@@ -86,7 +98,8 @@ test('should resolve a cid IPFS canonical resolution keeping query parameters', 
   const queryString = '?key=value'
 
   const response = await mf.dispatchFetch(
-    `https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq${queryString}`
+    `https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq${queryString}`,
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -94,13 +107,16 @@ test('should resolve a cid IPFS canonical resolution keeping query parameters', 
     response.headers.get('location'),
     `https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:8787/${queryString}`
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
 
 test('should resolve a cid IPFS canonical resolution with same path as IPFS path', async (t) => {
   const { mf } = t.context
 
   const response = await mf.dispatchFetch(
-    'https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
+    'https://localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq',
+    { headers: { Referer: 'localhost:8787' } }
   )
   await response.waitUntil()
   t.is(response.status, 302)
@@ -108,4 +124,6 @@ test('should resolve a cid IPFS canonical resolution with same path as IPFS path
     response.headers.get('location'),
     'https://bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq.ipfs.localhost:8787/ipfs/bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupoq'
   )
+  t.is(response.headers.get('referrer-policy'), 'unsafe-url')
+  t.is(response.headers.get('referer'), 'localhost:8787')
 })
