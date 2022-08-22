@@ -537,7 +537,7 @@ function getTransformedResponseWithCustomHeaders(response) {
 
   clonedResponse.headers.set(
     'content-security-policy',
-    "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: ; form-action 'self' ; navigate-to 'self'; "
+    "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: ; form-action 'self' ; navigate-to 'self' "
   )
 
   return clonedResponse
