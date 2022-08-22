@@ -537,7 +537,7 @@ function getTransformedResponseWithCustomHeaders(response) {
 
   clonedResponse.headers.set(
     'content-security-policy',
-    "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: ; form-action 'self' ; navigate-to 'self' "
+    "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://*.githubusercontent.com; form-action 'self' ; navigate-to 'self'; connect-src https://polygon-rpc.com "
   )
 
   return clonedResponse
