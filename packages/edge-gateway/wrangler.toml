@@ -19,6 +19,7 @@ bindings = [
 [env.production]
 # name = "gateway-nft-storage-production"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+zone_id = "c7795a0adce7609a95d62fec04705aff"
 routes = [
   "nftstorage.link/ipfs/*",
   "*.ipfs.nftstorage.link/*",
@@ -56,6 +57,7 @@ environment = "production"
 [env.staging]
 # name = "gateway-nft-storage-staging"
 account_id = "fffa4b4363a7e5250af8357087263b3a" # Protocol Labs CF account
+zone_id = "c7795a0adce7609a95d62fec04705aff"
 routes = [
   "*.ipfs-staging.nftstorage.link/*",
   "ipfs-staging.nftstorage.link/*",
