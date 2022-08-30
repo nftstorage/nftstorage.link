@@ -1,6 +1,6 @@
 {
   "name": "edge-gateway",
-  "version": "1.12.0",
+  "version": "1.12.1",
   "description": "IPFS edge gateway for nft.storage",
   "private": true,
   "type": "module",

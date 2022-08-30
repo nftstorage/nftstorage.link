@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.12.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.0...edge-gateway-v1.12.1) (2022-08-30)
+
+
+### Bug Fixes
+
+* add zone ([#180](https://github.com/nftstorage/nftstorage.link/issues/180)) ([2f3012e](https://github.com/nftstorage/nftstorage.link/commit/2f3012e89ea1a99331119a5a5d46b595204d7fbe))
+* wasm module loading ([#176](https://github.com/nftstorage/nftstorage.link/issues/176)) ([a869bc6](https://github.com/nftstorage/nftstorage.link/commit/a869bc6868e4f99406dde3b9a41a407f2e8ef390))
+* wrangler with zone inside routes ([#181](https://github.com/nftstorage/nftstorage.link/issues/181)) ([963edbf](https://github.com/nftstorage/nftstorage.link/commit/963edbf194201da2c54e9ffca494ef700af0dd75))
+
 ## [1.12.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.11.2...edge-gateway-v1.12.0) (2022-08-15)
 
 
