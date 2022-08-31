@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.1...edge-gateway-v1.12.2) (2022-08-31)
+
+
+### Bug Fixes
+
+* csp connect-src allow self ([#183](https://github.com/nftstorage/nftstorage.link/issues/183)) ([d8f7aef](https://github.com/nftstorage/nftstorage.link/commit/d8f7aefef5856d349f7e7e118340c8126f032e04))
+
 ## [1.12.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.0...edge-gateway-v1.12.1) (2022-08-30)
 
 
