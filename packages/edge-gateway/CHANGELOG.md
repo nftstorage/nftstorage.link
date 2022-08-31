@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.13.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.2...edge-gateway-v1.13.0) (2022-08-31)
+
+
+### Features
+
+* add bindings services to edge gateway ([#186](https://github.com/nftstorage/nftstorage.link/issues/186)) ([f031330](https://github.com/nftstorage/nftstorage.link/commit/f03133047f38d8b4b9e9e3be5388935de2747b3f))
+* gateway link using edge gateway worker binding ([#174](https://github.com/nftstorage/nftstorage.link/issues/174)) ([93d8688](https://github.com/nftstorage/nftstorage.link/commit/93d8688ea1416e3de6b49b03c3f6cbd9109a0e40))
+
 ## [1.12.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.1...edge-gateway-v1.12.2) (2022-08-31)
 
 
