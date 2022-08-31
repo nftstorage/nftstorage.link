@@ -32,6 +32,12 @@ GATEWAY_HOSTNAME = 'ipfs.nftstorage.link'
 DEBUG = "false"
 ENV = "production"
 
+[[env.production.services]]
+binding = "EDGE_GATEWAY"
+type = "service"
+service = "dotstorage-edge-gateway-production"
+environment = "production"
+
 # Staging!
 [env.staging]
 # name = "gateway-nft-storage-staging"
@@ -48,6 +54,12 @@ routes = [
 GATEWAY_HOSTNAME = 'ipfs-staging.nftstorage.link'
 DEBUG = "true"
 ENV = "staging"
+
+[[env.staging.services]]
+binding = "EDGE_GATEWAY"
+type = "service"
+service = "dotstorage-edge-gateway-staging"
+environment = "production"
 
 # Test!
 [env.test]
