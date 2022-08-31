@@ -1,5 +1,9 @@
 /* eslint-env serviceworker, browser */
 
+import pRetry from 'p-retry'
+
+const GOODBITS_BYPASS_TAG = 'https://nftstorage.link/tags/bypass-default-csp'
+
 /**
  * Handle gateway requests
  *
@@ -24,7 +28,17 @@ export async function gatewayGet(request, env) {
     },
   })
 
-  return getTransformedResponseWithCustomHeaders(response)
+  // Validation layer - CSP bypass
+  const resourceCid = decodeURIComponent(response.headers.get('etag') || '')
+  const goodbitsTags = await getTagsFromGoodbitsList(
+    env.GOODBITSLIST,
+    resourceCid
+  )
+  if (goodbitsTags.includes(GOODBITS_BYPASS_TAG)) {
+    return response
+  }
+
+  return getTransformedResponseWithCspHeaders(response)
 }
 
 /**
@@ -33,7 +47,7 @@ export async function gatewayGet(request, env) {
  *
  * @param {Response} response
  */
-function getTransformedResponseWithCustomHeaders(response) {
+function getTransformedResponseWithCspHeaders(response) {
   const clonedResponse = new Response(response.body, response)
 
   clonedResponse.headers.set(
@@ -42,4 +56,26 @@ function getTransformedResponseWithCustomHeaders(response) {
   )
 
   return clonedResponse
+}
+
+/**
+ * Get a given entry from the goodbits list if CID exists, and return tags
+ *
+ * @param {KVNamespace} datastore
+ * @param {string} cid
+ */
+async function getTagsFromGoodbitsList(datastore, cid) {
+  if (!datastore || !cid) {
+    return []
+  }
+
+  // TODO: Remove once https://github.com/nftstorage/nftstorage.link/issues/51 is fixed
+  const goodbitsEntry = await pRetry(() => datastore.get(cid), { retries: 5 })
+
+  if (goodbitsEntry) {
+    const { tags } = JSON.parse(goodbitsEntry)
+    return Array.isArray(tags) ? tags : []
+  }
+
+  return []
 }

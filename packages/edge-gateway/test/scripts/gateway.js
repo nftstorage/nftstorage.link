@@ -7,7 +7,13 @@ export default {
     // We need to perform requests as path based per localhost subdomain resolution
     const subdomainCid = getCidFromSubdomainUrl(reqUrl)
     if (subdomainCid) {
-      return new Response('Hello nftstorage.link! 😎')
+      const headers = new Headers({
+        etag: subdomainCid,
+      })
+      return new Response('Hello nftstorage.link! 😎', {
+        headers,
+        status: 200,
+      })
     }
 
     throw new Error('no cid in request')
