@@ -1,42 +1,12 @@
 /* global BRANCH, VERSION, COMMITHASH, SENTRY_RELEASE */
+
 import Toucan from 'toucan-js'
+import { Logging } from '@web3-storage/worker-utils/loki'
 import pkg from '../package.json'
-import { Logging } from './logs.js'
 
 /**
- * @typedef {Object} EnvInput
- * @property {string} IPFS_GATEWAYS
- * @property {string} GATEWAY_HOSTNAME
- * @property {string} EDGE_GATEWAY_API_URL
- * @property {string} VERSION
- * @property {string} SENTRY_RELEASE
- * @property {string} COMMITHASH
- * @property {string} BRANCH
- * @property {string} DEBUG
- * @property {string} ENV
- * @property {string} [SENTRY_DSN]
- * @property {string} [LOGTAIL_TOKEN]
- * @property {number} [REQUEST_TIMEOUT]
- * @property {Object} GATEWAYMETRICS
- * @property {Object} SUMMARYMETRICS
- * @property {Object} CIDSTRACKER
- * @property {Object} GATEWAYREDIRECTCOUNTER
- * @property {KVNamespace} DENYLIST
- * @property {CFService} API
- *
- * @typedef {Object} EnvTransformed
- * @property {string} IPFS_GATEWAY_HOSTNAME
- * @property {string} IPNS_GATEWAY_HOSTNAME
- * @property {Array<string>} ipfsGateways
- * @property {DurableObjectNamespace} gatewayMetricsDurable
- * @property {DurableObjectNamespace} summaryMetricsDurable
- * @property {DurableObjectNamespace} cidsTrackerDurable
- * @property {DurableObjectNamespace} gatewayRedirectCounter
- * @property {number} REQUEST_TIMEOUT
- * @property {Toucan} [sentry]
- * @property {Logging} [log]
- *
- * @typedef {EnvInput & EnvTransformed} Env
+ * @typedef {import('./bindings').Env} Env
+ * @typedef {import('.').Ctx} Ctx
  */
 
 /**
@@ -45,13 +15,6 @@ import { Logging } from './logs.js'
  * @param {import('.').Ctx} ctx
  */
 export function envAll(request, env, ctx) {
-  env.sentry = getSentry(request, env, ctx)
-  env.ipfsGateways = JSON.parse(env.IPFS_GATEWAYS)
-  env.gatewayMetricsDurable = env.GATEWAYMETRICS
-  env.summaryMetricsDurable = env.SUMMARYMETRICS
-  env.cidsTrackerDurable = env.CIDSTRACKER
-  env.gatewayRedirectCounter = env.GATEWAYREDIRECTCOUNTER
-  env.REQUEST_TIMEOUT = env.REQUEST_TIMEOUT || 20000
   env.IPFS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME
   env.IPNS_GATEWAY_HOSTNAME = env.GATEWAY_HOSTNAME.replace('ipfs', 'ipns')
 
@@ -61,7 +24,21 @@ export function envAll(request, env, ctx) {
   env.COMMITHASH = COMMITHASH
   env.SENTRY_RELEASE = SENTRY_RELEASE
 
-  env.log = new Logging(request, env, ctx)
+  env.sentry = getSentry(request, env, ctx)
+
+  env.log = new Logging(request, ctx, {
+    // @ts-ignore TODO: url should be optional together with token
+    url: env.LOKI_URL,
+    token: env.LOKI_TOKEN,
+    debug: Boolean(env.DEBUG),
+    version: env.VERSION,
+    commit: env.COMMITHASH,
+    branch: env.BRANCH,
+    worker: 'nftstorage.link',
+    env: env.ENV,
+    sentry: env.sentry,
+  })
+
   env.log.time('request')
 }
 
@@ -89,6 +66,7 @@ function getSentry(request, env, ctx) {
       // strip . from start of the filename ./worker.mjs as set by cloudflare, to make absolute path `/worker.mjs`
       iteratee: (frame) => ({
         ...frame,
+        // @ts-ignore
         filename: frame.filename.substring(1),
       }),
     },
@@ -96,30 +74,3 @@ function getSentry(request, env, ctx) {
     pkg,
   })
 }
-
-/**
- * From: https://github.com/cloudflare/workers-types
- *
- * @typedef {{ fetch: fetch }} CFService
- *
- * @typedef {{
- *  toString(): string
- *  equals(other: DurableObjectId): boolean
- *  readonly name?: string
- * }} DurableObjectId
- *
- * @typedef {{
- *   newUniqueId(options?: { jurisdiction?: string }): DurableObjectId
- *   idFromName(name: string): DurableObjectId
- *   idFromString(id: string): DurableObjectId
- *   get(id: DurableObjectId): DurableObjectStub
- * }} DurableObjectNamespace
- *
- * @typedef {{
- *   readonly id: DurableObjectId
- *   readonly name?: string
- *   fetch(requestOrUrl: Request | string, requestInit?: RequestInit | Request): Promise<Response>
- * }} DurableObjectStub
- *
- * @typedef {{ get: (key: string) => Promise<string | null> }} KVNamespace
- */

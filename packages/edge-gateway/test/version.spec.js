@@ -1,18 +1,17 @@
-import test from 'ava'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import git from 'git-rev-sync'
 
-import { getMiniflare } from './utils.js'
+import { test, getMiniflare } from './utils/setup.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const pkg = JSON.parse(
   fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8')
 )
 
+// Create a new Miniflare environment for each test
 test.before((t) => {
-  // Create a new Miniflare environment for each test
   t.context = {
     mf: getMiniflare(),
   }

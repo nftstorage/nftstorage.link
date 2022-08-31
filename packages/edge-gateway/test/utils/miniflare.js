@@ -1,10 +1,18 @@
+import fs from 'fs'
+import path from 'path'
 import { Miniflare } from 'miniflare'
 
 export function getMiniflare() {
+  let envPath = path.join(process.cwd(), '../../.env')
+  if (!fs.statSync(envPath, { throwIfNoEntry: false })) {
+    // @ts-ignore
+    envPath = true
+  }
+
   return new Miniflare({
-    // Autoload configuration from `.env`, `package.json` and `wrangler.toml`
-    envPath: true,
+    envPath,
     scriptPath: 'dist/worker.mjs',
+    port: 8788,
     packagePath: true,
     wranglerConfigPath: true,
     // We don't want to rebuild our worker for each test, we're already doing
@@ -14,25 +22,13 @@ export function getMiniflare() {
     wranglerConfigEnv: 'test',
     modules: true,
     mounts: {
-      api: {
-        scriptPath: './test/scripts/api.js',
+      gateway: {
+        scriptPath: './test/scripts/gateway.js',
         modules: true,
       },
     },
     serviceBindings: {
-      API: 'api',
+      EDGE_GATEWAY: 'gateway',
     },
   })
-}
-
-export function getCIDsTrackerName() {
-  return 'CIDSTRACKER'
-}
-
-export function getGatewayRateLimitsName() {
-  return 'GATEWAYRATELIMITS'
-}
-
-export function getSummaryMetricsName() {
-  return 'SUMMARYMETRICS'
 }

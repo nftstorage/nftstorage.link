@@ -1,5 +1,6 @@
-import { DNS_LABEL_MAX_LENGTH } from './constants.js'
 import { InvalidUrlError } from './errors.js'
+
+const DNS_LABEL_MAX_LENGTH = 63 // Label's max length in DNS (https://tools.ietf.org/html/rfc1034#page-7)
 
 /**
  * Handle IPNS path request
@@ -8,6 +9,7 @@ import { InvalidUrlError } from './errors.js'
  * @param {import('./env').Env} env
  */
 export async function ipnsGet(request, env) {
+  // @ts-ignore params in CF request
   const name = request.params.name
   const reqUrl = new URL(request.url)
   const reqQueryString = reqUrl.searchParams.toString()
@@ -21,7 +23,7 @@ export async function ipnsGet(request, env) {
     `https://${dnsLabel}.${env.IPNS_GATEWAY_HOSTNAME}${redirectPath}${redirectQueryString}`
   )
 
-  return Response.redirect(url, 302)
+  return Response.redirect(url.toString(), 302)
 }
 
 /**
