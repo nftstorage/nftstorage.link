@@ -16,7 +16,7 @@
     "@web-std/fetch": "4.1.0",
     "debug": "^4.3.1",
     "dotenv": "^9.0.2",
-    "ndjson-parse": "^1.0.4",
+    "iterable-ndjson": "^1.1.0",
     "p-settle": "^5.0.0",
     "pg": "^8.7.1",
     "toml": "^3.0.0"

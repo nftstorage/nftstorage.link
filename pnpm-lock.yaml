@@ -133,7 +133,7 @@ importers:
       '@web-std/fetch': 4.1.0
       debug: ^4.3.1
       dotenv: ^9.0.2
-      ndjson-parse: ^1.0.4
+      iterable-ndjson: ^1.1.0
       npm-run-all: ^4.1.5
       p-settle: ^5.0.0
       pg: ^8.7.1
@@ -142,7 +142,7 @@ importers:
       '@web-std/fetch': 4.1.0
       debug: 4.3.4
       dotenv: 9.0.2
-      ndjson-parse: 1.0.4
+      iterable-ndjson: 1.1.0
       p-settle: 5.0.0
       pg: 8.7.3
       toml: 3.0.0
@@ -12712,6 +12712,15 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
+  /iterable-ndjson/1.1.0:
+    resolution:
+      {
+        integrity: sha512-OOp1Lb0o3k5MkXHx1YaIY5Z0ELosZfTnBaas9f8opJVcZGBIONA2zY/6CYE+LKkqrSDooIneZbrBGgOZnHPkrg==,
+      }
+    dependencies:
+      string_decoder: 1.3.0
+    dev: false
+
   /itty-router/2.6.1:
     resolution:
       {
@@ -14208,13 +14217,6 @@ packages:
   /natural-compare/1.4.0:
     resolution: { integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc= }
     dev: true
-
-  /ndjson-parse/1.0.4:
-    resolution:
-      {
-        integrity: sha512-xwglvz2dMbxvX4NAVKnww8xEJ4kp4+CKVseQQdtkA79yI3abPqyBYqk6A6HvNci5oS0cUsSHheMEV1c+9MWlEw==,
-      }
-    dev: false
 
   /negotiator/0.6.3:
     resolution:

@@ -1,7 +1,8 @@
 import fetch, { Headers } from '@web-std/fetch'
 import path from 'path'
 import toml from 'toml'
-import ndjsonParser from 'ndjson-parse'
+// @ts-ignore no types in module
+import ndjson from 'iterable-ndjson'
 
 /**
  * @typedef {{ id: string, title: string }} Namespace
@@ -10,7 +11,7 @@ import ndjsonParser from 'ndjson-parse'
  */
 
 const GOODBITS_SOURCES = [
-  'https://raw.githubusercontent.com/nftstorage/goodbits/fix/require-json-objects/list.ndjson',
+  'https://raw.githubusercontent.com/nftstorage/goodbits/main/list.ndjson',
 ]
 
 const rootDir = path.dirname(path.dirname(import.meta.url))
@@ -19,6 +20,9 @@ const wranglerConfigPath = path.join(
   '../../edge-gateway/wrangler.toml'
 )
 
+/**
+ * @param {{ env: string } } opts
+ */
 export async function sync({ env }) {
   const cfApiToken = mustGetEnv('CF_API_TOKEN')
   const ghToken = mustGetEnv('GH_TOKEN')
@@ -48,11 +52,14 @@ export async function sync({ env }) {
   for (const url of GOODBITS_SOURCES) {
     console.log(`🦴 fetching ${url}`)
     const goodbitsList = await getGoodbitsList(url, ghToken)
-    console.log('goodbits', goodbitsList)
-    const kvs = goodbitsList.map(({ cid, tags }) => ({
-      key: cid,
-      value: { tags },
-    }))
+
+    const kvs = []
+    for await (const { cid, tags } of goodbitsList) {
+      kvs.push({
+        key: cid,
+        value: { tags },
+      })
+    }
 
     console.log(`📝 writing ${kvs.length} entries`)
     await writeKVMulti(cfApiToken, cfAccountId, goodbitsListKv.id, kvs)
@@ -112,8 +119,7 @@ async function getGoodbitsList(url, ghToken) {
   if (!res.ok) {
     throw new Error(`unexpected status fetching goodbits list: ${res.status}`)
   }
-  const list = ndjsonParser(await res.text())
-  return list
+  return ndjson.parse(await res.text())
 }
 
 async function getWranglerToml(url) {
