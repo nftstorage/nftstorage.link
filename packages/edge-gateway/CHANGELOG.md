@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.13.0...edge-gateway-v1.14.0) (2022-09-02)
+
+
+### Features
+
+* add goodbits ([#187](https://github.com/nftstorage/nftstorage.link/issues/187)) ([9b8bae8](https://github.com/nftstorage/nftstorage.link/commit/9b8bae8becdb6fff7baf876fb23100eb6ed3dd09))
+
+
+### Bug Fixes
+
+* parse subdomain cid when not resource ([f033d7a](https://github.com/nftstorage/nftstorage.link/commit/f033d7aca0757f9f4072c6156d0da6c9cdac9ab6))
+
 ## [1.13.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.12.2...edge-gateway-v1.13.0) (2022-08-31)
 
 
