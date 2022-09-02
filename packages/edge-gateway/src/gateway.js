@@ -1,6 +1,9 @@
 /* eslint-env serviceworker, browser */
 
 import pRetry from 'p-retry'
+import { CID } from 'multiformats/cid'
+
+import { InvalidUrlError } from './errors.js'
 
 const GOODBITS_BYPASS_TAG = 'https://nftstorage.link/tags/bypass-default-csp'
 
@@ -29,7 +32,9 @@ export async function gatewayGet(request, env) {
   })
 
   // Validation layer - CSP bypass
-  const resourceCid = decodeURIComponent(response.headers.get('etag') || '')
+  const resourceCid = decodeURIComponent(
+    response.headers.get('etag') || getCidFromSubdomainUrl(new URL(request.url))
+  )
   const goodbitsTags = await getTagsFromGoodbitsList(
     env.GOODBITSLIST,
     resourceCid
@@ -78,4 +83,28 @@ async function getTagsFromGoodbitsList(datastore, cid) {
   }
 
   return []
+}
+
+/**
+ * Parse subdomain URL and return cid.
+ *
+ * @param {URL} url
+ */
+export function getCidFromSubdomainUrl(url) {
+  // Replace "ipfs-staging" by "ipfs" if needed
+  const host = url.hostname.replace('ipfs-staging', 'ipfs')
+  const splitHost = host.split('.ipfs.')
+
+  if (!splitHost.length) {
+    throw new InvalidUrlError(url.hostname)
+  }
+
+  let cid
+  try {
+    cid = CID.parse(splitHost[0])
+  } catch (/** @type {any} */ err) {
+    throw new InvalidUrlError(`invalid CID: ${splitHost[0]}: ${err.message}`)
+  }
+
+  return cid.toV1().toString()
 }
