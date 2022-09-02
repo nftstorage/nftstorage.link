@@ -1,0 +1,36 @@
+name: Cron sync goodbits list
+
+on:
+  schedule:
+    - cron: '13 0,5,10,15,20 * * *'
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'packages/edge-gateway'
+
+jobs:
+  update:
+    name: Sync goodbits with KV store
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: ['staging', 'production']
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v2
+      - uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.32.x
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 16
+          cache: 'pnpm'
+      - run: pnpm install
+      - name: Run job
+        env:
+          ENV: ${{ matrix.env }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          CF_API_TOKEN: ${{ secrets.CF_GATEWAY_TOKEN }}
+        run: pnpm --filter cron start:goodbits-sync

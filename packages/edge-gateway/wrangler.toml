@@ -26,6 +26,9 @@ routes = [
   { pattern = "*.ipns.nftstorage.link/*", zone_id = "c7795a0adce7609a95d62fec04705aff" },
   { pattern = "*.ipns.nftstorage.link", zone_id = "c7795a0adce7609a95d62fec04705aff" }
 ]
+kv_namespaces = [
+  { binding = "GOODBITSLIST", id = "292616354e2a4f83b7ac13ef30d66a30" }
+]
 
 [env.production.vars]
 GATEWAY_HOSTNAME = 'ipfs.nftstorage.link'
@@ -49,6 +52,9 @@ routes = [
   { pattern = "*.ipns-staging.nftstorage.link/*", zone_id = "c7795a0adce7609a95d62fec04705aff" },
   { pattern = "*.ipns-staging.nftstorage.link", zone_id = "c7795a0adce7609a95d62fec04705aff" }
 ]
+kv_namespaces = [
+  { binding = "GOODBITSLIST", id = "3905c48a814d4a938e500f8b890a8602" }
+]
 
 [env.staging.vars]
 GATEWAY_HOSTNAME = 'ipfs-staging.nftstorage.link'
@@ -64,6 +70,9 @@ environment = "production"
 # Test!
 [env.test]
 workers_dev = true
+kv_namespaces = [
+  { binding = "GOODBITSLIST" }
+]
 
 [env.test.vars]
 GATEWAY_HOSTNAME = 'ipfs.localhost:8787'

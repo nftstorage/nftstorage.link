@@ -36,4 +36,4 @@ jobs:
           STAGING_RO_DATABASE_CONNECTION: ${{ secrets.STAGING_DATABASE_CONNECTION }} # no replica for staging
           PROD_DATABASE_CONNECTION: ${{ secrets.PROD_DATABASE_CONNECTION }}
           PROD_RO_DATABASE_CONNECTION: ${{ secrets.PROD_RO_DATABASE_CONNECTION }}
-        run: pnpm --filter cron start
+        run: pnpm --filter cron start:metrics
