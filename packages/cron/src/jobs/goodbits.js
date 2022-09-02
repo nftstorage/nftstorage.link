@@ -135,7 +135,7 @@ async function getWranglerToml(url) {
  * @returns {string}
  */
 function mustGetEnv(key) {
-  if (process.env[key]) {
+  if (!process.env[key]) {
     throw new Error(`missing environment variable: ${key}`)
   }
   // @ts-ignore validation of undefined before not accepted by ts compiler
