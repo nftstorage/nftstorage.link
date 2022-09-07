@@ -23,7 +23,7 @@ export async function buildCmd(opts) {
     entryPoints: [path.join(__dirname, '..', 'src', 'index.js')],
     bundle: true,
     format: 'esm',
-    outfile: path.join(__dirname, '..', 'dist', 'worker.mjs'),
+    outfile: path.join(__dirname, '..', 'dist', 'worker.js'),
     legalComments: 'external',
     define: {
       SENTRY_RELEASE: JSON.stringify(sentryRelease),
@@ -53,7 +53,7 @@ export async function buildCmd(opts) {
     })
     await cli.releases.uploadSourceMaps(sentryRelease, {
       include: [path.join(__dirname, '..', 'dist')],
-      ext: ['map', 'mjs'],
+      ext: ['map', 'js'],
     })
     await cli.releases.finalize(sentryRelease)
     await cli.releases.newDeploy(sentryRelease, {

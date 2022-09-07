@@ -63,12 +63,8 @@ function getSentry(request, env, ctx) {
     debug: false,
     environment: env.ENV || 'dev',
     rewriteFrames: {
-      // strip . from start of the filename ./worker.mjs as set by cloudflare, to make absolute path `/worker.mjs`
-      iteratee: (frame) => ({
-        ...frame,
-        // @ts-ignore
-        filename: frame.filename.substring(1),
-      }),
+      // sourcemaps only work if stack filepath are absolute like `/worker.js`
+      root: '/',
     },
     release: env.SENTRY_RELEASE,
     pkg,

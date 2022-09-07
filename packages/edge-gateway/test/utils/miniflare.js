@@ -11,7 +11,7 @@ export function getMiniflare() {
 
   return new Miniflare({
     envPath,
-    scriptPath: 'dist/worker.mjs',
+    scriptPath: 'dist/worker.js',
     port: 8788,
     packagePath: true,
     wranglerConfigPath: true,

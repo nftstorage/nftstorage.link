@@ -4,10 +4,10 @@
   "description": "IPFS edge gateway for nft.storage",
   "private": true,
   "type": "module",
-  "main": "./dist/worker.mjs",
+  "main": "./dist/worker.js",
   "scripts": {
     "build": "node scripts/cli.js build",
-    "dev": "miniflare --watch --debug",
+    "dev": "miniflare dist/worker.js --watch --debug -m",
     "deploy": "wrangler publish --env production",
     "test": "npm run test:setup && npm run test:worker",
     "test:worker": "ava --verbose test/*.spec.js",
