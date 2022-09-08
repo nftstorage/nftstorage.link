@@ -1,6 +1,6 @@
 # nftstorage.link wrangler config.
 name = "gateway-nft-storage"
-main = "./dist/worker.mjs"
+main = "./dist/worker.js"
 compatibility_date = "2022-07-01"
 compatibility_flags = [ "url_standard" ]
 no_bundle = true
