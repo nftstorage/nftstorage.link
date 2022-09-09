@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.0...edge-gateway-v1.14.1) (2022-09-08)
+
+
+### Bug Fixes
+
+* stracktraces frames ([#190](https://github.com/nftstorage/nftstorage.link/issues/190)) ([99221ba](https://github.com/nftstorage/nftstorage.link/commit/99221ba8935fccd38dd293589e9629b141632071))
+
 ## [1.14.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.13.0...edge-gateway-v1.14.0) (2022-09-02)
 
 
