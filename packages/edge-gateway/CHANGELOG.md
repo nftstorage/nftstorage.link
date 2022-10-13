@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.1...edge-gateway-v1.14.2) (2022-10-13)
+
+
+### Bug Fixes
+
+* ipfs path resolution with 301 status ([#192](https://github.com/nftstorage/nftstorage.link/issues/192)) ([31dec6d](https://github.com/nftstorage/nftstorage.link/commit/31dec6d45b0b2a13e23887f01a5dcc0c504c366a))
+
 ## [1.14.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.0...edge-gateway-v1.14.1) (2022-09-08)
 
 
