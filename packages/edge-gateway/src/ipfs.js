@@ -30,7 +30,7 @@ export async function ipfsGet(request, env) {
     `https://${nCid}.${env.IPFS_GATEWAY_HOSTNAME}${redirectPath}${redirectQueryString}`
   )
 
-  return Response.redirect(url.toString(), 302)
+  return Response.redirect(url.toString(), 301)
 }
 
 /**
