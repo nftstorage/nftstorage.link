@@ -66,6 +66,6 @@ nft.storage Gateway is currently rate limited at 200 requests per minute to a gi
 
 ## Deny List
 
-We rely on [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist together wtth our own denylist to prevent serving malicious content to the nftstorage.link users.
+We rely on [badbits](https://badbits.dwebops.pub/) denylist together wtth our own denylist to prevent serving malicious content to the nftstorage.link users.
 
-When new malicious content is discovered, it should be reported to [badbits](https://github.com/protocol/badbits.dwebops.pub) denylist given it is shared among multiple gateways.
+When new malicious content is discovered, it should be reported to [badbits](https://badbits.dwebops.pub/) denylist given it is shared among multiple gateways.
