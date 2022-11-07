@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.2...edge-gateway-v1.14.3) (2022-11-07)
+
+
+### Bug Fixes
+
+* csp headers connect self with blob and data support ([#195](https://github.com/nftstorage/nftstorage.link/issues/195)) ([d958988](https://github.com/nftstorage/nftstorage.link/commit/d95898825f432ce24d4728e807542f3e5896d14c))
+
 ## [1.14.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.1...edge-gateway-v1.14.2) (2022-10-13)
 
 
