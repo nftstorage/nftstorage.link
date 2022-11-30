@@ -11,7 +11,7 @@ import ndjson from 'iterable-ndjson'
  */
 
 const GOODBITS_SOURCES = [
-  'https://raw.githubusercontent.com/nftstorage/goodbits/main/list.ndjson',
+  'https://raw.githubusercontent.com/web3-storage/goodbits/main/list.ndjson',
 ]
 
 const rootDir = path.dirname(path.dirname(import.meta.url))
