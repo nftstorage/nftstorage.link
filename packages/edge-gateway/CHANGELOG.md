@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.4](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.3...edge-gateway-v1.14.4) (2022-12-07)
+
+
+### Bug Fixes
+
+* csp accept ipfs gateways origins ([#200](https://github.com/nftstorage/nftstorage.link/issues/200)) ([a595447](https://github.com/nftstorage/nftstorage.link/commit/a595447efed43b6da5f6fb66431f1c97f09500e7))
+
 ## [1.14.3](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.2...edge-gateway-v1.14.3) (2022-11-07)
 
 
