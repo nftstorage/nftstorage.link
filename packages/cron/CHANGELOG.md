@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/nftstorage/nftstorage.link/compare/cron-v1.1.0...cron-v1.1.1) (2022-11-30)
+
+
+### Bug Fixes
+
+* goodbits now lives on web3storage org ([#198](https://github.com/nftstorage/nftstorage.link/issues/198)) ([aaccfe6](https://github.com/nftstorage/nftstorage.link/commit/aaccfe67ac8a30036ccf7f7c262ce13b49d5391f))
+
 ## [1.1.0](https://github.com/nftstorage/nftstorage.link/compare/cron-v1.0.0...cron-v1.1.0) (2022-09-02)
 
 
