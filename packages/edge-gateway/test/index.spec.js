@@ -20,7 +20,7 @@ test('Gets content from binding', async (t) => {
   const csp = response.headers.get('content-security-policy') || ''
   t.true(csp.includes("default-src 'self' 'unsafe-inline' 'unsafe-eval'"))
   t.true(csp.includes('blob: data'))
-  t.true(csp.includes("form-action 'self' ; navigate-to 'self';"))
+  t.true(csp.includes("form-action 'self'; navigate-to 'self';"))
 })
 
 test('Gets content with no csp header when goodbits csp bypass tag exists', async (t) => {
