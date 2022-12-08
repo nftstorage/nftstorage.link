@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.5](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.4...edge-gateway-v1.14.5) (2022-12-08)
+
+
+### Bug Fixes
+
+* csp directive with wildcard ([#202](https://github.com/nftstorage/nftstorage.link/issues/202)) ([78b8255](https://github.com/nftstorage/nftstorage.link/commit/78b8255a43cb008cabe98687830d45bbe283213a))
+
 ## [1.14.4](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.3...edge-gateway-v1.14.4) (2022-12-07)
 
 
