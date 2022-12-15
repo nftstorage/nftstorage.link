@@ -6,6 +6,13 @@ import { CID } from 'multiformats/cid'
 import { InvalidUrlError } from './errors.js'
 
 const GOODBITS_BYPASS_TAG = 'https://nftstorage.link/tags/bypass-default-csp'
+const IPFS_GATEWAYS = [
+  'https://*.w3s.link',
+  'https://*.nftstorage.link',
+  'https://*.dweb.link',
+  'https://ipfs.io/ipfs/',
+]
+const DOTSTORAGE_APIS = ['https://*.web3.storage', 'https://*.nft.storage']
 
 /**
  * Handle gateway requests
@@ -57,7 +64,15 @@ function getTransformedResponseWithCspHeaders(response) {
 
   clonedResponse.headers.set(
     'content-security-policy',
-    "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: https://*.w3s.link https://*.nftstorage.link https://*.dweb.link https://ipfs.io/ipfs/ https://*.githubusercontent.com; form-action 'self'; navigate-to 'self'; connect-src 'self' blob: data: https://*.w3s.link https://*.nftstorage.link https://*.dweb.link https://ipfs.io/ipfs/ https://polygon-rpc.com https://rpc.testnet.fantom.network"
+    `default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data: ${IPFS_GATEWAYS.join(
+      ' '
+    )} ${DOTSTORAGE_APIS.join(
+      ' '
+    )} https://*.githubusercontent.com; form-action 'self'; navigate-to 'self'; connect-src 'self' blob: data: ${IPFS_GATEWAYS.join(
+      ' '
+    )} ${DOTSTORAGE_APIS.join(
+      ' '
+    )} https://polygon-rpc.com https://rpc.testnet.fantom.network`
   )
 
   return clonedResponse
