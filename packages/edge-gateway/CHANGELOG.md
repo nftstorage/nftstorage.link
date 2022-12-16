@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.14.6](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.5...edge-gateway-v1.14.6) (2022-12-16)
+
+
+### Bug Fixes
+
+* add dotstorage apis to csp allowlist ([#204](https://github.com/nftstorage/nftstorage.link/issues/204)) ([8c75d93](https://github.com/nftstorage/nftstorage.link/commit/8c75d932901d8d9954c2be72177c378dfd3fb498))
+
 ## [1.14.5](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.4...edge-gateway-v1.14.5) (2022-12-08)
 
 
