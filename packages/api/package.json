@@ -39,6 +39,8 @@
     "esbuild": "^0.14.38",
     "execa": "^5.1.1",
     "git-rev-sync": "^3.0.1",
+    "ipfs-http-client": "^57.0.3",
+    "ipfs-utils": "^9.0.4",
     "miniflare": "^2.5.0",
     "nft.storage-api": "https://gitpkg.now.sh/nftstorage/nft.storage/packages/api?019a505e8f4bb93a24b8c480646779f5e4b66326",
     "npm-run-all": "^4.1.5",
@@ -46,6 +48,7 @@
     "p-map": "^5.3.0",
     "p-retry": "^5.1.1",
     "p-settle": "^5.0.0",
+    "p-wait-for": "^5.0.0",
     "sade": "^1.7.4",
     "smoke": "^3.1.1",
     "uint8arrays": "^3.0.0"

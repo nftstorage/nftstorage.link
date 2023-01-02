@@ -24,7 +24,7 @@
     "swagger-ui-react": "^4.10.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.20.1",
+    "@playwright/test": "^1.29.1",
     "@svgr/webpack": "^6.2.1",
     "autoprefixer": "^10.4.7",
     "eslint": "^8.4.1",

@@ -7,7 +7,7 @@ import sade from 'sade'
 import { buildCmd } from './build.js'
 import { dbCmd } from './db.js'
 import { dbSqlCmd } from './db-sql.js'
-import { ipfsCmd } from '../node_modules/edge-gateway/scripts/ipfs.js'
+import { ipfsCmd } from './ipfs.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 dotenv.config({
