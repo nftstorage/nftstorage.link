@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.6...edge-gateway-v1.15.0) (2023-01-03)
+
+
+### Features
+
+* add csp report endpoint ([#209](https://github.com/nftstorage/nftstorage.link/issues/209)) ([c1d3b26](https://github.com/nftstorage/nftstorage.link/commit/c1d3b26b3e8b0d85f527851bda5d41a6b39516cf))
+
 ## [1.14.6](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.14.5...edge-gateway-v1.14.6) (2022-12-16)
 
 
