@@ -11,6 +11,7 @@ export interface EnvInput {
   LOKI_TOKEN?: string
   EDGE_GATEWAY: Fetcher
   GATEWAY_HOSTNAME: string
+  CSP_REPORT_URI: string
   GOODBITSLIST: KVNamespace
 }
 
