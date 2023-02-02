@@ -12,7 +12,6 @@ const IPFS_GATEWAYS = [
   'https://*.dweb.link',
   'https://ipfs.io/ipfs/',
 ]
-const DOTSTORAGE_APIS = ['https://*.web3.storage', 'https://*.nft.storage']
 const ALLOWED_LIST = [
   'https://*.githubusercontent.com',
   'https://polygon-rpc.com',
@@ -69,10 +68,10 @@ function getTransformedResponseWithCspHeaders(response, env) {
   const clonedResponse = new Response(response.body, response)
   const defaultSrc = `'self' 'unsafe-inline' 'unsafe-eval' blob: data: ${IPFS_GATEWAYS.join(
     ' '
-  )} ${DOTSTORAGE_APIS.join(' ')} ${ALLOWED_LIST.join(' ')}`
+  )} ${ALLOWED_LIST.join(' ')}`
   const connectSrc = `'self' blob: data: ${IPFS_GATEWAYS.join(
     ' '
-  )} ${DOTSTORAGE_APIS.join(' ')} ${ALLOWED_LIST.join(' ')}`
+  )} ${ALLOWED_LIST.join(' ')}`
   const reportUri = env.CSP_REPORT_URI
 
   clonedResponse.headers.set(
