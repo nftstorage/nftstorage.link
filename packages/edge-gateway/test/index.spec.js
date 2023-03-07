@@ -23,6 +23,15 @@ test('Gets content from binding', async (t) => {
   t.true(csp.includes("form-action 'self'; navigate-to 'self';"))
 })
 
+test('redirects from binding', async (t) => {
+  const { mf } = t.context
+  const cid = 'bafybeiet3ym4yxqaqxbrhyvhaddi7wrglpkwoqjg5vwlsifv6duruw4vz4'
+
+  const response = await mf.dispatchFetch(`https://${cid}.ipfs.localhost:8787`)
+
+  t.is(response.status, 307)
+})
+
 test('Gets content with no csp header when goodbits csp bypass tag exists', async (t) => {
   const { mf } = t.context
   const cid = 'bafkreidyeivj7adnnac6ljvzj2e3rd5xdw3revw4da7mx2ckrstapoupor'
