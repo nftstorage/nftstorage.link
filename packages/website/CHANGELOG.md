@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/nftstorage/nftstorage.link/compare/website-v2.0.0...website-v2.0.1) (2023-01-02)
+
+
+### Bug Fixes
+
+* api testing setup ([#206](https://github.com/nftstorage/nftstorage.link/issues/206)) ([0bd363e](https://github.com/nftstorage/nftstorage.link/commit/0bd363eaa0d66a3d4d747c8fb4ffff2b43458d7e))
+
 ## [2.0.0](https://github.com/nftstorage/nftstorage.link/compare/website-v1.2.1...website-v2.0.0) (2022-06-10)
 
 
