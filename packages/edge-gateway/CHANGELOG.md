@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.15.1...edge-gateway-v1.15.2) (2023-03-07)
+
+
+### Bug Fixes
+
+* handle redirect from edge gateway ([#215](https://github.com/nftstorage/nftstorage.link/issues/215)) ([846876d](https://github.com/nftstorage/nftstorage.link/commit/846876d9c44882725fac24c6d333c141e9ecf83e))
+
 ## [1.15.1](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.15.0...edge-gateway-v1.15.1) (2023-02-02)
 
 
