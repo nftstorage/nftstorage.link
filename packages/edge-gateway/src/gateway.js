@@ -40,7 +40,12 @@ export async function gatewayGet(request, env) {
       // @ts-ignore custom entry in cf object
       onlyIfCachedGateways: JSON.stringify(['https://w3s.link']),
     },
+    redirect: 'manual',
   })
+
+  if (response.redirected) {
+    return response
+  }
 
   // Validation layer - CSP bypass
   const resourceCid = decodeURIComponent(
