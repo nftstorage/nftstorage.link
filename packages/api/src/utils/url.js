@@ -30,8 +30,9 @@ export function getSourceUrl(request, env) {
     )
   }
   if (
-    !env.gatewayDomains.filter((gwDomain) => urlString.includes(gwDomain))
-      .length
+    !env.gatewayDomains.filter((gwDomain) =>
+      candidateUrl.host.endsWith(gwDomain)
+    ).length
   ) {
     throw new InvalidUrlError(
       `invalid URL provided: ${urlString}: not ${env.gatewayDomains.join(
