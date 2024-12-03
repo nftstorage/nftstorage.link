@@ -12,7 +12,6 @@ One time set up of your cloudflare worker subdomain for dev:
 ## Environment setup
 
 - Add secrets
-
   ```sh
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry
   ```
