@@ -24,7 +24,6 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install
-      - run: npx playwright install-deps
       - run: pnpm test:api
         env:
           DATABASE_URL: http://localhost:3000
