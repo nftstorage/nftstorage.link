@@ -40,7 +40,7 @@ export async function buildCmd(opts) {
   if (process.env.SENTRY_UPLOAD === 'true') {
     const cli = new Sentry(undefined, {
       authToken: process.env.SENTRY_TOKEN,
-      org: 'protocol-labs-it',
+      org: 'storacha-it',
       project: 'nft-gateway',
       dist: git.short(__dirname),
     })
