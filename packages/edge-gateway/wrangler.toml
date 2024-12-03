@@ -4,6 +4,7 @@ main = "./dist/worker.js"
 compatibility_date = "2022-07-01"
 compatibility_flags = [ "url_standard" ]
 no_bundle = true
+logpush = true
 
 [build]
 command = "npm run build"
