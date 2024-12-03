@@ -18,12 +18,13 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          version: 7.0.x
-      - uses: actions/setup-node@v2
+          version: 9
+      - uses: actions/setup-node@v3
         with:
+          node-version: 20
           cache: 'pnpm'
       - run: pnpm install
       - name: Run build
@@ -50,14 +51,14 @@ jobs:
           - packages/website/test-results
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: pnpm/action-setup@v2.0.1
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          version: 7.0.x
-      - uses: actions/setup-node@v2
+          version: 9
+      - uses: actions/setup-node@v3
         with:
-          cache: 'pnpm'
           node-version: ${{ matrix.node }}
+          cache: 'pnpm'
       - run: pnpm install
         env:
           DEBUG: pw:install
