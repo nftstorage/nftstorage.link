@@ -76,7 +76,6 @@ jobs:
     name: Release
     runs-on: ubuntu-latest
     needs:
-      - check
       - test
       - changelog
     steps:
