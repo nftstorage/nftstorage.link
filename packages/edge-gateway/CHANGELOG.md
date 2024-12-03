@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.16.0](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.15.2...edge-gateway-v1.16.0) (2024-12-03)
+
+
+### Features
+
+* enable logpush for edge-gateway ([5918e63](https://github.com/nftstorage/nftstorage.link/commit/5918e635f29096553efba518f9cf204230ffce60))
+* remove loki logging from edge-gateway ([c93562c](https://github.com/nftstorage/nftstorage.link/commit/c93562c4a0d7469a14422135cfe6fe6aa9cf94e8))
+
+
+### Fixes
+
+* move sentry to our org ([e94b282](https://github.com/nftstorage/nftstorage.link/commit/e94b2824fc0957c4f4cd2e0732efce2150a84b7f))
+* remove Loki references from README ([374c866](https://github.com/nftstorage/nftstorage.link/commit/374c8668844e3b1dd27f7fb6c1f66f1e02b3ad36))
+* upgrade wrangler ([c306815](https://github.com/nftstorage/nftstorage.link/commit/c3068153de1a025f69a650b35778028284ce5fa2))
+
 ## [1.15.2](https://github.com/nftstorage/nftstorage.link/compare/edge-gateway-v1.15.1...edge-gateway-v1.15.2) (2023-03-07)
 
 
