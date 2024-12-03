@@ -1,5 +1,4 @@
 import Toucan from 'toucan-js'
-import { Logging } from '@web3-storage/worker-utils/loki'
 
 export {}
 
@@ -23,7 +22,6 @@ export interface EnvTransformed {
   IPFS_GATEWAY_HOSTNAME: string
   IPNS_GATEWAY_HOSTNAME: string
   sentry?: Toucan
-  log: Logging
   startTime: number
 }
 
