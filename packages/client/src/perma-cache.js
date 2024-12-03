@@ -103,6 +103,7 @@ export class PermaCache {
   static async put(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
+    // @ts-ignore seems to be a spurious TS2463
     { onPut, maxRetries } = {}
   ) {
     urls.forEach(validateUrl)
@@ -162,6 +163,7 @@ export class PermaCache {
    */
   static async *list(
     { endpoint, token, rateLimiter = globalRateLimiter },
+    // @ts-ignore seems to be a spurious TS2463
     { sort = 'date', order = 'asc' } = {}
   ) {
     const headers = PermaCache.headers(token)
@@ -205,6 +207,7 @@ export class PermaCache {
   static async delete(
     { endpoint, token, rateLimiter = globalRateLimiter },
     urls,
+    // @ts-ignore seems to be a spurious TS2463
     { onDelete, maxRetries } = {}
   ) {
     urls.forEach(validateUrl)
