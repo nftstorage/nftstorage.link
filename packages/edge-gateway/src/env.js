@@ -1,7 +1,6 @@
 /* global BRANCH, VERSION, COMMITHASH, SENTRY_RELEASE */
 
 import Toucan from 'toucan-js'
-import { Logging } from '@web3-storage/worker-utils/loki'
 import pkg from '../package.json'
 
 /**
@@ -25,21 +24,6 @@ export function envAll(request, env, ctx) {
   env.SENTRY_RELEASE = SENTRY_RELEASE
 
   env.sentry = getSentry(request, env, ctx)
-
-  env.log = new Logging(request, ctx, {
-    // @ts-ignore TODO: url should be optional together with token
-    url: env.LOKI_URL,
-    token: env.LOKI_TOKEN,
-    debug: Boolean(env.DEBUG),
-    version: env.VERSION,
-    commit: env.COMMITHASH,
-    branch: env.BRANCH,
-    worker: 'nftstorage.link',
-    env: env.ENV,
-    sentry: env.sentry,
-  })
-
-  env.log.time('request')
 }
 
 /**
