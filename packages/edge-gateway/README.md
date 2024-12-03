@@ -15,8 +15,6 @@ One time set up of your cloudflare worker subdomain for dev:
 
   ```sh
     wrangler secret put SENTRY_DSN --env $(whoami) # Get from Sentry
-    wrangler secret put LOKI_URL --env $(whoami) # Get from Loki
-    wrangler secret put LOKI_TOKEN --env $(whoami) # Get from Loki
   ```
 
 ## High level architecture
