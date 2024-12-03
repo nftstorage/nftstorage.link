@@ -26,7 +26,6 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - run: pnpm install
-      - run: npx playwright install-deps
       - run: pnpm test:edge-gateway
   deploy-staging:
     name: Deploy Staging
