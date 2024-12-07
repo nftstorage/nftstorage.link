@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.3](https://github.com/nftstorage/nftstorage.link/compare/api-v2.3.2...api-v2.3.3) (2023-01-03)
+
+
+### Bug Fixes
+
+* api testing setup ([#206](https://github.com/nftstorage/nftstorage.link/issues/206)) ([0bd363e](https://github.com/nftstorage/nftstorage.link/commit/0bd363eaa0d66a3d4d747c8fb4ffff2b43458d7e))
+* api wrangler routes need pattern ([#210](https://github.com/nftstorage/nftstorage.link/issues/210)) ([b2b1c85](https://github.com/nftstorage/nftstorage.link/commit/b2b1c8583f3f4ba0f07a3d9ca02278d23c262dba))
+* normalized url with subdomain must be w3s.link ([182641a](https://github.com/nftstorage/nftstorage.link/commit/182641ad9c6c936c9b29c9006fc142f15c4d67c5))
+
 ## [2.3.2](https://github.com/nftstorage/nftstorage.link/compare/api-v2.3.1...api-v2.3.2) (2022-08-11)
 
 
